@@ -18,32 +18,31 @@
       </ion-header>
       
       <ion-list>
-        <MessageListItem v-for="message in messages" :key="message.id" :message="message" />
+        <ion-item v-for="list in lists" :key="list.id">
+          <ion-text>{{ list.name }}</ion-text>
+        </ion-item>
       </ion-list>
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
-import { IonContent, IonHeader, IonList, IonPage, IonRefresher, IonRefresherContent, IonTitle, IonToolbar } from '@ionic/vue';
-import MessageListItem from '@/components/MessageListItem.vue';
-import { defineComponent } from 'vue';
-import { getMessages } from '@/data/messages';
+import {
+  IonContent,
+  IonHeader,
+  IonList,
+  IonPage,
+  IonRefresher,
+  IonRefresherContent,
+  IonText,
+  IonTitle,
+  IonToolbar
+} from '@ionic/vue';
+import {computed} from 'vue';
+import {useStore} from "vuex";
 
-export default defineComponent({
+export default {
   name: 'Home',
-  data() {
-    return {
-      messages: getMessages()
-    }
-  },
-  methods: {
-    refresh: (ev: CustomEvent) => {
-      setTimeout(() => {
-        ev.detail.complete();
-      }, 3000);
-    }
-  },
   components: {
     IonContent,
     IonHeader,
@@ -53,7 +52,16 @@ export default defineComponent({
     IonRefresherContent,
     IonTitle,
     IonToolbar,
-    MessageListItem
+    IonText
   },
-});
+  setup () {
+    const store = useStore();
+
+    const lists = computed(() => store.getters['lists']);
+
+    return {
+      lists
+    }
+  }
+}
 </script>

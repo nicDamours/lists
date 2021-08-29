@@ -1,0 +1,29 @@
+.o-form {
+    width: 100%;
+}
+
+.o-form__group-input {
+    width: 100%;
+    margin-right: 16px;
+}
+
+.o-form__group--new {
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.o-list__item {
+    margin-left: 16px;
+    padding-right: 16px;
+}
+
+
+.o-list__item__quantity {
+    padding-left: 16px;
+    opacity: 0.4;
+}

@@ -54,8 +54,8 @@
                 <ion-label position="floating">Add new section</ion-label>
                 <ion-input type="text" v-model="newSectionName"/>
               </ion-item>
-              <ion-button slot="end" type="submit" color="success">
-                <ion-icon :name="addOutline" slot="icon-only"/>
+              <ion-button slot="end" type="submit" color="success" fill="clear">
+                ADD
               </ion-button>
             </div>
           </form>
@@ -75,7 +75,6 @@ import {
   IonCheckbox,
   IonContent,
   IonHeader,
-  IonIcon,
   IonInput,
   IonItem,
   IonItemOption,
@@ -116,7 +115,6 @@ export default {
     IonItemSliding,
     IonInput,
     IonLabel,
-    IonIcon,
     IonButton,
     NewItemForm,
     IonBackButton,

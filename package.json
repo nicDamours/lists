@@ -19,8 +19,10 @@
     "@capacitor/status-bar": "1.0.2",
     "@ionic/vue": "^5.4.0",
     "@ionic/vue-router": "^5.4.0",
+    "@vueuse/core": "^6.0.0",
     "core-js": "^3.6.5",
     "firebase": "^9.0.0",
+    "firebaseui": "^0.600.0",
     "vue": "^3.2.1",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"

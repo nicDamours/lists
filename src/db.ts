@@ -1,5 +1,11 @@
-import { getFirestore, collection, onSnapshot, DocumentSnapshot } from 'firebase/firestore'
-import { app } from "@/app"
+import { getFirestore} from 'firebase/firestore'
+import getAppInstance from "@/app";
 
 // Get a Firestore instance
-export const db = getFirestore(app)
+export default function getDatabaseInstance() {
+    if(!('firebaseDB' in window)) {
+        (window as any).firebaseDB = getFirestore(getAppInstance())
+    }
+
+    return (window as any).firebaseDB
+}

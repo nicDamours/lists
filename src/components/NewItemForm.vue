@@ -3,7 +3,7 @@
     <form @submit.prevent="handleSubmit" class="o-form">
       <div class="o-form__group--new">
         <ion-item class="o-form__group-input">
-          <ion-label position="floating">Add new item</ion-label>
+          <ion-label position="floating">Add new {{ name }}</ion-label>
           <ion-input type="text" v-model="newItemName"/>
         </ion-item>
         <ion-button slot="end" type="submit" color="success" fill="clear">
@@ -26,6 +26,12 @@ export default {
     IonButton
   },
   emits: ["form-submit"],
+  props: {
+    name: {
+      type: String,
+      required: true
+    }
+  },
   setup(_, { emit }) {
     const newItemName = ref("");
 

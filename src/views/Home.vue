@@ -2,7 +2,10 @@
   <ion-page>
     <ion-header :translucent="true">
       <ion-toolbar>
-        <ion-title>Inbox</ion-title>
+        <ion-title>Lists</ion-title>
+        <ion-buttons slot="end">
+          <ion-button fill="clear" @click="logOutCurrentUser">LOG OUT</ion-button>
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
 
@@ -22,16 +25,19 @@
           <ion-text>{{ list.name }}</ion-text>
         </ion-item>
 
-        <NewItemForm @form-submit="handleNewListSubmit"/>
+        <NewItemForm @form-submit="handleNewListSubmit" name="list" />
       </ion-list>
     </ion-content>
   </ion-page>
 </template>
 
-<script lang="ts">
+<script>
 import {
+  IonButton,
+  IonButtons,
   IonContent,
-  IonHeader, IonItem,
+  IonHeader,
+  IonItem,
   IonList,
   IonPage,
   IonRefresher,
@@ -46,6 +52,8 @@ import {List} from "@/models/dtos/List";
 import {useRouter} from "vue-router";
 import NewItemForm from "@/components/NewItemForm.vue";
 import ListService from "@/services/ListService";
+import { signOut } from "firebase/auth"
+import getAuthInstance from "@/auth";
 
 export default {
   name: 'Home',
@@ -60,14 +68,16 @@ export default {
     IonTitle,
     IonToolbar,
     IonText,
-    IonItem
+    IonItem,
+    IonButtons,
+    IonButton
   },
   setup () {
     const store = useStore();
     const router = useRouter();
     const lists = computed(() => store.getters['lists/lists']);
 
-    const openList = async (list: List) => {
+    const openList = async (list) => {
       await router.push({
         name: "ListView",
         params: {
@@ -76,16 +86,21 @@ export default {
       })
     }
 
-    const handleNewListSubmit = async (value: string) => {
+    const handleNewListSubmit = async (value) => {
       const dto = new List("irrelevent", value)
 
       await ListService.addList(dto);
 
     }
 
+    const logOutCurrentUser = async () => {
+      await signOut(getAuthInstance())
+    }
+
     return {
       lists,
       openList,
+      logOutCurrentUser,
       handleNewListSubmit
     }
   }

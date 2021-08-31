@@ -43,23 +43,11 @@
             <ion-checkbox :checked="item.done" slot="end"/>
           </ion-item>
         </ion-item-sliding>
-        <NewItemForm @form-submit="value => createNewItem(sectionIndex, value)" />
+        <NewItemForm @form-submit="value => createNewItem(sectionIndex, value)" name="item"/>
       </ion-list>
 
       <ion-list>
-        <ion-item>
-          <form @submit.prevent="createNewSection()" class="o-form">
-            <div class="o-form__group--new">
-              <ion-item class="o-form__group-input">
-                <ion-label position="floating">Add new section</ion-label>
-                <ion-input type="text" v-model="newSectionName"/>
-              </ion-item>
-              <ion-button slot="end" type="submit" color="success" fill="clear">
-                ADD
-              </ion-button>
-            </div>
-          </form>
-        </ion-item>
+        <NewItemForm @form-submit="createNewSection" name="section"/>
       </ion-list>
     </ion-content>
   </ion-page>
@@ -69,13 +57,14 @@
 import {useRoute, useRouter} from "vue-router";
 import {useStore} from "vuex";
 import {computed, ref} from "vue";
-import { addOutline, removeOutline} from 'ionicons/icons';
+import {addOutline, removeOutline} from 'ionicons/icons';
 import {
+  IonBackButton,
   IonButton,
+  IonButtons,
   IonCheckbox,
   IonContent,
   IonHeader,
-  IonInput,
   IonItem,
   IonItemOption,
   IonItemOptions,
@@ -86,8 +75,7 @@ import {
   IonPage,
   IonText,
   IonTitle,
-  IonToolbar,
-  alertController, IonBackButton, IonButtons
+  IonToolbar
 } from "@ionic/vue";
 import ListService from "@/services/ListService";
 import {Item} from "@/models/dtos/Item";
@@ -113,7 +101,6 @@ export default {
     IonItem,
     IonCheckbox,
     IonItemSliding,
-    IonInput,
     IonLabel,
     IonButton,
     NewItemForm,

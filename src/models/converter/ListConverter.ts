@@ -1,6 +1,7 @@
 import { QueryDocumentSnapshot, FirestoreDataConverter, SnapshotOptions, DocumentData } from "firebase/firestore";
 import {List} from "@/models/dtos/List";
 import SectionConverter from "@/models/converter/SectionConverter";
+import getAuthInstance from "@/auth";
 
 export const ListConverter: FirestoreDataConverter<List> = {
     fromFirestore: function(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): List {
@@ -18,6 +19,7 @@ export const ListConverter: FirestoreDataConverter<List> = {
         return {
             id: modelObject.id,
             name: modelObject.name,
+            user: getAuthInstance().currentUser.uid,
             sections: modelObject.sections.map(section => SectionConverter.toFirestore(section))
         }
     }

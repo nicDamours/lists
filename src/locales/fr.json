@@ -1,0 +1,25 @@
+{
+  "global": {
+    "title": "Mes Listes",
+    "add": "Ajouter",
+    "logout": "Déconnexion",
+    "enterQuantity": "Veuillez entrer une quantité",
+    "confirmHeader": "Attention",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "remove": "Retirer"
+  },
+  "lists": {
+    "addNewList": "Ajouter une nouvelle liste",
+    "confirmDeleteList": "Êtes-vous sûr de vouloir supprimer cette liste ?"
+  },
+  "sections": {
+    "addNewSection": "Ajouter une nouvelle section",
+    "confirmDeleteSection": "Êtes-vous sûr de vouloir supprimer cette section ?"
+  },
+  "items": {
+    "addNewItem": "Ajouter un nouvel element",
+    "confirmDeleteItem": "Êtes-vous sûr de vouloir supprimer cet élément ?"
+  }
+}

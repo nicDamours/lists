@@ -2,10 +2,10 @@
   <ion-page>
     <ion-header :translucent="true">
       <ion-toolbar>
-        <ion-title>Lists</ion-title>
+        <ion-title> {{ t('global.title') }}</ion-title>
         <ion-buttons slot="end">
           <ion-button fill="clear" @click="logOutCurrentUser">
-            LOG OUT
+            {{ t('global.logout') }}
             <ion-icon :icon="logOutOutline" slot="end" />
           </ion-button>
         </ion-buttons>
@@ -13,13 +13,9 @@
     </ion-header>
 
     <ion-content :fullscreen="true">
-      <ion-refresher slot="fixed" @ionRefresh="refresh($event)">
-        <ion-refresher-content></ion-refresher-content>
-      </ion-refresher>
-
       <ion-header collapse="condense">
         <ion-toolbar>
-          <ion-title size="large">Inbox</ion-title>
+          <ion-title size="large">{{ t('global.title') }}</ion-title>
         </ion-toolbar>
       </ion-header>
 
@@ -28,7 +24,7 @@
           <ion-text>{{ list.name }}</ion-text>
         </ion-item>
 
-        <NewItemForm @form-submit="handleNewListSubmit" name="list" />
+        <NewItemForm @form-submit="handleNewListSubmit" text="lists.addNewList" />
       </ion-list>
     </ion-content>
   </ion-page>
@@ -43,8 +39,6 @@ import {
   IonItem,
   IonList,
   IonPage,
-  IonRefresher,
-  IonRefresherContent,
   IonText,
   IonTitle,
   IonToolbar
@@ -58,6 +52,7 @@ import ListService from "@/services/ListService";
 import { signOut } from "firebase/auth"
 import getAuthInstance from "@/auth";
 import {logOutOutline, arrowForwardOutline} from 'ionicons/icons';
+import {useI18n} from "vue-i18n";
 
 export default {
   name: 'Home',
@@ -67,8 +62,6 @@ export default {
     IonHeader,
     IonList,
     IonPage,
-    IonRefresher,
-    IonRefresherContent,
     IonTitle,
     IonToolbar,
     IonIcon,
@@ -81,6 +74,7 @@ export default {
     const store = useStore();
     const router = useRouter();
     const lists = computed(() => store.getters['lists/lists']);
+    const { t } = useI18n();
 
     const openList = async (list) => {
       await router.push({
@@ -103,6 +97,7 @@ export default {
     }
 
     return {
+      t,
       arrowForwardOutline,
       logOutOutline,
       lists,

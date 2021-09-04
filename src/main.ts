@@ -27,8 +27,22 @@ import 'firebaseui/dist/firebaseui.css'
 import "@/assets/main.scss";
 
 import store from './store'
+import loadLocaleMessages from './i18n'
+
+import {createI18n} from "vue-i18n";
+
+const currentLocale = window.localStorage.getItem("preferred-locale");
+
+const i18n = createI18n({
+  legacy: false,
+  locale: currentLocale || 'en',
+  fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'en',
+  messages: loadLocaleMessages()
+})
+
 
 const app = createApp(App)
+    .use(i18n)
   .use(store)
   .use(IonicVue)
   .use(router);

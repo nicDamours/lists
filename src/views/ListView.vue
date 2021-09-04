@@ -8,7 +8,7 @@
         </ion-buttons>
         <ion-buttons slot="end">
           <ion-button @click="handleDeleteList" color="danger">
-            Delete
+            {{ t('global.delete') }}
             <ion-icon :icon="trashOutline" slot="end"></ion-icon>
           </ion-button>
         </ion-buttons>
@@ -27,32 +27,33 @@
 
       <ion-list v-for="(section, sectionIndex) in list.sections" :key="section.id">
         <ion-list-header lines="full">
-            <ion-title>{{ section.name }}</ion-title>
+            <ion-label>{{ section.name }}</ion-label>
             <ion-button color="danger" @click="deleteSection(section.id)">
-              remove
-              <ion-icon :icon="removeOutline" slot="end"></ion-icon>
+              <ion-icon :icon="removeOutline" slot="icon-only"></ion-icon>
             </ion-button>
         </ion-list-header>
 
         <ion-item-sliding v-for="(item, itemIndex) in section.items" :key="item.id" class="o-list__item">
           <ion-item-options side="start">
             <ion-item-option @click="deleteItem(sectionIndex, item.id)" color="danger">
-              delete
+              {{ t('global.remove') }}
               <ion-icon :icon="trashOutline" slot="end"></ion-icon>
             </ion-item-option>
           </ion-item-options>
 
           <ion-item button detail="false" @click="event => toggleItemDone(sectionIndex, itemIndex, !item.done, event)">
             <ion-text>{{ item.name }}</ion-text>
-            <ion-text class="o-list__item__quantity" @click="event => showQuantityChange(sectionIndex, itemIndex, event)"> x {{ item.quantity }}</ion-text>
+            <ion-text class="o-list__item__quantity"
+                      @click="event => showQuantityChange(sectionIndex, itemIndex, event)"> x {{ item.quantity }}
+            </ion-text>
             <ion-checkbox :checked="item.done" slot="end"/>
           </ion-item>
         </ion-item-sliding>
-        <NewItemForm @form-submit="value => createNewItem(sectionIndex, value)" name="item"/>
+        <NewItemForm @form-submit="value => createNewItem(sectionIndex, value)" text="items.addNewItem"/>
       </ion-list>
 
       <ion-list>
-        <NewItemForm @form-submit="createNewSection" name="section"/>
+        <NewItemForm @form-submit="createNewSection" text="sections.addNewSection"/>
       </ion-list>
     </ion-content>
   </ion-page>
@@ -69,12 +70,12 @@ import {
   IonButtons,
   IonCheckbox,
   IonContent,
-  IonHeader, IonIcon,
+  IonHeader,
+  IonIcon,
   IonItem,
   IonItemOption,
   IonItemOptions,
-  IonItemSliding,
-  IonLabel,
+  IonItemSliding, IonLabel,
   IonList,
   IonListHeader,
   IonPage,
@@ -89,6 +90,7 @@ import {Section} from "@/models/dtos/Section";
 import NewItemForm from "@/components/NewItemForm";
 import useConfirm from "@/composable/use-confirm";
 import useAlert from "@/composable/use-alerts";
+import {useI18n} from "vue-i18n";
 
 export default {
   name: "ListView",
@@ -110,16 +112,19 @@ export default {
     IonButton,
     NewItemForm,
     IonBackButton,
-    IonButtons
+    IonButtons,
+    IonLabel,
   },
   setup() {
     const route = useRoute();
     const store = useStore()
     const router = useRouter();
+    const { t } = useI18n();
 
     const currentListId = computed(() => route.params.id)
 
-    const { showNumberAlert } = useAlert();
+    const {showNumberAlert} = useAlert();
+    const { showConfirm } = useConfirm();
 
     const newSectionName = ref("");
 
@@ -127,7 +132,7 @@ export default {
 
     const toggleItemDone = async (sectionIndex, itemIndex, value, $event) => {
       const target = $event.target;
-      if(!target.classList.contains("o-list__item__quantity")) {
+      if (!target.classList.contains("o-list__item__quantity")) {
         const copiedList = list.value.clone();
         copiedList.sections[sectionIndex].items[itemIndex].done = value;
 
@@ -156,9 +161,9 @@ export default {
     }
 
     const deleteSection = async (sectionId) => {
-      const results = await useConfirm("Are you sure you want to delete this section ?");
+      const results = await showConfirm(t("sections.confirmDeleteSection"));
 
-      if(results) {
+      if (results) {
         const copiedList = list.value.clone();
 
         copiedList.sections = copiedList.sections.filter(item => item.id !== sectionId)
@@ -168,9 +173,9 @@ export default {
     }
 
     const deleteItem = async (sectionIndex, itemId) => {
-      const results = await useConfirm("Are you sur you want to delete this item ?");
+      const results = await showConfirm(t("items.confirmDeleteItem"));
 
-      if(results) {
+      if (results) {
         const copiedList = list.value.clone();
         copiedList.sections[sectionIndex].items = copiedList.sections[sectionIndex].items.filter(item => item.id !== itemId);
 
@@ -179,25 +184,25 @@ export default {
     }
 
     const handleDeleteList = async () => {
-      const results = await useConfirm("Are you sur you want to delete this list ?");
+      const results = await showConfirm(t("lists.confirmDeleteList"));
 
-      if(results) {
+      if (results) {
 
         await ListService.deleteList(list.value);
 
-        await router.push({ name: "Home"})
+        await router.push({name: "Home"})
       }
     }
 
     const showQuantityChange = async (sectionIndex, itemIndex, event) => {
       const target = event.target
-      if(target.classList.contains("o-list__item__quantity")) {
+      if (target.classList.contains("o-list__item__quantity")) {
         const copiedList = list.value.clone();
         const currentItem = copiedList.sections[sectionIndex].items[itemIndex];
 
-        const results = await showNumberAlert("Please enter a quantity", currentItem.quantity);
+        const results = await showNumberAlert(t("global.enterQuantity"), currentItem.quantity);
 
-        if(results !== false) {
+        if (results !== false) {
           copiedList.sections[sectionIndex].items[itemIndex].quantity = results;
 
           await ListService.updateList(copiedList)
@@ -206,6 +211,7 @@ export default {
     }
 
     return {
+      t,
       addOutline,
       removeOutline,
       trashOutline,

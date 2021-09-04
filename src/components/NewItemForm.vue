@@ -4,16 +4,16 @@
       <div class="o-form__new-label" v-if="!hasFocus" @click="handleLabelClick">
         <ion-button fill="clear" color="dark">
           <ion-icon :icon="addOutline" slot="start"></ion-icon>
-          Add new {{ name }}
+          {{ t(text) }}
         </ion-button>
       </div>
       <div class="o-form__group--new" v-if="hasFocus" @blur="handleGroupBlur">
         <ion-item class="o-form__group-input">
-          <ion-label position="floating">Add new {{ name }}</ion-label>
-            <ion-input type="text" v-model="newItemName" autofocus/>
+          <ion-label position="floating">{{ t(text) }}</ion-label>
+            <ion-input type="text" v-model="newItemName" :autofocus="hasFocus" @ion-blur="handleGroupBlur" />
         </ion-item>
         <ion-button slot="end" type="submit" color="success" fill="clear">
-          add
+          {{ t("global.add") }}
           <ion-icon :icon="addOutline" slot="end"></ion-icon>
         </ion-button>
       </div>
@@ -26,6 +26,7 @@ import {ref} from "vue";
 import {IonButton, IonIcon, IonInput, IonItem, IonLabel} from "@ionic/vue";
 import {addOutline} from "ionicons/icons";
 import UUID from "@/utils/UUID";
+import {useI18n} from "vue-i18n";
 
 export default {
   name: "NewItemForm",
@@ -38,7 +39,7 @@ export default {
   },
   emits: ["form-submit"],
   props: {
-    name: {
+    text: {
       type: String,
       required: true
     }
@@ -52,11 +53,12 @@ export default {
 
     const newItemName = ref("");
 
+    const { t } = useI18n();
+
     const handleSubmit = () => {
       emit("form-submit", `${newItemName.value}`)
 
       newItemName.value = ""
-      hasFocus.value = false;
     }
 
     const handleLabelClick = () => {
@@ -65,11 +67,11 @@ export default {
     }
 
     const handleGroupBlur = () => {
-      console.log('blured ! ')
       hasFocus.value = false;
     }
 
     return {
+      t,
       uuid,
       hasFocus,
       addOutline,

@@ -1,0 +1,49 @@
+<template>
+  <ion-fab-button v-for="locale in availableLocales" :key="locale" @click.prevent="selectLocale(locale) ">
+    {{ locale }}
+  </ion-fab-button>
+</template>
+
+<script>
+import {IonFabButton} from "@ionic/vue";
+import { flagOutline } from "ionicons/icons";
+import {computed, ref} from "vue";
+import {useI18n} from "vue-i18n";
+import {useLocalStorage} from "@vueuse/core";
+
+export default {
+  name: "LangSwitcher",
+  components: {
+    IonFabButton,
+  },
+  setup() {
+    const { locale } = useI18n();
+    const optionOpens = ref(false);
+
+    const preferredLocale = useLocalStorage("preferred-locale", "en");
+
+    const handleTriggerClick = () => {
+      optionOpens.value = true;
+    }
+
+    const availableLocales = computed(() => ['fr', 'en']);
+
+    const selectLocale = (selectedLocale) => {
+      locale.value = selectedLocale;
+      preferredLocale.value = selectedLocale;
+    }
+
+    return {
+      optionOpens,
+      flagOutline,
+      selectLocale,
+      availableLocales,
+      handleTriggerClick
+    }
+  }
+}
+</script>
+
+<style scoped>
+
+</style>

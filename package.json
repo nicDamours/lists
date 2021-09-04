@@ -9,7 +9,9 @@
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
-    "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\""
+    "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\"",
+    "production-android": "export CAPACITOR_ANDROID_STUDIO_PATH=$(which studio) && ionic capacitor build android --prod --release",
+    "build-android": "export CAPACITOR_ANDROID_STUDIO_PATH=$(which studio) && ionic capacitor build android"
   },
   "dependencies": {
     "@capacitor/android": "^3.2.0",
@@ -18,9 +20,13 @@
     "@capacitor/haptics": "1.0.2",
     "@capacitor/keyboard": "1.0.2",
     "@capacitor/status-bar": "1.0.2",
+    "@ionic-native/core": "^5.36.0",
+    "@ionic-native/firebase-authentication": "^5.36.0",
     "@ionic/vue": "^5.4.0",
     "@ionic/vue-router": "^5.4.0",
     "@vueuse/core": "^6.0.0",
+    "cordova-plugin-firebase-authentication": "^5.0.0",
+    "cordova-support-android-plugin": "^1.0.2",
     "core-js": "^3.6.5",
     "firebase": "^9.0.0",
     "firebaseui": "^0.600.0",

@@ -1,11 +1,11 @@
 import {alertController} from "@ionic/vue";
 
 export default function useAlert() {
-    const showNumberAlert = async (message: string, value = 1) => {
+    const showNumberAlert = async (message: string, value = 1, title = "") => {
         // eslint-disable-next-line no-async-promise-executor
         return new Promise(async (resolve) => {
             const confirm = await alertController.create({
-                header: 'Confirm !',
+                header: title,
                 message: message,
                 inputs: [
                     {

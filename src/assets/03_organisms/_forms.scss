@@ -16,4 +16,15 @@
       align-items: center;
     }
   }
+
+  &__new-label {
+    opacity: 0.7;
+    font-weight: 700;
+    font-style: italic;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
 }

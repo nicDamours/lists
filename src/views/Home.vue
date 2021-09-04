@@ -4,7 +4,10 @@
       <ion-toolbar>
         <ion-title>Lists</ion-title>
         <ion-buttons slot="end">
-          <ion-button fill="clear" @click="logOutCurrentUser">LOG OUT</ion-button>
+          <ion-button fill="clear" @click="logOutCurrentUser">
+            LOG OUT
+            <ion-icon :icon="logOutOutline" slot="end" />
+          </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
@@ -36,7 +39,7 @@ import {
   IonButton,
   IonButtons,
   IonContent,
-  IonHeader,
+  IonHeader, IonIcon,
   IonItem,
   IonList,
   IonPage,
@@ -54,6 +57,7 @@ import NewItemForm from "@/components/NewItemForm.vue";
 import ListService from "@/services/ListService";
 import { signOut } from "firebase/auth"
 import getAuthInstance from "@/auth";
+import {logOutOutline, arrowForwardOutline} from 'ionicons/icons';
 
 export default {
   name: 'Home',
@@ -67,6 +71,7 @@ export default {
     IonRefresherContent,
     IonTitle,
     IonToolbar,
+    IonIcon,
     IonText,
     IonItem,
     IonButtons,
@@ -98,6 +103,8 @@ export default {
     }
 
     return {
+      arrowForwardOutline,
+      logOutOutline,
       lists,
       openList,
       logOutCurrentUser,

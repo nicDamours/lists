@@ -7,7 +7,10 @@
           <ion-back-button default-href="/lists"></ion-back-button>
         </ion-buttons>
         <ion-buttons slot="end">
-          <ion-button @click="handleDeleteList" color="danger">Delete</ion-button>
+          <ion-button @click="handleDeleteList" color="danger">
+            Delete
+            <ion-icon :icon="trashOutline" slot="end"></ion-icon>
+          </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
@@ -23,10 +26,11 @@
       </ion-header>
 
       <ion-list v-for="(section, sectionIndex) in list.sections" :key="section.id">
-        <ion-list-header>
-            <ion-label>{{ section.name }}</ion-label>
+        <ion-list-header lines="full">
+            <ion-title>{{ section.name }}</ion-title>
             <ion-button color="danger" @click="deleteSection(section.id)">
               remove
+              <ion-icon :icon="removeOutline" slot="end"></ion-icon>
             </ion-button>
         </ion-list-header>
 
@@ -34,6 +38,7 @@
           <ion-item-options side="start">
             <ion-item-option @click="deleteItem(sectionIndex, item.id)" color="danger">
               delete
+              <ion-icon :icon="trashOutline" slot="end"></ion-icon>
             </ion-item-option>
           </ion-item-options>
 
@@ -57,14 +62,14 @@
 import {useRoute, useRouter} from "vue-router";
 import {useStore} from "vuex";
 import {computed, ref} from "vue";
-import {addOutline, removeOutline} from 'ionicons/icons';
+import {addOutline, removeOutline, trashOutline} from 'ionicons/icons';
 import {
   IonBackButton,
   IonButton,
   IonButtons,
   IonCheckbox,
   IonContent,
-  IonHeader,
+  IonHeader, IonIcon,
   IonItem,
   IonItemOption,
   IonItemOptions,
@@ -91,6 +96,7 @@ export default {
     IonPage,
     IonContent,
     IonList,
+    IonIcon,
     IonListHeader,
     IonToolbar,
     IonHeader,
@@ -101,7 +107,6 @@ export default {
     IonItem,
     IonCheckbox,
     IonItemSliding,
-    IonLabel,
     IonButton,
     NewItemForm,
     IonBackButton,
@@ -139,17 +144,15 @@ export default {
       await ListService.updateList(copiedList);
     }
 
-    const createNewSection = async () => {
+    const createNewSection = async (value) => {
       const newSection = new Section(UUID.uuidv4());
 
-      newSection.name = newSectionName.value;
+      newSection.name = value
 
       const copiedList = list.value.clone();
       copiedList.sections.push(newSection)
 
       await ListService.updateList(copiedList);
-
-      newSectionName.value = "";
     }
 
     const deleteSection = async (sectionId) => {
@@ -205,6 +208,7 @@ export default {
     return {
       addOutline,
       removeOutline,
+      trashOutline,
       list,
       deleteItem,
       deleteSection,

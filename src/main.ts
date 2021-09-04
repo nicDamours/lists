@@ -22,8 +22,9 @@ import '@ionic/vue/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import "@/assets/styles.css";
 import 'firebaseui/dist/firebaseui.css'
+
+import "@/assets/main.scss";
 
 import store from './store'
 

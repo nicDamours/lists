@@ -1,0 +1,11 @@
+.o-list{
+  &__item {
+    margin-left: 16px;
+    padding-right: 16px;
+
+    &__quantity {
+      padding-left: 16px;
+      opacity: 0.4;
+    }
+  }
+}

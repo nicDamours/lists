@@ -6,7 +6,7 @@
         <ion-buttons slot="end">
           <ion-button fill="clear" @click="logOutCurrentUser">
             {{ t('global.logout') }}
-            <ion-icon :icon="logOutOutline" slot="end" />
+            <ion-icon :icon="logOutOutline" slot="end"/>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
@@ -24,7 +24,7 @@
           <ion-text>{{ list.name }}</ion-text>
         </ion-item>
 
-        <NewItemForm @form-submit="handleNewListSubmit" text="lists.addNewList" />
+        <NewItemForm @form-submit="handleNewListSubmit" text="lists.addNewList"/>
       </ion-list>
     </ion-content>
   </ion-page>
@@ -49,10 +49,11 @@ import {List} from "@/models/dtos/List";
 import {useRouter} from "vue-router";
 import NewItemForm from "@/components/NewItemForm.vue";
 import ListService from "@/services/ListService";
-import { signOut } from "firebase/auth"
-import getAuthInstance from "@/auth";
+import {signOut} from "firebase/auth"
 import {logOutOutline, arrowForwardOutline} from 'ionicons/icons';
 import {useI18n} from "vue-i18n";
+import {Container} from "@/utils/Container";
+import {FirebaseAuthService} from "@/services/FirebaseAuthService";
 
 export default {
   name: 'Home',
@@ -70,11 +71,11 @@ export default {
     IonButtons,
     IonButton
   },
-  setup () {
+  setup() {
     const store = useStore();
     const router = useRouter();
     const lists = computed(() => store.getters['lists/lists']);
-    const { t } = useI18n();
+    const {t} = useI18n();
 
     const openList = async (list) => {
       await router.push({
@@ -93,7 +94,8 @@ export default {
     }
 
     const logOutCurrentUser = async () => {
-      await signOut(getAuthInstance())
+      const auth = Container.get('FirebaseAuthService').auth;
+      await signOut(auth)
     }
 
     return {

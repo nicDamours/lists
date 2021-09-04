@@ -1,14 +1,15 @@
-import getAuthInstance from "@/auth"
 import {onAuthStateChanged} from "firebase/auth";
 import useAuthentication from "@/composable/use-authentication";
 import firebase from "firebase/compat";
 import User = firebase.User;
 import {isPlatform} from "@ionic/vue";
 import {FirebaseAuthentication} from "@ionic-native/firebase-authentication";
+import {Container} from "@/utils/Container";
+import {FirebaseAuthService} from "@/services/FirebaseAuthService";
 
 export default function useBindAuthentication(): Promise<User> {
     const {showAuthenticationModal} = useAuthentication();
-    const authenticationInstance = getAuthInstance();
+    const auth = Container.get<FirebaseAuthService>('FirebaseAuthService').auth
 
     const authenticationCallback = (resolve: Function) => async (user: any) => {
         console.log('in callback')
@@ -16,7 +17,7 @@ export default function useBindAuthentication(): Promise<User> {
             await showAuthenticationModal()
         }
 
-        user = authenticationInstance.currentUser
+        user = auth.currentUser
         resolve(user as User);
     };
 
@@ -28,12 +29,11 @@ export default function useBindAuthentication(): Promise<User> {
                 console.log('user', user);
                 return authenticationCallback(resolve)
             });
+
             FirebaseAuthentication.onAuthStateChanged().toPromise().then(authenticationCallback(resolve));
 
-            return showAuthenticationModal();
-
         } else {
-            onAuthStateChanged(authenticationInstance, authenticationCallback(resolve));
+            onAuthStateChanged(auth, authenticationCallback(resolve));
         }
     })
 }

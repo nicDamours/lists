@@ -14,8 +14,9 @@ import ListConverter from "@/models/converter/ListConverter";
 import {List} from "@/models/dtos/List";
 import useBindAuthentication from "@/composable/use-bind-authentication";
 import {collection, query, where} from "@firebase/firestore";
-import getDatabaseInstance from "@/db";
 import Preferences from "@/components/Preferences.vue";
+import {Container} from "@/utils/Container";
+import {FirebaseDatabaseService} from "@/services/FirebaseDatabaseService";
 
 export default defineComponent({
   name: 'App',
@@ -26,10 +27,11 @@ export default defineComponent({
   },
   setup() {
     const {registerBindings} = useFirestoreBinding<List>()
+    const db = Container.get<FirebaseDatabaseService>('FirebaseDatabaseService').db
 
     useBindAuthentication().then((user) => {
       registerBindings("lists",
-          query(collection(getDatabaseInstance(), "lists"), where('user', '==', user.uid)),
+          query(collection(db, "lists"), where('user', '==', user.uid)),
           {
             storePath: "lists/",
             converter: ListConverter

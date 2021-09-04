@@ -31,6 +31,12 @@ import loadLocaleMessages from './i18n'
 
 import {createI18n} from "vue-i18n";
 
+import containerRegistrationFunction from "@/dependeciesInjections";
+import {Container} from "@/utils/Container";
+import {FirebaseAppService} from "@/services/FirebaseAppService";
+
+containerRegistrationFunction();
+
 const currentLocale = window.localStorage.getItem("preferred-locale");
 
 const i18n = createI18n({
@@ -40,6 +46,7 @@ const i18n = createI18n({
   messages: loadLocaleMessages()
 })
 
+Container.get<FirebaseAppService>('FirebaseAppService');
 
 const app = createApp(App)
     .use(i18n)

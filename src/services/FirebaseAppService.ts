@@ -1,8 +1,10 @@
-import {initializeApp} from "firebase/app";
+import {FirebaseApp, initializeApp} from "firebase/app";
 
-export default function getAppInstance() {
-    if(!('firebaseApp' in window)) {
-        (window as any).firebaseApp = initializeApp({
+export class FirebaseAppService {
+    private readonly _app: FirebaseApp;
+
+    constructor() {
+        this._app = initializeApp({
             apiKey: process.env.VUE_APP_FIRESTORE_API_KEY,
             authDomain: process.env.VUE_APP_FIRESTORE_AUTH_DOMAIN,
             projectId: process.env.VUE_APP_FIRESTORE_PROJECT_ID,
@@ -11,7 +13,11 @@ export default function getAppInstance() {
             appId: process.env.VUE_APP_FIRESTORE_APP_ID,
             measurementId: process.env.VUE_APP_FIRESTORE_MEASUREMENT_ID
         });
+
+        console.log('initialized app');
     }
 
-    return (window as any).firebaseApp
+    get app(): FirebaseApp {
+        return this._app;
+    }
 }

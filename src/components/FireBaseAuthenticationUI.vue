@@ -6,12 +6,12 @@
 import * as firebaseUI from 'firebaseui';
 import getAuthInstance from "@/auth"
 import {computed, onMounted} from "vue";
-import { GoogleAuthProvider } from "firebase/auth";
+import {GoogleAuthProvider, EmailAuthProvider} from "firebase/auth";
 
 export default {
   name: "FireBaseAuthenticationUI",
   emits: ["authentication-success"],
-  setup(_, { emit }) {
+  setup(_, {emit}) {
 
     const UI = computed(() => {
       const instance = firebaseUI.auth.AuthUI.getInstance();
@@ -27,7 +27,8 @@ export default {
           }
         },
         signInOptions: [
-          GoogleAuthProvider.PROVIDER_ID
+          GoogleAuthProvider.PROVIDER_ID,
+          EmailAuthProvider.PROVIDER_ID,
         ]
       });
     })

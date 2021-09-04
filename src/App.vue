@@ -1,6 +1,8 @@
 <template>
   <ion-app>
     <ion-router-outlet/>
+
+    <ThemeToggle />
   </ion-app>
 </template>
 
@@ -13,10 +15,12 @@ import {List} from "@/models/dtos/List";
 import useBindAuthentication from "@/composable/use-bind-authentication";
 import {collection, query, where} from "@firebase/firestore";
 import getDatabaseInstance from "@/db";
+import ThemeToggle from "@/components/ThemeToggle.vue";
 
 export default defineComponent({
   name: 'App',
   components: {
+    ThemeToggle,
     IonApp,
     IonRouterOutlet
   },

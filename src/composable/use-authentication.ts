@@ -13,18 +13,27 @@ export default function useAuthentication() {
     }
 
     const showAuthenticationModal = async () => {
-        const modal = await modalController
-            .create({
+        return new Promise(resolve => {
+            return modalController.create({
                 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
                 // @ts-ignore
                 component: LoginModal,
-                cssClass: 'my-custom-class',
+                cssClass: 'o-modal__authentication',
                 componentProps: {
                     title: 'New Title'
                 },
             })
+            .then(modal => {
+                modal.present()
+                return modal;
+            })
+            .then(modal => {
+                modal.onDidDismiss().then(result => {
+                    resolve(result);
+                })
+            })
+        })
 
-        await modal.present();
     }
 
     return {

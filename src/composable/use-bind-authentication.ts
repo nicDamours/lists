@@ -6,14 +6,15 @@ import User = firebase.User;
 
 export default function useBindAuthentication(): Promise<User> {
     const { showAuthenticationModal } = useAuthentication();
-
+    const authenticationInstance = getAuthInstance();
     return new Promise(resolve => {
-        onAuthStateChanged(getAuthInstance(), async user => {
-            if(!user) {
+        onAuthStateChanged(authenticationInstance, async user => {
+            if(user === null) {
                 await showAuthenticationModal()
             }
 
-            resolve(getAuthInstance().currentUser as User);
+            user = authenticationInstance.currentUser
+            resolve(user as User);
         });
     })
 }

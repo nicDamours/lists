@@ -27,3 +27,8 @@
     padding-left: 16px;
     opacity: 0.4;
 }
+
+
+.m-theme-toggle {
+    z-index: 100000000;
+}

@@ -4,7 +4,7 @@
       <ion-toolbar>
         <ion-title size="large">{{ list.name }}</ion-title>
         <ion-buttons slot="start">
-          <ion-back-button default-href="lists"></ion-back-button>
+          <ion-back-button default-href="/lists"></ion-back-button>
         </ion-buttons>
         <ion-buttons slot="end">
           <ion-button @click="handleDeleteList" color="danger">Delete</ion-button>
@@ -17,7 +17,7 @@
         <ion-toolbar>
           <ion-title size="large">{{ list.name }}</ion-title>
           <ion-buttons slot="end">
-            <ion-back-button default-href="/lists"></ion-back-button>
+
           </ion-buttons>
         </ion-toolbar>
       </ion-header>

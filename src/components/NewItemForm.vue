@@ -7,7 +7,7 @@
           {{ t(text) }}
         </ion-button>
       </div>
-      <div class="o-form__group--new" v-if="hasFocus" @blur="handleGroupBlur">
+      <div class="o-form__group--new" v-if="hasFocus">
         <ion-item class="o-form__group-input">
           <ion-label position="floating">{{ t(text) }}</ion-label>
             <ion-input type="text" v-model="newItemName" :autofocus="hasFocus" @ion-blur="handleGroupBlur" />

@@ -41,8 +41,16 @@
             </ion-item-option>
           </ion-item-options>
 
-          <ion-item button detail="false" @click="event => toggleItemDone(sectionIndex, itemIndex, !item.done, event)">
-            <ion-text>{{ item.name }}</ion-text>
+          <ion-item class="o-form__group-input" v-if="item.editing">
+            <ion-input type="text" v-model="item.name" :id="'item-input-' + item.id" />
+
+            <ion-button slot="end" color="success" fill="clear" @click="() => handleEditingSaveClick(item)">
+              {{ t("global.save") }}
+              <ion-icon :icon="checkmarkOutline" slot="end"></ion-icon>
+            </ion-button>
+          </ion-item>
+          <ion-item button detail="false" @click.self="event => toggleItemDone(sectionIndex, itemIndex, !item.done, event)" v-if="!item.editing">
+            <ion-text @click.self="toggleItem(item)">{{ item.name }}</ion-text>
             <ion-text class="o-list__item__quantity"
                       @click="event => showQuantityChange(sectionIndex, itemIndex, event)"> x {{ item.quantity }}
             </ion-text>
@@ -62,8 +70,8 @@
 <script>
 import {useRoute, useRouter} from "vue-router";
 import {useStore} from "vuex";
-import {computed, ref} from "vue";
-import {addOutline, removeOutline, trashOutline} from 'ionicons/icons';
+import {computed, onBeforeUpdate, ref, reactive, nextTick} from "vue";
+import {addOutline, removeOutline, trashOutline, checkmarkOutline} from 'ionicons/icons';
 import {
   IonBackButton,
   IonButton,
@@ -71,7 +79,7 @@ import {
   IonCheckbox,
   IonContent,
   IonHeader,
-  IonIcon,
+  IonIcon, IonInput,
   IonItem,
   IonItemOption,
   IonItemOptions,
@@ -110,6 +118,7 @@ export default {
     IonCheckbox,
     IonItemSliding,
     IonButton,
+    IonInput,
     NewItemForm,
     IonBackButton,
     IonButtons,
@@ -121,6 +130,8 @@ export default {
     const router = useRouter();
     const { t } = useI18n();
 
+    const itemsInputRefs = ref({});
+
     const currentListId = computed(() => route.params.id)
 
     const {showNumberAlert} = useAlert();
@@ -128,9 +139,14 @@ export default {
 
     const newSectionName = ref("");
 
+    onBeforeUpdate(() => {
+      itemsInputRefs.value = {};
+    });
+
     const list = computed(() => store.getters['lists/getListById'](currentListId.value));
 
     const toggleItemDone = async (sectionIndex, itemIndex, value, $event) => {
+      console.log('item toggled')
       const target = $event.target;
       if (!target.classList.contains("o-list__item__quantity")) {
         const copiedList = list.value.clone();
@@ -210,15 +226,25 @@ export default {
       }
     }
 
+    const toggleItem = item => {
+      item.editing = true;
+      nextTick(() => {
+        document.getElementById('item-input-' + item.id).focus()
+      })
+    }
+
     return {
       t,
       addOutline,
       removeOutline,
       trashOutline,
+      checkmarkOutline,
       list,
+      toggleItem,
       deleteItem,
       deleteSection,
       createNewItem,
+      itemsInputRefs,
       newSectionName,
       toggleItemDone,
       handleDeleteList,

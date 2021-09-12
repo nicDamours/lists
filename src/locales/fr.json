@@ -8,7 +8,8 @@
     "confirm": "Confirmer",
     "cancel": "Annuler",
     "delete": "Supprimer",
-    "remove": "Retirer"
+    "remove": "Retirer",
+    "save": "Sauvegarder"
   },
   "lists": {
     "addNewList": "Ajouter une nouvelle liste",

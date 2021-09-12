@@ -5,6 +5,7 @@ export class Item implements IdentifiableRecord{
     private _name!: string;
     private _done = false;
     private _quantity = 1;
+    private _editing = false;
 
     constructor(id: string, name: string) {
         this._id = id;
@@ -41,6 +42,14 @@ export class Item implements IdentifiableRecord{
 
     set quantity(value: number) {
         this._quantity = value;
+    }
+
+    get editing(): boolean {
+        return this._editing;
+    }
+
+    set editing(value: boolean) {
+        this._editing = value;
     }
 
     isEqual(other: IdentifiableRecord): boolean {

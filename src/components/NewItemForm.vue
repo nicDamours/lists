@@ -12,7 +12,7 @@
           <ion-label position="floating">{{ t(text) }}</ion-label>
             <ion-input type="text" v-model="newItemName" :autofocus="hasFocus" @ion-blur="handleGroupBlur" />
         </ion-item>
-        <ion-button slot="end" type="submit" color="success" fill="clear">
+        <ion-button slot="end" type="submit" color="success" fill="clear" class="o-form__submit-button">
           {{ t("global.add") }}
           <ion-icon :icon="addOutline" slot="end"></ion-icon>
         </ion-button>

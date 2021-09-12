@@ -33,7 +33,7 @@ export default {
       return instance || new firebaseUI.auth.AuthUI(auth);
     });
 
-    const isMobile = computed(() => isPlatform('ios') || isPlatform('android'))
+    const isMobile = computed(() => false)
 
     onMounted(() => {
       if(!isMobile.value) {

@@ -35,6 +35,8 @@ import containerRegistrationFunction from "@/dependeciesInjections";
 import {Container} from "@/utils/Container";
 import {FirebaseAppService} from "@/services/FirebaseAppService";
 
+import "./registerServiceWorker";
+
 containerRegistrationFunction();
 
 const currentLocale = window.localStorage.getItem("preferred-locale");

@@ -1,8 +1,9 @@
 <template>
   <ion-app>
+    <LoadingBar />
     <ion-router-outlet/>
 
-    <Preferences />
+    <Preferences/>
   </ion-app>
 </template>
 
@@ -17,10 +18,12 @@ import {collection, query, where} from "@firebase/firestore";
 import Preferences from "@/components/Preferences.vue";
 import {Container} from "@/utils/Container";
 import {FirebaseDatabaseService} from "@/services/FirebaseDatabaseService";
+import LoadingBar from "@/components/LoadingBar.vue";
 
 export default defineComponent({
   name: 'App',
   components: {
+    LoadingBar,
     Preferences,
     IonApp,
     IonRouterOutlet

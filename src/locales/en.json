@@ -22,5 +22,8 @@
   "items": {
     "addNewItem": "Add a new item",
     "confirmDeleteItem": "Are you sur you want to delete this item ?"
+  },
+  "errors": {
+    "fieldCannotBeEmpty": "This field cannot be empty."
   }
 }

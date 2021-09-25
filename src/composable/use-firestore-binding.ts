@@ -3,6 +3,7 @@ import {FirestoreDataConverter, onSnapshot, Query} from "firebase/firestore";
 import {MUTATION_NAME_ADD, MUTATION_NAME_DELETE, MUTATION_NAME_UPDATE} from "@/store/modules/firestoreModule";
 import {onBeforeUnmount} from "vue";
 import {IdentifiableRecord} from "@/models/Interfaces/IdentifiableRecord";
+import useLoading from "@/composable/use-loading";
 
 export interface FireStoreBindingOptions<S extends IdentifiableRecord> {
     collectionName?: string;
@@ -12,6 +13,8 @@ export interface FireStoreBindingOptions<S extends IdentifiableRecord> {
 
 export default function useFirestoreBinding<S extends IdentifiableRecord>() {
     const store = useStore();
+
+    const { startLoading, stopLoading } = useLoading();
 
     const registerBindings = (storeProperty: string, collectionQuery: Query, options: FireStoreBindingOptions<S>) => {
         const allOptions: FireStoreBindingOptions<S> = {
@@ -26,6 +29,8 @@ export default function useFirestoreBinding<S extends IdentifiableRecord>() {
         }
 
         const unsubscribe = onSnapshot(collectionQuery, async (snapshot) => {
+            await startLoading()
+
             snapshot.docChanges().forEach((change) => {
                 let data;
                 if(allOptions.converter) {
@@ -47,6 +52,8 @@ export default function useFirestoreBinding<S extends IdentifiableRecord>() {
                     store.commit(`${allOptions.storePath}${MUTATION_NAME_DELETE}${storeProperty.toUpperCase()}`, change.doc.id, { root: true})
                 }
             });
+
+            await stopLoading();
         });
 
         onBeforeUnmount(() => {

@@ -41,13 +41,13 @@
             </ion-item-option>
           </ion-item-options>
 
-          <ion-item class="o-form__group-input" v-if="item.editing">
-            <ion-input type="text" v-model="item.name" :id="'item-input-' + item.id" />
+          <ion-item class="o-form__group-input" v-if="item.editing" @blur.capture="(event) => handleItemBlur(item, event)">
+              <ion-input type="text" v-model="item.name" :ref="el => refs[item.id] = el"/>
 
-            <ion-button slot="end" color="success" fill="clear" @click="() => handleEditingSaveClick(item)">
-              {{ t("global.save") }}
-              <ion-icon :icon="checkmarkOutline" slot="end"></ion-icon>
-            </ion-button>
+              <ion-button slot="end" color="success" fill="clear" class="o-form__update-save-button" @click="() => handleEditingSaveClick(item, itemIndex, sectionIndex)">
+                {{ t("global.save") }}
+                <ion-icon :icon="checkmarkOutline" slot="end"></ion-icon>
+              </ion-button>
           </ion-item>
           <ion-item button detail="false" @click.self="event => toggleItemDone(sectionIndex, itemIndex, !item.done, event)" v-if="!item.editing">
             <ion-text @click.self="toggleItem(item)">{{ item.name }}</ion-text>
@@ -70,7 +70,7 @@
 <script>
 import {useRoute, useRouter} from "vue-router";
 import {useStore} from "vuex";
-import {computed, onBeforeUpdate, ref, reactive, nextTick} from "vue";
+import {computed, ref} from "vue";
 import {addOutline, removeOutline, trashOutline, checkmarkOutline} from 'ionicons/icons';
 import {
   IonBackButton,
@@ -91,7 +91,6 @@ import {
   IonTitle,
   IonToolbar
 } from "@ionic/vue";
-import ListService from "@/services/ListService";
 import {Item} from "@/models/dtos/Item";
 import UUID from "@/utils/UUID";
 import {Section} from "@/models/dtos/Section";
@@ -99,6 +98,8 @@ import NewItemForm from "@/components/NewItemForm";
 import useConfirm from "@/composable/use-confirm";
 import useAlert from "@/composable/use-alerts";
 import {useI18n} from "vue-i18n";
+import useInputFocus from "@/composable/use-input-focus";
+import useListService from "@/composable/use-list-service";
 
 export default {
   name: "ListView",
@@ -129,30 +130,26 @@ export default {
     const store = useStore()
     const router = useRouter();
     const { t } = useI18n();
-
-    const itemsInputRefs = ref({});
+    const refs = ref({});
+    const { updateList, deleteList } = useListService();
 
     const currentListId = computed(() => route.params.id)
 
     const {showNumberAlert} = useAlert();
     const { showConfirm } = useConfirm();
+    const { defineInputFocus } = useInputFocus(refs);
 
     const newSectionName = ref("");
-
-    onBeforeUpdate(() => {
-      itemsInputRefs.value = {};
-    });
 
     const list = computed(() => store.getters['lists/getListById'](currentListId.value));
 
     const toggleItemDone = async (sectionIndex, itemIndex, value, $event) => {
-      console.log('item toggled')
       const target = $event.target;
       if (!target.classList.contains("o-list__item__quantity")) {
         const copiedList = list.value.clone();
         copiedList.sections[sectionIndex].items[itemIndex].done = value;
 
-        await ListService.updateList(copiedList)
+        await updateList(copiedList)
       }
     }
 
@@ -162,7 +159,7 @@ export default {
       const copiedList = list.value.clone();
       copiedList.sections[sectionIndex].items.push(newItem);
 
-      await ListService.updateList(copiedList);
+      await updateList(copiedList);
     }
 
     const createNewSection = async (value) => {
@@ -173,7 +170,7 @@ export default {
       const copiedList = list.value.clone();
       copiedList.sections.push(newSection)
 
-      await ListService.updateList(copiedList);
+      await updateList(copiedList);
     }
 
     const deleteSection = async (sectionId) => {
@@ -184,7 +181,7 @@ export default {
 
         copiedList.sections = copiedList.sections.filter(item => item.id !== sectionId)
 
-        await ListService.updateList(copiedList);
+        await updateList(copiedList);
       }
     }
 
@@ -195,7 +192,7 @@ export default {
         const copiedList = list.value.clone();
         copiedList.sections[sectionIndex].items = copiedList.sections[sectionIndex].items.filter(item => item.id !== itemId);
 
-        await ListService.updateList(copiedList);
+        await updateList(copiedList);
       }
     }
 
@@ -204,7 +201,7 @@ export default {
 
       if (results) {
 
-        await ListService.deleteList(list.value);
+        await deleteList(list.value);
 
         await router.push({name: "Home"})
       }
@@ -221,16 +218,29 @@ export default {
         if (results !== false) {
           copiedList.sections[sectionIndex].items[itemIndex].quantity = results;
 
-          await ListService.updateList(copiedList)
+          await updateList(copiedList)
         }
       }
     }
 
-    const toggleItem = item => {
+    const toggleItem = async item => {
       item.editing = true;
-      nextTick(() => {
-        document.getElementById('item-input-' + item.id).focus()
-      })
+      await defineInputFocus(item.id, true)
+    }
+
+    const handleItemBlur = async (item, event) => {
+      if(event.relatedTarget && !event.relatedTarget.classList.contains('o-form__update-save-button')) {
+        item.editing = false;
+        await defineInputFocus(item.id, false);
+      }
+    }
+
+    const handleEditingSaveClick = async (item, index, sectionIndex) => {
+      const copiedList = list.value.clone();
+      copiedList.sections[sectionIndex].items[index] = item;
+
+      await updateList(copiedList)
+      await defineInputFocus(item.id, false);
     }
 
     return {
@@ -240,16 +250,18 @@ export default {
       trashOutline,
       checkmarkOutline,
       list,
+      refs,
       toggleItem,
       deleteItem,
       deleteSection,
       createNewItem,
-      itemsInputRefs,
       newSectionName,
+      handleItemBlur,
       toggleItemDone,
       handleDeleteList,
       createNewSection,
-      showQuantityChange
+      showQuantityChange,
+      handleEditingSaveClick
     }
   }
 }

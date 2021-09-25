@@ -22,5 +22,8 @@
   "items": {
     "addNewItem": "Ajouter un nouvel element",
     "confirmDeleteItem": "Êtes-vous sûr de vouloir supprimer cet élément ?"
+  },
+  "errors": {
+    "fieldCannotBeEmpty": "Ce champ ne peux être vide."
   }
 }

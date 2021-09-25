@@ -53,7 +53,7 @@ import {signOut} from "firebase/auth"
 import {logOutOutline, arrowForwardOutline} from 'ionicons/icons';
 import {useI18n} from "vue-i18n";
 import {Container} from "@/utils/Container";
-import {FirebaseAuthService} from "@/services/FirebaseAuthService";
+import useListService from "@/composable/use-list-service";
 
 export default {
   name: 'Home',
@@ -69,13 +69,14 @@ export default {
     IonText,
     IonItem,
     IonButtons,
-    IonButton
+    IonButton,
   },
   setup() {
     const store = useStore();
     const router = useRouter();
     const lists = computed(() => store.getters['lists/lists']);
     const {t} = useI18n();
+    const { addList } = useListService();
 
     const openList = async (list) => {
       await router.push({
@@ -89,8 +90,7 @@ export default {
     const handleNewListSubmit = async (value) => {
       const dto = new List("irrelevent", value)
 
-      await ListService.addList(dto);
-
+      await addList(dto);
     }
 
     const logOutCurrentUser = async () => {

@@ -15,7 +15,7 @@ export default function useLoading() {
         return defineLoadingState(false);
     }
 
-    const callAsync = async (cb: (args: any[]) => Promise<any>, ...args: any[]) => {
+    const callAsync = async (cb: (...args: any[]) => Promise<any>, ...args: any[]) => {
         await startLoading();
         // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
         // @ts-ignore

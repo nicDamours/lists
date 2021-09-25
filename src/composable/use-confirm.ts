@@ -30,7 +30,36 @@ export default function useConfirm() {
             await confirm.present();
         });
     }
+
+    const showConfirmWithInput = async (message: string, inputs: any[]) => {
+        // eslint-disable-next-line no-async-promise-executor
+        return new Promise(async (resolve) => {
+            const confirm = await alertController.create({
+                header: t('global.confirmHeader'),
+                message: message,
+                buttons: [
+                    {
+                        text: t('global.cancel'),
+                        role: 'cancel',
+                        handler: () => {
+                            return resolve(false);
+                        },
+                    },
+                    {
+                        text: t('global.confirm'),
+                        handler: () => {
+                            return resolve(true);
+                        },
+                    },
+                ],
+                inputs
+            });
+
+            await confirm.present();
+        });
+    }
     return {
-        showConfirm
+        showConfirm,
+        showConfirmWithInput
     }
 }

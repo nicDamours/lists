@@ -11,7 +11,7 @@
         <ion-item class="o-form__group-input">
           <ContainerWithErrors  :errors="inputErrors">
             <ion-label position="floating" :color="hasErrors ? 'danger' : 'primary'" >{{ t(text) }}</ion-label>
-            <ion-input type="text" v-model="newItemName" :ref="el => refs[uuid] = el" :color="hasErrors ? 'danger' : 'primary'" class="o-form__input"/>
+            <ion-input type="text" v-model="newItemName" :ref="el => refs[uuid] = el" :color="hasErrors ? 'danger' : 'dark'" class="o-form__input"/>
           </ContainerWithErrors>
         </ion-item>
         <ion-button slot="end" type="submit" color="success" fill="clear" class="o-form__submit-button">

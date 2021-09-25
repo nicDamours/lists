@@ -7,9 +7,8 @@
           <ion-back-button default-href="/lists"></ion-back-button>
         </ion-buttons>
         <ion-buttons slot="end">
-          <ion-button @click="handleDeleteList" color="danger">
-            {{ t('global.delete') }}
-            <ion-icon :icon="trashOutline" slot="end"></ion-icon>
+          <ion-button @click="openPopover">
+            <ion-icon :icon="settingsOutline" slot="icon-only"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
@@ -68,10 +67,10 @@
 </template>
 
 <script>
-import {useRoute, useRouter} from "vue-router";
+import {useRoute} from "vue-router";
 import {useStore} from "vuex";
 import {computed, ref} from "vue";
-import {addOutline, removeOutline, trashOutline, checkmarkOutline} from 'ionicons/icons';
+import {addOutline, removeOutline, trashOutline, checkmarkOutline, settingsOutline} from 'ionicons/icons';
 import {
   IonBackButton,
   IonButton,
@@ -89,7 +88,7 @@ import {
   IonPage,
   IonText,
   IonTitle,
-  IonToolbar
+  IonToolbar, popoverController
 } from "@ionic/vue";
 import {Item} from "@/models/dtos/Item";
 import UUID from "@/utils/UUID";
@@ -100,6 +99,7 @@ import useAlert from "@/composable/use-alerts";
 import {useI18n} from "vue-i18n";
 import useInputFocus from "@/composable/use-input-focus";
 import useListService from "@/composable/use-list-service";
+import ListOptionsPopOver from "@/components/ListOptionsPopOver";
 
 export default {
   name: "ListView",
@@ -128,10 +128,9 @@ export default {
   setup() {
     const route = useRoute();
     const store = useStore()
-    const router = useRouter();
     const { t } = useI18n();
     const refs = ref({});
-    const { updateList, deleteList } = useListService();
+    const { updateList } = useListService();
 
     const currentListId = computed(() => route.params.id)
 
@@ -196,16 +195,7 @@ export default {
       }
     }
 
-    const handleDeleteList = async () => {
-      const results = await showConfirm(t("lists.confirmDeleteList"));
 
-      if (results) {
-
-        await deleteList(list.value);
-
-        await router.push({name: "Home"})
-      }
-    }
 
     const showQuantityChange = async (sectionIndex, itemIndex, event) => {
       const target = event.target
@@ -243,14 +233,32 @@ export default {
       await defineInputFocus(item.id, false);
     }
 
+    const openPopover = async (ev) => {
+      const popover = await popoverController
+          .create({
+            component: ListOptionsPopOver,
+            componentProps: {
+              list
+            },
+            cssClass: 'my-custom-class',
+            event: ev,
+            translucent: true
+          })
+      await popover.present();
+
+      await popover.onDidDismiss();
+    }
+
     return {
       t,
       addOutline,
       removeOutline,
       trashOutline,
       checkmarkOutline,
+      settingsOutline,
       list,
       refs,
+      openPopover,
       toggleItem,
       deleteItem,
       deleteSection,
@@ -258,7 +266,6 @@ export default {
       newSectionName,
       handleItemBlur,
       toggleItemDone,
-      handleDeleteList,
       createNewSection,
       showQuantityChange,
       handleEditingSaveClick

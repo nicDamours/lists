@@ -9,11 +9,14 @@
     "cancel": "Annuler",
     "delete": "Supprimer",
     "remove": "Retirer",
-    "save": "Sauvegarder"
+    "save": "Sauvegarder",
+    "empty": "Vider"
   },
   "lists": {
     "addNewList": "Ajouter une nouvelle liste",
-    "confirmDeleteList": "Êtes-vous sûr de vouloir supprimer cette liste ?"
+    "confirmDeleteList": "Êtes-vous sûr de vouloir supprimer cette liste ?",
+    "confirmEmptyList": "Êtes-vous sûr de vouloir vider cette liste ?",
+    "keepSections": "Garder les sections."
   },
   "sections": {
     "addNewSection": "Ajouter une nouvelle section",

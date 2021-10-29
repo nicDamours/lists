@@ -1,6 +1,10 @@
 <template>
   <ion-content>
     <ion-list>
+      <ion-item button @click="handleShare">
+        <ion-text>{{ t('global.share')}}</ion-text>
+        <ion-icon :icon="shareOutline" slot="start"></ion-icon>
+      </ion-item>
       <ion-item button @click="handleEmptyList">
         <ion-text color="danger">{{ t('global.empty') }}</ion-text>
         <ion-icon :icon="closeCircleOutline" slot="start" color="danger"></ion-icon>
@@ -14,14 +18,18 @@
 </template>
 
 <script>
-import {closeCircleOutline, settingsOutline, trashOutline} from 'ionicons/icons';
-import {IonContent, IonIcon, IonItem, IonList, IonText, popoverController} from "@ionic/vue";
+import {closeCircleOutline, settingsOutline, trashOutline, shareOutline} from 'ionicons/icons';
+import {IonContent, IonIcon, IonItem, IonList, IonText, modalController, popoverController} from "@ionic/vue";
 import {useI18n} from "vue-i18n";
 import {toRefs} from "vue";
 import useConfirm from "@/composable/use-confirm";
 import useListService from "@/composable/use-list-service";
 import {useRouter} from "vue-router";
 import {List} from "@/models/dtos/List";
+import ShareWithUserModal from "@/components/modal/ShareWithUserModal";
+import {FirebaseFunctionService} from "@/services/FirebaseFunctionService";
+import useCloudFunctions from "@/composable/use-cloud-functions";
+import useToast from "@/composable/use-toast";
 
 export default {
   name: "ListOptionsPopOver",
@@ -41,6 +49,8 @@ export default {
     const {showConfirm, showConfirmWithInput} = useConfirm();
     const router = useRouter();
     const {deleteList, updateList} = useListService();
+    const{ callFunction } = useCloudFunctions();
+    const { dangerToast } = useToast();
 
     const handleDeleteList = async () => {
       const results = await showConfirm(t("lists.confirmDeleteList"));
@@ -85,10 +95,37 @@ export default {
       }
     }
 
+    const handleShare = async () => {
+      const modal = await modalController
+          .create({
+            component: ShareWithUserModal,
+          })
+      await modal.present();
+
+      const value = await modal.onDidDismiss()
+
+      if(value.data) {
+        try {
+          await callFunction('shareWithEmail', {
+            list: list.value.id,
+            email: value.data
+          });
+        } catch(e) {
+          await dangerToast(e.message);
+        } finally {
+          await popoverController.dismiss();
+        }
+      } else {
+        await popoverController.dismiss();
+      }
+    }
+
     return {
       t,
+      handleShare,
       handleEmptyList,
       trashOutline,
+      shareOutline,
       settingsOutline,
       closeCircleOutline,
       handleDeleteList

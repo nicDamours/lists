@@ -10,7 +10,9 @@
     "delete": "Delete",
     "remove": "Remove",
     "save": "Save",
-    "empty": "Empty"
+    "empty": "Empty",
+    "close": "Close",
+    "share": "Share"
   },
   "lists": {
     "addNewList": "Add a new list",
@@ -28,5 +30,18 @@
   },
   "errors": {
     "fieldCannotBeEmpty": "This field cannot be empty."
+  },
+  "shareRequest": {
+    "item": {
+      "textReceived": "{authorName} wants to share the list \"{listName}\" with you.",
+      "decline": "Decline",
+      "accept": "Accept",
+      "revoke": "Revoke"
+    },
+    "successfullyAcceptedRequest": "Share request accepted successfully",
+    "successfullyDeclinedRequest": "Share request declined successfully",
+    "title": "Share Request",
+    "receivedRequest": "Received requests",
+    "issuedRequest": "Sent requests"
   }
 }

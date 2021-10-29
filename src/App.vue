@@ -19,6 +19,9 @@ import Preferences from "@/components/Preferences.vue";
 import {Container} from "@/utils/Container";
 import {FirebaseDatabaseService} from "@/services/FirebaseDatabaseService";
 import LoadingBar from "@/components/LoadingBar.vue";
+import useLoading from "@/composable/use-loading";
+import {ShareRequestConverter} from "@/models/converter/ShareRequestConverter";
+import ShareRequest from "@/models/dtos/ShareRequest";
 
 export default defineComponent({
   name: 'App',
@@ -29,17 +32,31 @@ export default defineComponent({
     IonRouterOutlet
   },
   setup() {
-    const {registerBindings} = useFirestoreBinding<List>()
+    const { startLoading } = useLoading();
+    const {registerBindings} = useFirestoreBinding()
     const db = Container.get<FirebaseDatabaseService>('FirebaseDatabaseService').db
 
-    useBindAuthentication().then((user) => {
-      registerBindings("lists",
-          query(collection(db, "lists"), where('user', '==', user.uid)),
-          {
-            storePath: "lists/",
-            converter: ListConverter
-          });
-    });
+    startLoading().then(() => {
+      useBindAuthentication().then((user) => {
+        registerBindings<List>("lists",
+            [
+                query(collection(db, "lists"), where('user', '==', user.uid)),
+                query(collection(db, "lists"), where( 'sharedWith', 'array-contains', user.uid)),
+            ],
+            {
+              storePath: "lists/",
+              converter: ListConverter
+            });
+
+        registerBindings<ShareRequest>("shareRequests", [
+            query(collection(db, "shareRequest"), where("targetId", '==', user.uid)),
+            query(collection(db, "shareRequest"), where("authorId", '==', user.uid))
+        ],{
+          storePath: "shareRequests/",
+          converter: ShareRequestConverter
+        })
+      });
+    })
   }
 });
 </script>

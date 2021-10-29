@@ -1,0 +1,9 @@
+.m-floating-badge {
+  position: relative;
+
+  &__badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}

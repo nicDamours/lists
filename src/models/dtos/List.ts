@@ -1,11 +1,15 @@
 import {Section} from "@/models/dtos/Section";
 import {IdentifiableRecord} from "@/models/Interfaces/IdentifiableRecord";
+import {SharedUser} from "@/models/dtos/SharedUser";
 
 export class List implements IdentifiableRecord {
     private _id: string;
     private _name: string;
+    private _isSharedWithCurrentUser = false;
+    private _originalAuthor: string | null = null;
 
     private _sections: Section[] = [];
+    private _sharedWiths: SharedUser[] = [];
 
     constructor(id: string, name: string) {
         this._id = id;
@@ -45,7 +49,33 @@ export class List implements IdentifiableRecord {
         const cloned = new List(this.id, this.name);
 
         cloned.sections = [...this.sections];
+        cloned.originalAuthor = this.originalAuthor;
+        cloned.sharedWiths = [...this.sharedWiths]
 
         return cloned;
+    }
+
+    get sharedWiths(): SharedUser[] {
+        return this._sharedWiths;
+    }
+
+    set sharedWiths(value: SharedUser[]) {
+        this._sharedWiths = value;
+    }
+
+    get originalAuthor(): string | null {
+        return this._originalAuthor;
+    }
+
+    set originalAuthor(value: string | null) {
+        this._originalAuthor = value;
+    }
+
+    get isSharedWithCurrentUser(): boolean {
+        return this._isSharedWithCurrentUser;
+    }
+
+    set isSharedWithCurrentUser(value: boolean) {
+        this._isSharedWithCurrentUser = value;
     }
 }

@@ -4,9 +4,14 @@
       <ion-toolbar>
         <ion-title> {{ t('global.title') }}</ion-title>
         <ion-buttons slot="end">
+          <FloatingBadge :value="shareRequestCount" v-if="hasShareRequest">
+            <ion-button fill="clear" @click="showRequestModal">
+              <ion-icon slot="icon-only" :icon="shareOutline"></ion-icon>
+            </ion-button>
+          </FloatingBadge>
           <ion-button fill="clear" @click="logOutCurrentUser">
-            {{ t('global.logout') }}
-            <ion-icon :icon="logOutOutline" slot="end"/>
+            <span class="ion-hide-sm-down">{{ t('global.logout') }}</span>
+            <ion-icon :icon="logOutOutline" :slot="isSmallScreen ? 'end' : 'icon-only'"/>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
@@ -35,29 +40,34 @@ import {
   IonButton,
   IonButtons,
   IonContent,
-  IonHeader, IonIcon,
+  IonHeader,
+  IonIcon,
   IonItem,
   IonList,
   IonPage,
   IonText,
   IonTitle,
-  IonToolbar
+  IonToolbar, modalController
 } from '@ionic/vue';
 import {computed} from 'vue';
 import {useStore} from "vuex";
 import {List} from "@/models/dtos/List";
 import {useRouter} from "vue-router";
 import NewItemForm from "@/components/NewItemForm.vue";
-import ListService from "@/services/ListService";
 import {signOut} from "firebase/auth"
-import {logOutOutline, arrowForwardOutline} from 'ionicons/icons';
+import {arrowForwardOutline, logOutOutline, shareOutline} from 'ionicons/icons';
 import {useI18n} from "vue-i18n";
 import {Container} from "@/utils/Container";
 import useListService from "@/composable/use-list-service";
+import useShareRequests from "@/composable/use-share-requests";
+import FloatingBadge from "@/components/FloatingBadge";
+import {useMediaQuery} from "@vueuse/core";
+import ShareRequestModal from "@/components/modal/ShareRequestModal";
 
 export default {
   name: 'Home',
   components: {
+    FloatingBadge,
     NewItemForm,
     IonContent,
     IonHeader,
@@ -69,7 +79,7 @@ export default {
     IonText,
     IonItem,
     IonButtons,
-    IonButton,
+    IonButton
   },
   setup() {
     const store = useStore();
@@ -77,6 +87,7 @@ export default {
     const lists = computed(() => store.getters['lists/lists']);
     const {t} = useI18n();
     const { addList } = useListService();
+    const { shareRequests } = useShareRequests();
 
     const openList = async (list) => {
       await router.push({
@@ -89,6 +100,9 @@ export default {
 
     const handleNewListSubmit = async (value) => {
       const dto = new List("irrelevent", value)
+      const auth = Container.get('FirebaseAuthService').auth;
+
+      dto.originalAuthor = auth.currentUser.uid;
 
       await addList(dto);
     }
@@ -98,12 +112,29 @@ export default {
       await signOut(auth)
     }
 
+    const hasShareRequest = computed(() => !!shareRequests.value.length )
+    const shareRequestCount = computed(() => shareRequests.value.length )
+
+    const isSmallScreen = useMediaQuery('(min-width: 576px)')
+
+    const showRequestModal = async () => {
+      const modal = await modalController.create({
+        component: ShareRequestModal
+      })
+
+      await modal.present();
+    }
     return {
       t,
       arrowForwardOutline,
       logOutOutline,
+      shareOutline,
       lists,
+      hasShareRequest,
+      shareRequestCount,
+      showRequestModal,
       openList,
+      isSmallScreen,
       logOutCurrentUser,
       handleNewListSubmit
     }

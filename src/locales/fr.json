@@ -10,7 +10,9 @@
     "delete": "Supprimer",
     "remove": "Retirer",
     "save": "Sauvegarder",
-    "empty": "Vider"
+    "empty": "Vider",
+    "close": "Fermer",
+    "share": "Partager"
   },
   "lists": {
     "addNewList": "Ajouter une nouvelle liste",
@@ -28,5 +30,19 @@
   },
   "errors": {
     "fieldCannotBeEmpty": "Ce champ ne peux être vide."
+  },
+  "shareRequest": {
+    "item": {
+      "textReceived": "{authorName} veux partager la liste \"{listName}\" avec vous.",
+      "textSent": "Demande envoyée à {targetName} pour la liste \"{listName}\".",
+      "decline": "Refuser",
+      "accept": "Accepter",
+      "revoke": "Annuler"
+    },
+    "successfullyAcceptedRequest": "Demande de partage accepté avec succès",
+    "successfullyDeclinedRequest": "Demande de partage refusé avec succès",
+    "title": "Demandes de partage",
+    "receivedRequest": "Demande(s) reçue(s)",
+    "issuedRequest": "Demande(s) envoyée(s)"
   }
 }

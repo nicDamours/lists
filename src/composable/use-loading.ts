@@ -16,11 +16,14 @@ export default function useLoading() {
     }
 
     const callAsync = async (cb: (...args: any[]) => Promise<any>, ...args: any[]) => {
-        await startLoading();
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-        // @ts-ignore
-        await cb.call({}, ...args);
-        await stopLoading();
+        try {
+            await startLoading();
+            // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+            // @ts-ignore
+            await cb.call({}, ...args);
+        } finally {
+            await stopLoading();
+        }
     }
 
     return {

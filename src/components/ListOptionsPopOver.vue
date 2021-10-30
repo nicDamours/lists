@@ -18,16 +18,14 @@
 </template>
 
 <script>
-import {closeCircleOutline, settingsOutline, trashOutline, shareOutline} from 'ionicons/icons';
+import {closeCircleOutline, settingsOutline, shareOutline, trashOutline} from 'ionicons/icons';
 import {IonContent, IonIcon, IonItem, IonList, IonText, modalController, popoverController} from "@ionic/vue";
 import {useI18n} from "vue-i18n";
 import {toRefs} from "vue";
 import useConfirm from "@/composable/use-confirm";
 import useListService from "@/composable/use-list-service";
 import {useRouter} from "vue-router";
-import {List} from "@/models/dtos/List";
-import ShareWithUserModal from "@/components/modal/ShareWithUserModal";
-import {FirebaseFunctionService} from "@/services/FirebaseFunctionService";
+import ShareWithUserModal from "@/components/modal/ShareWithUserModal/ShareWithUserModal";
 import useCloudFunctions from "@/composable/use-cloud-functions";
 import useToast from "@/composable/use-toast";
 
@@ -37,10 +35,7 @@ export default {
   props: {
     list: {
       type: Object,
-      required: true,
-      validator(value) {
-        return value instanceof List
-      }
+      required: true
     }
   },
   setup(props) {
@@ -99,6 +94,9 @@ export default {
       const modal = await modalController
           .create({
             component: ShareWithUserModal,
+            componentProps: {
+              list: list.value
+            }
           })
       await modal.present();
 

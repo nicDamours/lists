@@ -41,7 +41,7 @@ export default defineComponent({
         registerBindings<List>("lists",
             [
                 query(collection(db, "lists"), where('user', '==', user.uid)),
-                query(collection(db, "lists"), where( 'sharedWith', 'array-contains', user.uid)),
+                query(collection(db, "lists"), where( 'sharedWith.' +  user.uid, '!=', null)),
             ],
             {
               storePath: "lists/",

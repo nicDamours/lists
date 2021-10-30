@@ -31,15 +31,17 @@ const acceptShareRequest = functions.https.onCall((data: any, context) => {
         throw new functions.https.HttpsError(
             "not-found", "The list associated with this request cannot be found");
       }
-      const currentlySharedWithUsers: string[] = listDocumentData.get("sharedWith") ?? [];
+      const currentlySharedWithUsers: { [key: string]: string } = listDocumentData.get("sharedWith") ?? {};
 
       const currentUserId = context.auth?.uid;
 
       if (currentUserId) {
-        currentlySharedWithUsers.push(currentUserId);
+        return app.auth().getUser(currentUserId).then((currentUser) => {
+          currentlySharedWithUsers[currentUserId] = currentUser.email || "";
 
-        return app.firestore().doc(`/lists/${list}`).update("sharedWith", currentlySharedWithUsers).then(() => {
-          return app.firestore().doc(`/shareRequest/${request}`).delete();
+          return app.firestore().doc(`/lists/${list}`).update("sharedWith", currentlySharedWithUsers).then(() => {
+            return app.firestore().doc(`/shareRequest/${request}`).delete();
+          });
         });
       } else {
         throw new functions.https.HttpsError("failed-precondition",

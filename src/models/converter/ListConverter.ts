@@ -17,7 +17,10 @@ export const ListConverter: FirestoreDataConverter<List> = {
         }
 
         if(data.sharedWith) {
-            dto.sharedWiths = data.sharedWith.map((user: any) => SectionConverter.fromFirestore(user))
+            dto.sharedWiths = Object.keys(data.sharedWith).map((key: any) => SharedUserConverter.fromFirestore({
+                id: key,
+                email: data.sharedWith[key]
+            } as any))
         }
 
         if(data.user) {

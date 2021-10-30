@@ -6,7 +6,7 @@
         <ion-buttons slot="end">
           <FloatingBadge :value="shareRequestCount" v-if="hasShareRequest">
             <ion-button fill="clear" @click="showRequestModal">
-              <ion-icon slot="icon-only" :icon="shareOutline"></ion-icon>
+              <ion-icon slot="icon-only" :icon="peopleOutline"></ion-icon>
             </ion-button>
           </FloatingBadge>
           <ion-button fill="clear" @click="logOutCurrentUser">
@@ -27,6 +27,7 @@
       <ion-list>
         <ion-item v-for="list in lists" :key="list.id" @click="openList(list)" button>
           <ion-text>{{ list.name }}</ion-text>
+          <ion-icon slot="end" :icon="peopleOutline" v-if="list.isSharedWithCurrentUser"></ion-icon>
         </ion-item>
 
         <NewItemForm @form-submit="handleNewListSubmit" text="lists.addNewList"/>
@@ -55,7 +56,7 @@ import {List} from "@/models/dtos/List";
 import {useRouter} from "vue-router";
 import NewItemForm from "@/components/NewItemForm.vue";
 import {signOut} from "firebase/auth"
-import {arrowForwardOutline, logOutOutline, shareOutline} from 'ionicons/icons';
+import {arrowForwardOutline, logOutOutline, peopleOutline} from 'ionicons/icons';
 import {useI18n} from "vue-i18n";
 import {Container} from "@/utils/Container";
 import useListService from "@/composable/use-list-service";
@@ -128,7 +129,7 @@ export default {
       t,
       arrowForwardOutline,
       logOutOutline,
-      shareOutline,
+      peopleOutline,
       lists,
       hasShareRequest,
       shareRequestCount,

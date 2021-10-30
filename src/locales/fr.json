@@ -31,6 +31,15 @@
   "errors": {
     "fieldCannotBeEmpty": "Ce champ ne peux être vide."
   },
+  "shareWithUserModal": {
+    "listTitle": "Liste partagé avec",
+    "revokeSuccessful": "Partage annuler avec succès",
+    "formTitle": "Nouveau partage",
+    "form": {
+      "headerText": "Pour partager cette liste avec quelqu'un, veuillez entrer son address courriel ici.",
+      "email": "Address courriel"
+    }
+  },
   "shareRequest": {
     "item": {
       "textReceived": "{authorName} veux partager la liste \"{listName}\" avec vous.",

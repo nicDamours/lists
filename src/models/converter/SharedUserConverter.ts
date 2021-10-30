@@ -3,7 +3,7 @@ import {SharedUser} from "@/models/dtos/SharedUser";
 
 export const SharedUserConverter: FirestoreDataConverter<SharedUser> = {
     fromFirestore: function(data: any): SharedUser {
-        return new SharedUser(data.id, data.email, data.name);
+        return new SharedUser(data.id, data.email);
     },
     toFirestore: function(modelObject: SharedUser): DocumentData {
         return {

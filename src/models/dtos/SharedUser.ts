@@ -3,12 +3,10 @@ import {IdentifiableRecord} from "@/models/Interfaces/IdentifiableRecord";
 export class SharedUser implements IdentifiableRecord {
     private _id: string;
     private _email: string | null;
-    private _name: string | null;
 
-    constructor(id: string, email: string | null, name: string | null) {
+    constructor(id: string, email: string | null) {
         this._id = id;
-        this._email = email;
-        this._name = name;
+        this._email = email
     }
 
     get id(): string {
@@ -25,14 +23,6 @@ export class SharedUser implements IdentifiableRecord {
 
     set email(value: string | null) {
         this._email = value;
-    }
-
-    get name(): string | null {
-        return this._name;
-    }
-
-    set name(value: string | null) {
-        this._name = value;
     }
 
     isEqual(other: IdentifiableRecord): boolean {

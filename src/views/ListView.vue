@@ -53,7 +53,7 @@
             <ion-text class="o-list__item__quantity"
                       @click="event => showQuantityChange(sectionIndex, itemIndex, event)"> x {{ item.quantity }}
             </ion-text>
-            <ion-checkbox :checked="item.done" slot="end"/>
+            <ion-checkbox :checked="item.done" slot="end" />
           </ion-item>
         </ion-item-sliding>
         <NewItemForm @form-submit="value => createNewItem(sectionIndex, value)" text="items.addNewItem"/>

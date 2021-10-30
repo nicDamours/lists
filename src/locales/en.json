@@ -31,6 +31,15 @@
   "errors": {
     "fieldCannotBeEmpty": "This field cannot be empty."
   },
+  "shareWithUserModal": {
+    "listTitle": "List shared with",
+    "revokeSuccessful": "Share revoke successfully",
+    "formTitle": "New share",
+    "form": {
+      "headerText": "To share this list with someone, please enter their email address below.",
+      "email": "Email address"
+    }
+  },
   "shareRequest": {
     "item": {
       "textReceived": "{authorName} wants to share the list \"{listName}\" with you.",

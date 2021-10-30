@@ -13,14 +13,14 @@
 import useShareRequests from "../../composable/use-share-requests";
 import ShareRequestListItemReceived from "../ShareRequestListItemReceived";
 import ShareRequestListItemSent from "../ShareRequestListItemSent";
-import {IonList} from "@ionic/vue";
+import {IonList, IonListHeader} from "@ionic/vue";
 import BaseModal from "@/components/modal/BaseModal";
 import {useI18n} from "vue-i18n";
 import {computed} from "vue";
 
 export default {
   name: "ShareRequestModal",
-  components: {BaseModal, ShareRequestListItemReceived, ShareRequestListItemSent, IonList },
+  components: {BaseModal, ShareRequestListItemReceived, ShareRequestListItemSent, IonList, IonListHeader },
   setup() {
     const { shareRequests } = useShareRequests();
     const { t } = useI18n();

@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import {IonIcon, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonList} from "@ionic/vue";
+import {IonIcon, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonList, IonTitle} from "@ionic/vue";
 import {trashOutline} from "ionicons/icons";
 import {useI18n} from "vue-i18n";
 import useCloudFunctions from "../../../composable/use-cloud-functions";
@@ -31,7 +31,7 @@ export default {
       required: true
     }
   },
-  components: { IonList, IonItem, IonItemOption, IonItemOptions, IonIcon, IonItemSliding },
+  components: { IonList, IonItem, IonItemOption, IonItemOptions, IonIcon, IonItemSliding, IonTitle },
   setup(props) {
     const { t } = useI18n()
     const { list } = toRefs(props);

@@ -1,5 +1,5 @@
 <template>
-  <BaseModal title="Share with user">
+  <BaseModal :title="t('shareWithUserModal.title')">
     <template #default>
       <div class="o-share-with-user-model__content">
         <ShareWithUserList :list="list" />

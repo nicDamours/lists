@@ -32,6 +32,7 @@
     "fieldCannotBeEmpty": "Ce champ ne peux être vide."
   },
   "shareWithUserModal": {
+    "title": "Partage de liste",
     "listTitle": "Liste partagé avec",
     "revokeSuccessful": "Partage annuler avec succès",
     "formTitle": "Nouveau partage",

@@ -32,6 +32,7 @@
     "fieldCannotBeEmpty": "This field cannot be empty."
   },
   "shareWithUserModal": {
+    "title": "Share a list",
     "listTitle": "List shared with",
     "revokeSuccessful": "Share revoke successfully",
     "formTitle": "New share",

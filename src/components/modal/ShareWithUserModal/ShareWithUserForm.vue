@@ -19,7 +19,7 @@
 
 <script>
 import ContainerWithErrors from "../../ContainerWithErrors";
-import {IonIcon, IonInput, IonItem, IonLabel, IonSpinner, IonText} from "@ionic/vue";
+import {IonIcon, IonInput, IonItem, IonLabel, IonSpinner, IonText, IonTitle} from "@ionic/vue";
 import useUsers from "../../../composable/use-users";
 import useCurrentUser from "../../../composable/use-current-user";
 import useValidation from "../../../composable/use-validation";
@@ -29,7 +29,7 @@ import {useI18n} from "vue-i18n";
 
 export default {
   name: "ShareWithUserForm",
-  components: { ContainerWithErrors, IonText, IonIcon, IonItem, IonLabel, IonInput, IonSpinner },
+  components: { ContainerWithErrors, IonText, IonIcon, IonItem, IonLabel, IonInput, IonSpinner, IonTitle },
   emits: ["update:modelValue"],
   props: {
     modelValue: {

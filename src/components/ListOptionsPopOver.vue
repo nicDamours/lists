@@ -95,7 +95,7 @@ export default {
           .create({
             component: ShareWithUserModal,
             componentProps: {
-              list: list.value
+              listId: list.value.id
             }
           })
       await modal.present();

@@ -12,7 +12,8 @@
     "save": "Sauvegarder",
     "empty": "Vider",
     "close": "Fermer",
-    "share": "Partager"
+    "share": "Partager",
+    "noData": "Aucune donnée"
   },
   "lists": {
     "addNewList": "Ajouter une nouvelle liste",

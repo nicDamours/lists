@@ -1,9 +1,8 @@
 import * as functions from "firebase-functions";
-
-import admin = require("firebase-admin");
+import {getApp} from "./app-instance";
 
 const unShareWithEmail = functions.https.onCall((data: any, context) => {
-  const app = admin.initializeApp();
+  const app = getApp();
   const payload = JSON.parse(data.text);
   if (!context.auth) {
     throw new functions.https.HttpsError("failed-precondition",
@@ -25,16 +24,15 @@ const unShareWithEmail = functions.https.onCall((data: any, context) => {
             "You cannot unshare a list with yourself");
       }
 
-      const currentlySharedWithUsers: string[] = documentData.get("sharedWith") ?? [];
+      const currentlySharedWithUsers: {[key: string]: string} = documentData.get("sharedWith") ?? {};
 
-      if (!currentlySharedWithUsers.includes(relatedUser.uid)) {
+      if (!currentlySharedWithUsers[relatedUser.uid]) {
         throw new functions.https.HttpsError("failed-precondition",
             "this list is not share with this user");
       }
+      delete currentlySharedWithUsers[relatedUser.uid];
 
-      const updatedSharedWithUsers = currentlySharedWithUsers.filter((value) => value !== relatedUser.uid);
-
-      app.firestore().doc(`/lists/${list}`).update("sharedWith", updatedSharedWithUsers).then(() => {
+      app.firestore().doc(`/lists/${list}`).update("sharedWith", currentlySharedWithUsers).then(() => {
         console.log("successfully shared list with user");
       });
     }).catch(() => {

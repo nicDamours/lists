@@ -12,7 +12,8 @@
     "save": "Save",
     "empty": "Empty",
     "close": "Close",
-    "share": "Share"
+    "share": "Share",
+    "noData": "No data"
   },
   "lists": {
     "addNewList": "Add a new list",

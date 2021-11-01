@@ -11,6 +11,7 @@
         </ion-item-options>
         <ion-item >{{ user.email }}</ion-item>
       </ion-item-sliding>
+      <EmptyListItem v-if="list.sharedWiths.length === 0" />
     </ion-list>
   </div>
 </template>
@@ -22,6 +23,7 @@ import {useI18n} from "vue-i18n";
 import useCloudFunctions from "../../../composable/use-cloud-functions";
 import {toRefs} from "vue";
 import useToast from "../../../composable/use-toast";
+import EmptyListItem from "@/components/EmptyListItem";
 
 export default {
   name: "ShareWithUserList",
@@ -31,7 +33,7 @@ export default {
       required: true
     }
   },
-  components: { IonList, IonItem, IonItemOption, IonItemOptions, IonIcon, IonItemSliding, IonTitle },
+  components: { IonList, IonItem, IonItemOption, IonItemOptions, IonIcon, IonItemSliding, IonTitle, EmptyListItem },
   setup(props) {
     const { t } = useI18n()
     const { list } = toRefs(props);

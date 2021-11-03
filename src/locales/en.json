@@ -58,6 +58,7 @@
   "shareRequest": {
     "item": {
       "textReceived": "{authorName} wants to share the list \"{listName}\" with you.",
+      "textSent": "Share request sent to {targetName} for the list \"{listName}\".",
       "decline": "Decline",
       "accept": "Accept",
       "revoke": "Revoke"

@@ -13,13 +13,18 @@
     "empty": "Vider",
     "close": "Fermer",
     "share": "Partager",
-    "noData": "Aucune donnée"
+    "noData": "Aucune donnée",
+    "cancelSharing": "Arrêter le partage",
+    "ok": "Ok",
+    "submit": "Envoyer"
   },
   "lists": {
     "addNewList": "Ajouter une nouvelle liste",
     "confirmDeleteList": "Êtes-vous sûr de vouloir supprimer cette liste ?",
     "confirmEmptyList": "Êtes-vous sûr de vouloir vider cette liste ?",
-    "keepSections": "Garder les sections."
+    "confirmCancelShare": "Êtes-vous sûr de vouloir arrêter le partage de cette liste ?",
+    "keepSections": "Garder les sections.",
+    "successfullyCanceledShare": "Le partage à été arrêter avec succès"
   },
   "sections": {
     "addNewSection": "Ajouter une nouvelle section",
@@ -30,15 +35,23 @@
     "confirmDeleteItem": "Êtes-vous sûr de vouloir supprimer cet élément ?"
   },
   "errors": {
-    "fieldCannotBeEmpty": "Ce champ ne peux être vide."
+    "fieldCannotBeEmpty": "Ce champ ne peux être vide.",
+    "userDoesntExists": "Cet utilisateur n'existe pas."
+  },
+  "modals": {
+    "shareInfo": {
+      "message": "Cette liste vous à été partagé par <b>{author}</b>. Vous ne pouvez la supprimer, mais vous pouvez y effectuer des modifications",
+      "title": "Ceci est une liste partagée"
+    }
   },
   "shareWithUserModal": {
     "title": "Partage de liste",
     "listTitle": "Liste partagé avec",
     "revokeSuccessful": "Partage annuler avec succès",
+    "successfullySentShareRequest": "Demande de partage envoyé avec succès.",
     "formTitle": "Nouveau partage",
     "form": {
-      "headerText": "Pour partager cette liste avec quelqu'un, veuillez entrer son address courriel ici.",
+      "headerText": "Pour partager cette liste avec quelqu'un, veuillez entrer son address courriel ici. Veuillez noter que l'adresse courriel doit être associé à un compte.",
       "email": "Address courriel"
     }
   },

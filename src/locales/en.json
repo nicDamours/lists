@@ -13,13 +13,18 @@
     "empty": "Empty",
     "close": "Close",
     "share": "Share",
-    "noData": "No data"
+    "noData": "No data",
+    "cancelSharing": "Cancel sharing",
+    "ok": "Ok",
+    "submit": "Submit"
   },
   "lists": {
     "addNewList": "Add a new list",
     "confirmDeleteList": "Are you sure you want to delete this list ?",
     "confirmEmptyList": "Are you sure you want to empty this list ?",
-    "keepSections": "Keep the sections"
+    "keepSections": "Keep the sections",
+    "confirmCancelShare": "Are you sure you want to cancel the sharing of this list",
+    "successfullyCanceledShare": "The sharing was canceled successfully"
   },
   "sections": {
     "addNewSection": "Add a new section",
@@ -30,15 +35,23 @@
     "confirmDeleteItem": "Are you sur you want to delete this item ?"
   },
   "errors": {
-    "fieldCannotBeEmpty": "This field cannot be empty."
+    "fieldCannotBeEmpty": "This field cannot be empty.",
+    "userDoesntExists": "This user does not exists"
+  },
+  "modals": {
+    "shareInfo": {
+      "message": "This this has been shared to you by <b>{author}</b>. You cannot delete it, but you can make changes to it.",
+      "title": "this is a shared list"
+    }
   },
   "shareWithUserModal": {
     "title": "Share a list",
     "listTitle": "List shared with",
     "revokeSuccessful": "Share revoke successfully",
+    "successfullySentShareRequest": "Share request sent successfully",
     "formTitle": "New share",
     "form": {
-      "headerText": "To share this list with someone, please enter their email address below.",
+      "headerText": "To share this list with someone, please enter their email address below. Please note that they need an account.",
       "email": "Email address"
     }
   },

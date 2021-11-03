@@ -13,8 +13,13 @@ export default function useShareRequests() {
         return callAsync(ShareRequestService.deleteRequest, request)
     }
 
+    const emptyShareRequest = async () => {
+        await store.dispatch("shareRequest/emptyShareRequest");
+    }
+
     return {
         shareRequests,
-        deleteRequest
+        deleteRequest,
+        emptyShareRequest
     }
 }

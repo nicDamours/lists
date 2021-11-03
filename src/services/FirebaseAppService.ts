@@ -13,8 +13,6 @@ export class FirebaseAppService {
             appId: process.env.VUE_APP_FIRESTORE_APP_ID,
             measurementId: process.env.VUE_APP_FIRESTORE_MEASUREMENT_ID
         });
-
-        console.log('initialized app');
     }
 
     get app(): FirebaseApp {

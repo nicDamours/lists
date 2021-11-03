@@ -5,10 +5,7 @@
         <ion-text>{{ t('global.share')}}</ion-text>
         <ion-icon :icon="shareOutline" slot="start"></ion-icon>
       </ion-item>
-      <ion-item button @click="handleEmptyList">
-        <ion-text color="danger">{{ t('global.empty') }}</ion-text>
-        <ion-icon :icon="closeCircleOutline" slot="start" color="danger"></ion-icon>
-      </ion-item>
+      <ListOptionsEmpty :list="list" />
       <ion-item button @click="handleDeleteList">
         <ion-text color="danger">{{ t('global.delete') }}</ion-text>
         <ion-icon :icon="trashOutline" slot="start" color="danger"></ion-icon>
@@ -28,10 +25,11 @@ import {useRouter} from "vue-router";
 import ShareWithUserModal from "@/components/modal/ShareWithUserModal/ShareWithUserModal";
 import useCloudFunctions from "@/composable/use-cloud-functions";
 import useToast from "@/composable/use-toast";
+import ListOptionsEmpty from "@/components/ListOptionsEmpty";
 
 export default {
   name: "ListOptionsPopOver",
-  components: {IonIcon, IonContent, IonList, IonItem, IonText},
+  components: {IonIcon, IonContent, IonList, IonItem, IonText, ListOptionsEmpty},
   props: {
     list: {
       type: Object,
@@ -41,11 +39,11 @@ export default {
   setup(props) {
     const {list} = toRefs(props);
     const {t} = useI18n();
-    const {showConfirm, showConfirmWithInput} = useConfirm();
+    const {showConfirm} = useConfirm();
     const router = useRouter();
-    const {deleteList, updateList} = useListService();
+    const {deleteList} = useListService();
     const{ callFunction } = useCloudFunctions();
-    const { dangerToast } = useToast();
+    const { dangerToast, successToast } = useToast();
 
     const handleDeleteList = async () => {
       const results = await showConfirm(t("lists.confirmDeleteList"));
@@ -55,36 +53,6 @@ export default {
         await deleteList(list.value);
 
         await router.push({name: "Home"})
-
-        await popoverController.dismiss();
-      }
-    }
-
-    const handleEmptyList = async () => {
-      let keepEmptyLists = true;
-      const results = await showConfirmWithInput(t("lists.confirmEmptyList"), [
-        {
-          type: 'checkbox',
-          label: t('lists.keepSections'),
-          value: 'keepEmptyLists',
-          handler: function (value) {
-            keepEmptyLists = value.checked;
-          },
-          checked: true,
-        },
-      ]);
-
-      if (results) {
-        const clonedList = list.value.clone();
-        if(keepEmptyLists) {
-          clonedList.sections.forEach(section => {
-            section.items = [];
-          })
-        } else {
-          clonedList.sections = [];
-        }
-
-        await updateList(clonedList);
 
         await popoverController.dismiss();
       }
@@ -108,6 +76,8 @@ export default {
             list: list.value.id,
             email: value.data
           });
+
+          await successToast(t('shareWithUserModal.successfullySentShareRequest'))
         } catch(e) {
           await dangerToast(e.message);
         } finally {
@@ -121,7 +91,6 @@ export default {
     return {
       t,
       handleShare,
-      handleEmptyList,
       trashOutline,
       shareOutline,
       settingsOutline,

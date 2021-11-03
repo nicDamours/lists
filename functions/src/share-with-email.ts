@@ -36,9 +36,9 @@ const shareWithEmail = functions.https.onCall((data: any, context) => {
             "You cannot share a list with yourself");
       }
 
-      const currentlySharedWithUsers: string[] = documentData.get("sharedWith") ?? [];
+      const currentlySharedWithUsers: { [key: string]: string } = documentData.get("sharedWith") ?? {};
 
-      if (currentlySharedWithUsers.includes(relatedUser.uid)) {
+      if (Object.keys(currentlySharedWithUsers).includes(relatedUser.uid)) {
         throw new functions.https.HttpsError("failed-precondition",
             "This list is already shared with this user");
       }

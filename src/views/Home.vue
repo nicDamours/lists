@@ -64,6 +64,7 @@ import useShareRequests from "@/composable/use-share-requests";
 import FloatingBadge from "@/components/FloatingBadge";
 import {useMediaQuery} from "@vueuse/core";
 import ShareRequestModal from "@/components/modal/ShareRequestModal";
+import useLists from "@/composable/use-lists";
 
 export default {
   name: 'Home',
@@ -88,7 +89,8 @@ export default {
     const lists = computed(() => store.getters['lists/lists']);
     const {t} = useI18n();
     const { addList } = useListService();
-    const { shareRequests } = useShareRequests();
+    const { removeAllLists } = useLists();
+    const { shareRequests, emptyShareRequest } = useShareRequests();
 
     const openList = async (list) => {
       await router.push({
@@ -110,6 +112,9 @@ export default {
 
     const logOutCurrentUser = async () => {
       const auth = Container.get('FirebaseAuthService').auth;
+
+      await Promise.all([removeAllLists(), emptyShareRequest()]);
+
       await signOut(auth)
     }
 

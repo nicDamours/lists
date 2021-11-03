@@ -7,6 +7,9 @@
           <ion-back-button default-href="/lists"></ion-back-button>
         </ion-buttons>
         <ion-buttons slot="end">
+          <ion-button @click="showShareInfoModal" v-if="list.isSharedWithCurrentUser">
+            <ion-icon :icon="peopleOutline" slot="icon-only"></ion-icon>
+          </ion-button>
           <ion-button @click="openPopover">
             <ion-icon :icon="settingsOutline" slot="icon-only"></ion-icon>
           </ion-button>
@@ -26,10 +29,10 @@
 
       <ion-list v-for="(section, sectionIndex) in list.sections" :key="section.id">
         <ion-list-header lines="full">
-            <ion-label>{{ section.name }}</ion-label>
-            <ion-button color="danger" @click="deleteSection(section.id)">
-              <ion-icon :icon="removeOutline" slot="icon-only"></ion-icon>
-            </ion-button>
+          <ion-label>{{ section.name }}</ion-label>
+          <ion-button color="danger" @click="deleteSection(section.id)">
+            <ion-icon :icon="removeOutline" slot="icon-only"></ion-icon>
+          </ion-button>
         </ion-list-header>
 
         <ion-item-sliding v-for="(item, itemIndex) in section.items" :key="item.id" class="o-list__item">
@@ -40,15 +43,19 @@
             </ion-item-option>
           </ion-item-options>
 
-          <ion-item class="o-form__group-input" v-if="item.editing" @blur.capture="(event) => handleItemBlur(item, event)">
-              <ion-input type="text" v-model="item.name" :ref="el => refs[item.id] = el"/>
+          <ion-item class="o-form__group-input" v-if="item.editing"
+                    @blur.capture="(event) => handleItemBlur(item, event)">
+            <ion-input type="text" v-model="item.name" :ref="el => refs[item.id] = el"/>
 
-              <ion-button slot="end" color="success" fill="clear" class="o-form__update-save-button" @click="() => handleEditingSaveClick(item, itemIndex, sectionIndex)">
-                {{ t("global.save") }}
-                <ion-icon :icon="checkmarkOutline" slot="end"></ion-icon>
-              </ion-button>
+            <ion-button slot="end" color="success" fill="clear" class="o-form__update-save-button"
+                        @click="() => handleEditingSaveClick(item, itemIndex, sectionIndex)">
+              {{ t("global.save") }}
+              <ion-icon :icon="checkmarkOutline" slot="end"></ion-icon>
+            </ion-button>
           </ion-item>
-          <ion-item button detail="false" @click.self="event => toggleItemDone(sectionIndex, itemIndex, !item.done, event)" v-if="!item.editing">
+          <ion-item button detail="false"
+                    @click.self="toggleUsingItem(sectionIndex, itemIndex, !item.done, $event)"
+                    v-if="!item.editing">
             <ion-text @click.self="toggleItem(item)">{{ item.name }}</ion-text>
             <ion-text class="o-list__item__quantity"
                       @click="event => showQuantityChange(sectionIndex, itemIndex, event)"> x {{ item.quantity }}
@@ -70,7 +77,14 @@
 import {useRoute} from "vue-router";
 import {useStore} from "vuex";
 import {computed, ref} from "vue";
-import {addOutline, removeOutline, trashOutline, checkmarkOutline, settingsOutline} from 'ionicons/icons';
+import {
+  addOutline,
+  removeOutline,
+  trashOutline,
+  checkmarkOutline,
+  settingsOutline,
+  peopleOutline
+} from 'ionicons/icons';
 import {
   IonBackButton,
   IonButton,
@@ -100,6 +114,7 @@ import {useI18n} from "vue-i18n";
 import useInputFocus from "@/composable/use-input-focus";
 import useListService from "@/composable/use-list-service";
 import ListOptionsPopOver from "@/components/ListOptionsPopOver";
+import SharedListOptionsPopOver from "@/components/SharedListOptionsPopOver";
 
 export default {
   name: "ListView",
@@ -128,15 +143,15 @@ export default {
   setup() {
     const route = useRoute();
     const store = useStore()
-    const { t } = useI18n();
+    const {t} = useI18n();
     const refs = ref({});
-    const { updateList } = useListService();
+    const {updateList} = useListService();
 
     const currentListId = computed(() => route.params.id)
 
-    const {showNumberAlert} = useAlert();
-    const { showConfirm } = useConfirm();
-    const { defineInputFocus } = useInputFocus(refs);
+    const {showNumberAlert, showInfoAlert} = useAlert();
+    const {showConfirm} = useConfirm();
+    const {defineInputFocus} = useInputFocus(refs);
 
     const newSectionName = ref("");
 
@@ -196,7 +211,6 @@ export default {
     }
 
 
-
     const showQuantityChange = async (sectionIndex, itemIndex, event) => {
       const target = event.target
       if (target.classList.contains("o-list__item__quantity")) {
@@ -219,7 +233,7 @@ export default {
     }
 
     const handleItemBlur = async (item, event) => {
-      if(event.relatedTarget && !event.relatedTarget.classList.contains('o-form__update-save-button')) {
+      if (event.relatedTarget && !event.relatedTarget.classList.contains('o-form__update-save-button')) {
         item.editing = false;
         await defineInputFocus(item.id, false);
       }
@@ -234,9 +248,10 @@ export default {
     }
 
     const openPopover = async (ev) => {
+      const popoverComponent = list.value.isSharedWithCurrentUser ? SharedListOptionsPopOver : ListOptionsPopOver
       const popover = await popoverController
           .create({
-            component: ListOptionsPopOver,
+            component: popoverComponent,
             componentProps: {
               list
             },
@@ -249,13 +264,24 @@ export default {
       await popover.onDidDismiss();
     }
 
+    const showShareInfoModal = async () => {
+      await showInfoAlert(t('modals.shareInfo.message', {
+        author: list.value.originalAuthorEmail
+      }), t('modals.shareInfo.title'))
+    }
+    const toggleUsingItem = async (sectionIndex, itemIndex, done, event) => {
+      await toggleItemDone(sectionIndex, itemIndex, done, event)
+    }
+
     return {
       t,
+      toggleUsingItem,
       addOutline,
       removeOutline,
       trashOutline,
       checkmarkOutline,
       settingsOutline,
+      peopleOutline,
       list,
       refs,
       openPopover,
@@ -267,6 +293,7 @@ export default {
       handleItemBlur,
       toggleItemDone,
       createNewSection,
+      showShareInfoModal,
       showQuantityChange,
       handleEditingSaveClick
     }

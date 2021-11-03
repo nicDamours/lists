@@ -7,6 +7,7 @@ export class List implements IdentifiableRecord {
     private _name: string;
     private _isSharedWithCurrentUser = false;
     private _originalAuthor: string | null = null;
+    private _originalAuthorEmail: string | null = null;
 
     private _sections: Section[] = [];
     private _sharedWiths: SharedUser[] = [];
@@ -69,6 +70,14 @@ export class List implements IdentifiableRecord {
 
     set originalAuthor(value: string | null) {
         this._originalAuthor = value;
+    }
+
+    get originalAuthorEmail(): string | null {
+        return this._originalAuthorEmail;
+    }
+
+    set originalAuthorEmail(value: string | null) {
+        this._originalAuthorEmail = value;
     }
 
     get isSharedWithCurrentUser(): boolean {

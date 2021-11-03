@@ -11,6 +11,11 @@ const unShareWithEmail = functions.https.onCall((data: any, context) => {
 
   const {list, email} = payload;
   app.firestore().doc(`/lists/${list}`).get().then((documentData) => {
+    if (!documentData.exists) {
+      throw new functions.https.HttpsError(
+          "not-found", "list with this id cannot be found");
+    }
+
     const listOwner = documentData.get("user");
 
     if (listOwner !== context.auth?.uid) {

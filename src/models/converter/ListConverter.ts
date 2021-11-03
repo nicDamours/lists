@@ -26,6 +26,10 @@ export const ListConverter: FirestoreDataConverter<List> = {
         if(data.user) {
             dto.originalAuthor = data.user
 
+            if(data.userEmail) {
+                dto.originalAuthorEmail = data.userEmail;
+            }
+
             if(auth.currentUser) {
                 dto.isSharedWithCurrentUser = auth.currentUser.uid !== dto.originalAuthor;
             }
@@ -36,12 +40,18 @@ export const ListConverter: FirestoreDataConverter<List> = {
     toFirestore: function(modelObject: List): DocumentData {
         const auth = Container.get<FirebaseAuthService>('FirebaseAuthService').auth;
 
-        return {
+        const values: Record<string, any> = {
             id: modelObject.id,
             name: modelObject.name,
             user: modelObject.originalAuthor,
             sections: modelObject.sections.map(section => SectionConverter.toFirestore(section))
         }
+
+        if(auth.currentUser && modelObject.originalAuthor === auth.currentUser.uid) {
+            values.userEmail = auth.currentUser.email;
+        }
+
+        return values;
     }
 
 }

@@ -1,5 +1,6 @@
 import {firestoreMutations} from "@/store/modules/firestoreModule";
 import ShareRequest from "@/models/dtos/ShareRequest";
+import {VuexFunction} from "@/store";
 
 export const namespaced = true;
 
@@ -20,6 +21,15 @@ export const getters = {
     }
 }
 
-export const mutations = firestoreMutations<ShareRequestState>("shareRequests");
+export const mutations = {
+    ...firestoreMutations<ShareRequestState>("shareRequests"),
+    EMPTY_SHARE_REQUEST(state: ShareRequestState) {
+        state.shareRequests = [];
+    }
+};
 
-export const actions = {}
+export const actions = {
+    emptyShareRequest({ commit }: VuexFunction<typeof mutations>) {
+        commit("EMPTY_SHARE_REQUEST")
+    }
+}

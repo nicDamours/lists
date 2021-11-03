@@ -22,7 +22,7 @@ export default createStore({
 
 
 export type VuexFunction<mutationObject> = {
-    commit: (mutation: keyof mutationObject, value: any) => void;
+    commit: (mutation: keyof mutationObject, value?: any) => void;
     dispatch: Function;
     getters: object;
 }

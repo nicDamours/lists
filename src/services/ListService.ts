@@ -9,7 +9,7 @@ export const ListService = {
         const databaseInstance = Container.get<FirebaseDatabaseService>('FirebaseDatabaseService').db
 
         const firebaseReadyData = ListConverter.toFirestore(list)
-        return setDoc(doc(databaseInstance, "lists", list.id), firebaseReadyData , { merge: true})
+        return setDoc(doc(databaseInstance, "lists", list.id), firebaseReadyData , { merge: true })
     },
 
     async addList(list: List) {

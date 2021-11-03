@@ -10,8 +10,13 @@ export default function useLists() {
         return store.getters['lists/getListById'](id);
     }
 
+    const removeAllLists = async () => {
+        return store.dispatch('lists/removeAllLists');
+    }
+
     return {
         lists,
-        getListById
+        getListById,
+        removeAllLists
     }
 }

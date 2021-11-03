@@ -1,5 +1,6 @@
 import {List} from "@/models/dtos/List";
 import {firestoreMutations} from "@/store/modules/firestoreModule";
+import {VuexFunction} from "@/store";
 
 export const namespaced = true;
 
@@ -20,7 +21,17 @@ export const getters = {
     }
 }
 
-export const mutations = firestoreMutations<ListState>("lists");
+export const mutations = {
+    ...firestoreMutations<ListState>("lists"),
 
-export const actions = {}
+    REMOVE_ALL_LISTS(state: ListState){
+        state.lists = [];
+    }
+};
+
+export const actions = {
+    removeAllLists({ commit }: VuexFunction<typeof mutations>) {
+        commit("REMOVE_ALL_LISTS");
+    }
+}
 

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="ion-padding">
     <ion-title size="h2">{{ t('shareWithUserModal.listTitle') }}</ion-title>
     <ion-list>
       <ion-item-sliding v-for="user in list.sharedWiths" :key="user.id">

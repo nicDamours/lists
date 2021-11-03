@@ -9,8 +9,8 @@ export class FirebaseFunctionService {
         const app = Container.get<FirebaseAppService>('FirebaseAppService').app;
 
         this._functions = getFunctions(app);
-
-        if(!process.env.VUP_APP_RUN_PRODUCTION_FUNCTIONS) {
+        console.log('use remote functions', process.env)
+        if(!process.env.VUE_APP_RUN_PRODUCTION_FUNCTIONS) {
             connectFunctionsEmulator(this._functions, "localhost", 5001);
         }
     }

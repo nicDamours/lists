@@ -15,6 +15,9 @@ module.exports = {
       fullInstall: true
     },
   },
+  devServer: {
+    https: true,
+  },
   pwa: {
     themeColor: "#2dd36f",
     msTileColor: "#ffffff",

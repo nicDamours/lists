@@ -1,9 +1,9 @@
 import {onAuthStateChanged} from "firebase/auth";
 import useAuthentication from "@/composable/use-authentication";
 import firebase from "firebase/compat";
-import User = firebase.User;
 import {Container} from "@/utils/Container";
 import {FirebaseAuthService} from "@/services/FirebaseAuthService";
+import User = firebase.User;
 
 export default function useBindAuthentication(): Promise<User> {
     const {showAuthenticationModal} = useAuthentication();

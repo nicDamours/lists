@@ -1,0 +1,19 @@
+.o-loading-modal {
+  &__content {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-wrapper {
+    height: 20vh;
+    width: 80vw;
+
+    position: absolute;
+    display: block;
+  }
+}

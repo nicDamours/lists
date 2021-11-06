@@ -5,3 +5,16 @@
 .--muted {
   opacity: 0.7;
 }
+
+.--flex {
+  display: flex;
+
+  &-center {
+    justify-content: center;
+  }
+}
+
+
+.--full-width {
+  width: 100%;
+}

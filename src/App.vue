@@ -1,6 +1,7 @@
 <template>
   <ion-app>
     <LoadingBar />
+
     <ion-router-outlet/>
 
     <Preferences/>
@@ -22,6 +23,8 @@ import LoadingBar from "@/components/LoadingBar.vue";
 import useLoading from "@/composable/use-loading";
 import {ShareRequestConverter} from "@/models/converter/ShareRequestConverter";
 import ShareRequest from "@/models/dtos/ShareRequest";
+import WeekConverter from "@/models/converter/WeekConverter";
+import {WeekPlan} from "@/models/dtos/WeekPlan/WeekPlan";
 
 export default defineComponent({
   name: 'App',
@@ -46,6 +49,15 @@ export default defineComponent({
             {
               storePath: "lists/",
               converter: ListConverter
+            });
+
+        registerBindings<WeekPlan>("weeks",
+            [
+              query(collection(db, "weeks"), where('user', '==', user.uid)),
+            ],
+            {
+              storePath: "weeks/",
+              converter: WeekConverter
             });
 
         registerBindings<ShareRequest>("shareRequests", [

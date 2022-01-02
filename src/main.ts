@@ -36,10 +36,17 @@ import {Container} from "@/utils/Container";
 import {FirebaseAppService} from "@/services/FirebaseAppService";
 
 import "./registerServiceWorker";
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faBurgerSoda as falBurgerAndSoda, faBiking as falBiking, faUtensils as falUtensils } from '@fortawesome/pro-light-svg-icons'
 
 containerRegistrationFunction();
 
 const currentLocale = window.localStorage.getItem("preferred-locale");
+
+library.add(falBurgerAndSoda, falBiking, falUtensils)
 
 const i18n = createI18n({
   legacy: false,
@@ -55,6 +62,8 @@ const app = createApp(App)
   .use(store)
   .use(IonicVue)
   .use(router);
+
+app.component('font-awesome-icon', FontAwesomeIcon)
 
 router.isReady().then(() => {
   app.mount('#app');

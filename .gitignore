@@ -34,3 +34,5 @@ npm-debug.log*
 *.keystore
 .env
 .firebaserc
+.npmrc
+

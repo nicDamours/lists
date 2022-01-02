@@ -6,10 +6,10 @@
 
 <script>
 import {IonFabButton} from "@ionic/vue";
-import { flagOutline } from "ionicons/icons";
+import {flagOutline} from "ionicons/icons";
 import {computed, ref} from "vue";
 import {useI18n} from "vue-i18n";
-import {useLocalStorage} from "@vueuse/core";
+import useLocale from "@/composable/use-locale";
 
 export default {
   name: "LangSwitcher",
@@ -20,7 +20,7 @@ export default {
     const { locale } = useI18n();
     const optionOpens = ref(false);
 
-    const preferredLocale = useLocalStorage("preferred-locale", "en");
+    const { preferredLocale } = useLocale();
 
     const handleTriggerClick = () => {
       optionOpens.value = true;

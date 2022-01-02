@@ -18,6 +18,14 @@
     "ok": "Ok",
     "submit": "Envoyer"
   },
+  "pages": {
+    "lists": {
+      "title": "Mes Listes"
+    },
+    "week": {
+      "title": "Ma Semaine"
+    }
+  },
   "lists": {
     "addNewList": "Ajouter une nouvelle liste",
     "confirmDeleteList": "Êtes-vous sûr de vouloir supprimer cette liste ?",
@@ -68,5 +76,16 @@
     "title": "Demandes de partage",
     "receivedRequest": "Demande(s) reçue(s)",
     "issuedRequest": "Demande(s) envoyée(s)"
+  },
+  "tabs": {
+    "lists" : "Listes",
+    "week": "Semaine"
+  },
+  "WeekPlanner": {
+    "titles": {
+      "dinner": "Dîner",
+      "supper": "Souper",
+      "activities": "Activités"
+    }
   }
 }

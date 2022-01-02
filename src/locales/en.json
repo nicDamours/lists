@@ -18,6 +18,14 @@
     "ok": "Ok",
     "submit": "Submit"
   },
+  "pages": {
+    "lists": {
+      "title": "My Lists"
+    },
+    "week": {
+      "title": "My Week"
+    }
+  },
   "lists": {
     "addNewList": "Add a new list",
     "confirmDeleteList": "Are you sure you want to delete this list ?",
@@ -68,5 +76,16 @@
     "title": "Share Request",
     "receivedRequest": "Received requests",
     "issuedRequest": "Sent requests"
+  },
+  "tabs": {
+    "lists" : "Lists",
+    "week": "Week"
+  },
+  "WeekPlanner": {
+    "titles": {
+      "dinner": "Lunch",
+      "supper": "Diner",
+      "activities": "Activities"
+    }
   }
 }

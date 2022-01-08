@@ -18,7 +18,7 @@ export const ShareRequestConverter: FirestoreDataConverter<ShareRequest> = {
 
         return dto;
     },
-    toFirestore: function (modelObject: ShareRequest): DocumentData {
+    toFirestore: function (): DocumentData {
         return {}
     }
 }

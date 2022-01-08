@@ -1,6 +1,6 @@
 import {firestoreMutations} from "@/store/modules/firestoreModule";
 import {WeekPlan} from "@/models/dtos/WeekPlan/WeekPlan";
-import {addDays, endOfWeek, startOfWeek} from "date-fns";
+import {addDays, startOfWeek} from "date-fns";
 
 export const namespaced = true;
 

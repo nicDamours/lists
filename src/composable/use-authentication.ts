@@ -2,6 +2,7 @@ import {useStore} from "vuex";
 import {useStorage} from "@vueuse/core"
 import {modalController} from "@ionic/vue";
 import LoginModal from "@/components/modal/LoginModal.vue";
+import {ComponentRef} from "@ionic/core";
 
 export default function useAuthentication() {
     const store = useStore();
@@ -15,7 +16,7 @@ export default function useAuthentication() {
     const showAuthenticationModal = async () => {
         return new Promise(resolve => {
             return modalController.create({
-                component: 'LoginModal',
+                component: LoginModal as any as ComponentRef,
                 cssClass: 'o-modal__authentication',
                 componentProps: {
                     title: 'New Title'

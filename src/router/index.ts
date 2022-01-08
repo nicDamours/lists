@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
 import ListView from '@/views/ListView.vue'
 import ListsIndex from '@/views/ListsIndex.vue';
-import Home from "@/views/Home.vue";
+import HomeView from "@/views/HomeView.vue";
 import WeekView from "@/views/WeekView.vue";
 
 const routes: Array<RouteRecordRaw> = [
@@ -16,7 +16,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/tabs",
-    component: Home,
+    component: HomeView,
     children: [
       {
         path: '',

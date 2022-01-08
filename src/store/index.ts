@@ -22,9 +22,12 @@ export default createStore({
         : []
 })
 
+type VuexDispatchContext = {
+    commit: (mutation: string, ...values: any[]) => void;
+}
 
 export type VuexFunction<mutationObject> = {
     commit: (mutation: keyof mutationObject, value?: any) => void;
-    dispatch: Function;
+    dispatch: (Context: VuexDispatchContext, ...args: any[]) => Promise<any>;
     getters: object;
 }

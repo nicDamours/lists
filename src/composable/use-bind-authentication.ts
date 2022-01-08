@@ -9,7 +9,7 @@ export default function useBindAuthentication(): Promise<User> {
     const {showAuthenticationModal} = useAuthentication();
     const auth = Container.get<FirebaseAuthService>('FirebaseAuthService').auth
 
-    const authenticationCallback = (resolve: Function) => async (user: any) => {
+    const authenticationCallback = (resolve: (value: any | PromiseLike<any>) => void) => async (user: any) => {
         if (user === null) {
             await showAuthenticationModal()
         }

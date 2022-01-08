@@ -19,7 +19,7 @@ import ThemeToggle from "./ThemeToggle";
 import LangSwitcher from "./LangSwitcher"
 
 export default {
-  name: "Preferences",
+  name: "OrganismPreferences",
   components: {
     ThemeToggle,
     IonFab,

@@ -1,10 +1,8 @@
-import {DocumentData, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions} from "firebase/firestore";
+import {DocumentData, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions, Timestamp} from "firebase/firestore";
 import {WeekPlan} from "@/models/dtos/WeekPlan/WeekPlan";
 import WeekDayConverter from "@/models/converter/WeekDayConverter";
 import {Container} from "@/utils/Container";
 import {FirebaseAuthService} from "@/services/FirebaseAuthService";
-import firebase from "firebase/compat";
-import Timestamp = firebase.firestore.Timestamp;
 
 export const WeekConverter: FirestoreDataConverter<WeekPlan> = {
     fromFirestore: function(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): WeekPlan {

@@ -4,6 +4,9 @@ import {MUTATION_NAME_ADD, MUTATION_NAME_DELETE, MUTATION_NAME_UPDATE} from "@/s
 import {onBeforeUnmount} from "vue";
 import {IdentifiableRecord} from "@/models/Interfaces/IdentifiableRecord";
 import useLoading from "@/composable/use-loading";
+import firebase from "firebase/compat";
+
+import Unsubscribe = firebase.Unsubscribe;
 
 export interface FireStoreBindingOptions<S extends IdentifiableRecord> {
     collectionName?: string;
@@ -24,7 +27,7 @@ export default function useFirestoreBinding() {
             ...options
         };
 
-        const unSubscribeFunctions: Function[] = [];
+        const unSubscribeFunctions: Unsubscribe[] = [];
 
         collectionQueries.forEach(collectionQuery => {
             if(allOptions.converter) {
@@ -61,7 +64,7 @@ export default function useFirestoreBinding() {
         })
 
         onBeforeUnmount(() => {
-            unSubscribeFunctions.forEach((unSubscribeFn: Function) => {
+            unSubscribeFunctions.forEach((unSubscribeFn: Unsubscribe) => {
                 unSubscribeFn();
             })
         })

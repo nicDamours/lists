@@ -1,8 +1,6 @@
-import {DocumentData, FirestoreDataConverter} from "firebase/firestore";
+import {DocumentData, FirestoreDataConverter, Timestamp} from "firebase/firestore";
 import UUID from "@/utils/UUID";
 import {WeekPlanDays} from "@/models/dtos/WeekPlan/WeekPlanDays";
-import firebase from "firebase/compat";
-import Timestamp = firebase.firestore.Timestamp;
 
 export const WeekDayConverter: FirestoreDataConverter<WeekPlanDays> = {
     fromFirestore(data: any): WeekPlanDays {

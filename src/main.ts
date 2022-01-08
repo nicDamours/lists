@@ -36,8 +36,7 @@ import {Container} from "@/utils/Container";
 import {FirebaseAppService} from "@/services/FirebaseAppService";
 
 import "./registerServiceWorker";
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
+
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faBurgerSoda as falBurgerAndSoda, faBiking as falBiking, faUtensils as falUtensils } from '@fortawesome/pro-light-svg-icons'

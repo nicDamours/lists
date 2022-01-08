@@ -19,7 +19,6 @@ module.exports = {
     themeColor: "#2dd36f",
     msTileColor: "#ffffff",
     manifestOptions: {
-      // eslint-disable-next-line @typescript-eslint/camelcase
       start_url: "https://lists-bl5q.onrender.com?v=" + version
     }
   }

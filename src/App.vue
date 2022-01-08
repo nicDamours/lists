@@ -4,7 +4,7 @@
 
     <ion-router-outlet/>
 
-    <Preferences/>
+    <OrganismPreferences />
   </ion-app>
 </template>
 
@@ -16,7 +16,7 @@ import ListConverter from "@/models/converter/ListConverter";
 import {List} from "@/models/dtos/List";
 import useBindAuthentication from "@/composable/use-bind-authentication";
 import {collection, query, where} from "@firebase/firestore";
-import Preferences from "@/components/Preferences.vue";
+import OrganismPreferences from "@/components/OrganismPreferences.vue";
 import {Container} from "@/utils/Container";
 import {FirebaseDatabaseService} from "@/services/FirebaseDatabaseService";
 import LoadingBar from "@/components/LoadingBar.vue";
@@ -30,7 +30,7 @@ export default defineComponent({
   name: 'App',
   components: {
     LoadingBar,
-    Preferences,
+    OrganismPreferences,
     IonApp,
     IonRouterOutlet
   },

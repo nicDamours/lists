@@ -15,9 +15,7 @@ export default function useAuthentication() {
     const showAuthenticationModal = async () => {
         return new Promise(resolve => {
             return modalController.create({
-                // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-                // @ts-ignore
-                component: LoginModal,
+                component: 'LoginModal',
                 cssClass: 'o-modal__authentication',
                 componentProps: {
                     title: 'New Title'

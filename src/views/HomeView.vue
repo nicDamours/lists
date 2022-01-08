@@ -24,7 +24,7 @@ import { listOutline, calendarOutline } from 'ionicons/icons';
 import {useI18n} from "vue-i18n";
 
 export default {
-  name: "Home",
+  name: "HomeView",
   components: { IonLabel, IonTabs, IonTabBar, IonTabButton, IonIcon, IonPage, IonRouterOutlet },
   setup() {
     const { t } = useI18n();

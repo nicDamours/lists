@@ -33,7 +33,7 @@ export default {
     const { startDate, endDate } = toRefs(props);
     const { getDaysFromDates } = useDates()
 
-    const daysOfWeek = computed(() => getDaysFromDates(startDate.value, endDate.value));
+    const daysOfWeek = getDaysFromDates(startDate.value, endDate.value);
 
     return {
       daysOfWeek

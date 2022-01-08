@@ -20,7 +20,7 @@ export default {
     const { locale } = useI18n();
     const optionOpens = ref(false);
 
-    const { preferredLocale } = useLocale();
+    const { setPreferredLocale } = useLocale();
 
     const handleTriggerClick = () => {
       optionOpens.value = true;
@@ -30,7 +30,7 @@ export default {
 
     const selectLocale = (selectedLocale) => {
       locale.value = selectedLocale;
-      preferredLocale.value = selectedLocale;
+      setPreferredLocale(selectedLocale);
     }
 
     return {

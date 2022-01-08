@@ -11,6 +11,10 @@ const routes: Array<RouteRecordRaw> = [
     redirect: '/tabs/lists'
   },
   {
+    path: "/lists",
+    redirect: "/tabs/lists"
+  },
+  {
     path: "/tabs",
     component: Home,
     children: [

@@ -2,9 +2,9 @@
   <div class="week-calendar">
     <ion-grid class="ion-hide-sm-down">
       <WeekHeader :start-date="plan.startDate" :end-date="plan.endDate" />
-      <WeekRow :cells="dinnerCells" title="Dinner" @change="({value, day}) => handleCellChange('dinner', value, day)"/>
-      <WeekRow :cells="supperCells" title="Supper"  @change="({value, day}) => handleCellChange('supper', value, day)"/>
-      <WeekRow :cells="activitiesCells" title="Activities"  @change="({value, day}) => handleCellChange('activities', value, day)"/>
+      <WeekRow :cells="dinnerCells" :title="t('WeekPlanner.titles.dinner')" @change="({value, day}) => handleCellChange('dinner', value, day)"/>
+      <WeekRow :cells="supperCells" :title="t('WeekPlanner.titles.supper')"  @change="({value, day}) => handleCellChange('supper', value, day)"/>
+      <WeekRow :cells="activitiesCells" :title="t('WeekPlanner.titles.activities')"  @change="({value, day}) => handleCellChange('activities', value, day)"/>
     </ion-grid>
 
     <ion-list class="ion-hide-sm-up">
@@ -19,6 +19,7 @@ import {IonGrid, IonList} from "@ionic/vue";
 import WeekHeader from "./week/WeekHeader";
 import {computed, toRefs} from "vue";
 import WeekDayListGroup from "@/components/week/WeekDayListGroup";
+import {useI18n} from "vue-i18n";
 
 export default {
   name: "WeekPlanner",
@@ -31,6 +32,7 @@ export default {
     }
   },
   setup(props, { emit }) {
+    const { t } = useI18n();
     const { plan } = toRefs(props);
 
     const dinnerCells = computed(() => plan.value.days.map(day => ({content: day.dinner, id: day.id, day})));
@@ -58,6 +60,7 @@ export default {
     }
 
     return {
+      t,
       dinnerCells,
       supperCells,
       activitiesCells,

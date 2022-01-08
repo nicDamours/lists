@@ -1,6 +1,7 @@
 import * as dateFns from "date-fns";
 import useLocale from "@/composable/use-locale";
 import useStrings from "@/composable/use-strings";
+import {computed} from "vue";
 
 export default function useDates() {
     const { preferredDateLocale } = useLocale();
@@ -16,8 +17,10 @@ export default function useDates() {
     }
 
     const format = (date: Date, format: string) => {
-        return dateFns.format(date, format, {
-            locale: preferredDateLocale.value
+        return computed(() => {
+            return dateFns.format(date, format, {
+                locale: preferredDateLocale.value
+            })
         });
     }
 
@@ -28,17 +31,17 @@ export default function useDates() {
     const dayOfWeekFormat = (date: Date) => format(date, 'EEE');
 
     const formatDateForDayOfWeek = (date: Date) => {
-        return `${capitalize(dayOfWeekFormat(date))} ${format(date, 'dd MMM')}`;
+        return computed(() => `${capitalize(dayOfWeekFormat(date).value)} ${format(date, 'dd MMM').value}`);
     }
 
     const getDaysFromDates = (startDate: Date, endDate: Date) => {
-        return new Array(Math.abs(dateFns.differenceInDays(startDate, endDate)) + 1).fill(undefined).map((_, index) => {
+        return computed(() => new Array(Math.abs(dateFns.differenceInDays(startDate, endDate)) + 1).fill(undefined).map((_, index) => {
             const currentDate = addDays(new Date(startDate), index);
             return {
-                title: formatDateForDayOfWeek(currentDate),
+                title: formatDateForDayOfWeek(currentDate).value,
                 date: currentDate
             }
-        })
+        }));
     }
 
 

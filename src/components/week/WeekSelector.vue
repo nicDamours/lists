@@ -61,8 +61,8 @@ export default {
     const { subDays, addDays, parse, format, getStartOfWeek, getEndOfWeek} = useDates();
 
     const formattedModelValue = computed(() => {
-      const startOfGivenWeek = format(getStartOfWeek(modelValue.value), 'ccc d MMM yyyy');
-      const endOfGivenWeek = format(getEndOfWeek(modelValue.value), 'ccc d MMM yyyy');
+      const startOfGivenWeek = format(getStartOfWeek(modelValue.value), 'ccc d MMM yyyy').value;
+      const endOfGivenWeek = format(getEndOfWeek(modelValue.value), 'ccc d MMM yyyy').value;
 
       return `${startOfGivenWeek} - ${endOfGivenWeek}`;
     })
@@ -75,8 +75,6 @@ export default {
 
     const handleNextWeekClick = () => {
       const updatedDate = addDays(modelValue.value, 7);
-
-      console.log('new date', updatedDate);
 
       emit("update:modelValue", updatedDate);
     }

@@ -53,11 +53,21 @@ export default function useDates() {
         return dateFns.endOfWeek(date);
     }
 
+    const toISO = (date = new Date()) => {
+        return dateFns.formatISO(date);
+    }
+
+    const parseISO = (dateString: string) => {
+        return dateFns.parseISO(dateString)
+    }
+
     return {
-        format,
         parse,
+        toISO,
+        format,
         subDays,
         addDays,
+        parseISO,
         getEndOfWeek,
         getStartOfWeek,
         getDaysFromDates,

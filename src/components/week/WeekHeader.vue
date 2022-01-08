@@ -12,9 +12,9 @@
 
 <script>
 import {IonCol, IonRow} from "@ionic/vue";
-import {computed} from "vue";
 import {toRefs} from "@vueuse/core";
 import useDates from "@/composable/use-dates";
+import {computed} from "vue";
 
 export default {
   name: "WeekHeader",
@@ -33,7 +33,7 @@ export default {
     const { startDate, endDate } = toRefs(props);
     const { getDaysFromDates } = useDates()
 
-    const daysOfWeek = getDaysFromDates(startDate.value, endDate.value);
+    const daysOfWeek = computed(() => getDaysFromDates(startDate.value, endDate.value).value);
 
     return {
       daysOfWeek

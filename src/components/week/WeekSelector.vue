@@ -9,16 +9,14 @@
         </ion-col>
         <ion-col size="8" class="ion-align-self-center --col--center">
           <ion-button fill="clear" color="dark" @click="openDateTimeModal">{{ formattedModelValue }}</ion-button>
-          <ion-popover :is-open="dateTimeModalOpen" :event="popOverEvent" @didDismiss="closeDateTimeModal">
-            <div class="grid">
-              <div class="grid-item">
-                <ion-datetime
-                    presentation="date"
-                    :value="model"
-                    :locale="preferredLocaleCode"
-                    @ionChange="handleDateChange"></ion-datetime>
-              </div>
-            </div>
+          <ion-popover :is-open="dateTimeModalOpen" :show-backdrop="false" :event="popOverEvent" @didDismiss="closeDateTimeModal">
+            <ion-datetime
+                presentation="date"
+                :value="model"
+                size="cover"
+                :locale="preferredLocaleCode"
+                @ionChange="handleDateChange">
+            </ion-datetime>
           </ion-popover>
         </ion-col>
         <ion-col size="2" class="ion-align-self-center --col--start">
@@ -46,9 +44,9 @@ export default {
     IonRow,
     IonCol,
     IonIcon,
-    IonPopover,
     IonDatetime,
-    IonButton
+    IonButton,
+    IonPopover
   },
   props: {
     modelValue: {

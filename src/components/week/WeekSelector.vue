@@ -107,7 +107,6 @@ export default {
     }
 
     const preferredLocaleCode = computed(() => {
-      console.log(preferredDateLocale.value.code);
       return preferredDateLocale.value.code;
     })
 

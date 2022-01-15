@@ -48,7 +48,7 @@ export default {
     const { formatDateForDayOfWeek } = useDates();
 
     const getTitleForDay = day => {
-      return formatDateForDayOfWeek(day.date);
+      return formatDateForDayOfWeek(day.date).value;
     }
 
     return {

@@ -1,4 +1,5 @@
 import {IdentifiableRecord} from "@/models/Interfaces/IdentifiableRecord";
+import Clonable from "@/models/mixins/clonable";
 
 export class Item implements IdentifiableRecord{
     private _id: string;
@@ -6,10 +7,13 @@ export class Item implements IdentifiableRecord{
     private _done = false;
     private _quantity = 1;
     private _editing = false;
+    private _index: number|null = null;
 
     constructor(id: string, name: string) {
         this._id = id;
         this._name = name;
+
+        Object.assign(this, Clonable);
     }
 
     get id(): string {
@@ -50,6 +54,14 @@ export class Item implements IdentifiableRecord{
 
     set editing(value: boolean) {
         this._editing = value;
+    }
+
+    get index(): number|null {
+        return this._index;
+    }
+
+    set index(value: number|null) {
+        this._index = value;
     }
 
     isEqual(other: IdentifiableRecord): boolean {

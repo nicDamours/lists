@@ -61,6 +61,10 @@ export default function useDates() {
         return dateFns.parseISO(dateString)
     }
 
+    const isSameDay = (firstDate: Date, secondDate: Date) => {
+        return dateFns.format(firstDate, 'yyyy-MM-dd') === dateFns.format(secondDate, 'yyyy-MM-dd');
+    }
+
     return {
         parse,
         toISO,
@@ -68,6 +72,7 @@ export default function useDates() {
         subDays,
         addDays,
         parseISO,
+        isSameDay,
         getEndOfWeek,
         getStartOfWeek,
         getDaysFromDates,

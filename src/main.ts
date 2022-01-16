@@ -40,6 +40,7 @@ import "./registerServiceWorker";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faBurgerSoda as falBurgerAndSoda, faBiking as falBiking, faUtensils as falUtensils } from '@fortawesome/pro-light-svg-icons'
+import OnLongPress from "@/directive/on-long-press";
 
 containerRegistrationFunction();
 
@@ -63,6 +64,8 @@ const app = createApp(App)
   .use(router);
 
 app.component('font-awesome-icon', FontAwesomeIcon)
+
+app.directive('long-press', OnLongPress)
 
 router.isReady().then(() => {
   app.mount('#app');

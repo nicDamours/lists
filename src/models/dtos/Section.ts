@@ -39,4 +39,19 @@ export class Section implements IdentifiableRecord{
     isEqual(other: IdentifiableRecord): boolean {
         return this.id === other.id;
     }
+
+    removeItem(index: number) {
+        this.items.splice(index, 1);
+    }
+
+    insertItem(item: Item, index: number = this.items.length) {
+        this.items.splice(index, 0, item);
+        this._updateItemsIndexes();
+    }
+
+    _updateItemsIndexes() {
+        this.items.forEach((item, index) => {
+            item.index = index;
+        })
+    }
 }

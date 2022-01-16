@@ -15,11 +15,16 @@ export const ItemConverter: FirestoreDataConverter<Item> = {
             dto.quantity = data.quantity
         }
 
+        if(data.index) {
+            dto.index = data.index;
+        }
+
         return dto;
     },
     toFirestore(modelObject: Item): DocumentData {
         return {
             id: modelObject.id || UUID.uuidv4(),
+            index: modelObject.index,
             name: modelObject.name,
             done: modelObject.done,
             quantity: modelObject.quantity

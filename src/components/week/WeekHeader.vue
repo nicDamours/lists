@@ -3,9 +3,10 @@
     <ion-col class="week-header__cell"></ion-col>
     <ion-col
         class="week-header__cell"
-        v-for="date in daysOfWeek"
-        :key="date.date">
-      <span class="week-header__cell-content">{{ date.title }}</span>
+        v-for="day in daysOfWeek"
+        :class="{'--today': isCurrentDate(day.date) }"
+        :key="day.date">
+      <span class="week-header__cell-content">{{ day.title }}</span>
     </ion-col>
   </ion-row>
 </template>
@@ -31,12 +32,16 @@ export default {
   },
   setup(props) {
     const { startDate, endDate } = toRefs(props);
-    const { getDaysFromDates } = useDates()
+    const { getDaysFromDates, isSameDay } = useDates()
 
     const daysOfWeek = computed(() => getDaysFromDates(startDate.value, endDate.value).value);
 
+    const isCurrentDate = (date) => {
+      return date && isSameDay(date, new Date());
+    }
     return {
-      daysOfWeek
+      daysOfWeek,
+      isCurrentDate
     }
   }
 }
@@ -56,6 +61,11 @@ export default {
 
     &-content {
       white-space: pre-line;
+    }
+
+
+    &.--today {
+      background-color: var(--ion-color-step-150);
     }
   }
 }

@@ -8,8 +8,8 @@ export default function useAuthentication() {
     const store = useStore();
     const currentUser = useStorage('current-user', null);
 
-    const defineCurrentUser = (user: any) => {
-        store.dispatch("user/defineCurrentUser", user);
+    const defineCurrentUser = async (user: any) => {
+        await store.dispatch("user/defineCurrentUser", user);
         currentUser.value = user;
     }
 

@@ -1,5 +1,5 @@
 <template>
-  <ion-item>
+  <ion-item data-reorder-after="false">
     <form @submit.prevent="handleSubmit" class="o-form">
       <div class="o-form__new-label" v-if="!hasFocus" @click="handleLabelClick">
         <ion-button fill="clear" color="dark">

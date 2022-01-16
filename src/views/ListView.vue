@@ -7,11 +7,14 @@
           <ion-back-button default-href="/lists"></ion-back-button>
         </ion-buttons>
         <ion-buttons slot="end">
-          <ion-button @click="showShareInfoModal" v-if="list.isSharedWithCurrentUser">
+          <ion-button @click="showShareInfoModal" v-if="list.isSharedWithCurrentUser && !isReorderActive">
             <ion-icon :icon="peopleOutline" slot="icon-only"></ion-icon>
           </ion-button>
-          <ion-button @click="openPopover">
+          <ion-button @click="openPopover" v-if="!isReorderActive">
             <ion-icon :icon="settingsOutline" slot="icon-only"></ion-icon>
+          </ion-button>
+          <ion-button @click="disableReorder" v-if="isReorderActive">
+            <ion-icon :icon="checkmarkOutline" slot="icon-only"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
@@ -27,45 +30,50 @@
         </ion-toolbar>
       </ion-header>
 
-      <ion-list v-for="(section, sectionIndex) in list.sections" :key="section.id">
-        <ion-list-header lines="full">
-          <ion-label>{{ section.name }}</ion-label>
-          <ion-button color="danger" @click="deleteSection(section.id)">
-            <ion-icon :icon="removeOutline" slot="icon-only"></ion-icon>
-          </ion-button>
-        </ion-list-header>
+      <ion-list>
+        <ion-reorder-group :disabled="!isReorderActive" @ionItemReorder="handleReorder($event)">
+          <template v-for="(section, sectionIndex) in list.sections" :key="section.id">
+            <ion-list-header lines="full" data-reorder-before="false">
+              <ion-label>{{ section.name }}</ion-label>
+              <ion-button color="danger" @click="deleteSection(section.id)">
+                <ion-icon :icon="removeOutline" slot="icon-only"></ion-icon>
+              </ion-button>
+            </ion-list-header>
+            <ion-item-sliding v-for="(item, itemIndex) in section.items" :key="item.id" class="o-list__item">
+              <ion-item-options side="start">
+                <ion-item-option @click="deleteItem(sectionIndex, item.id)" color="danger">
+                  {{ t('global.remove') }}
+                  <ion-icon :icon="trashOutline" slot="end"></ion-icon>
+                </ion-item-option>
+              </ion-item-options>
 
-        <ion-item-sliding v-for="(item, itemIndex) in section.items" :key="item.id" class="o-list__item">
-          <ion-item-options side="start">
-            <ion-item-option @click="deleteItem(sectionIndex, item.id)" color="danger">
-              {{ t('global.remove') }}
-              <ion-icon :icon="trashOutline" slot="end"></ion-icon>
-            </ion-item-option>
-          </ion-item-options>
 
-          <ion-item class="o-form__group-input" v-if="item.editing"
-                    @blur.capture="(event) => handleItemBlur(item, event)">
-            <ion-input type="text" v-model="item.name" :ref="el => refs[item.id] = el"/>
+              <ion-item class="o-form__group-input" v-if="item.editing"
+                        @blur.capture="(event) => handleItemBlur(item, event)">
+                <ion-input type="text" v-model="item.name" :ref="el => refs[item.id] = el"/>
 
-            <ion-button slot="end" color="success" fill="clear" class="o-form__update-save-button"
-                        @click="() => handleEditingSaveClick(item, itemIndex, sectionIndex)">
-              {{ t("global.save") }}
-              <ion-icon :icon="checkmarkOutline" slot="end"></ion-icon>
-            </ion-button>
-          </ion-item>
-          <ion-item button detail="false"
-                    @click.self="toggleUsingItem(sectionIndex, itemIndex, !item.done, $event)"
-                    v-if="!item.editing">
-            <ion-text @click.self="toggleItem(item)">{{ item.name }}</ion-text>
-            <ion-text class="o-list__item__quantity"
-                      @click="event => showQuantityChange(sectionIndex, itemIndex, event)"> x {{ item.quantity }}
-            </ion-text>
-            <ion-checkbox :checked="item.done" slot="end" />
-          </ion-item>
-        </ion-item-sliding>
-        <NewItemForm @form-submit="value => createNewItem(sectionIndex, value)" text="items.addNewItem"/>
+                <ion-button slot="end" color="success" fill="clear" class="o-form__update-save-button"
+                            @click="() => handleEditingSaveClick(item, itemIndex, sectionIndex)">
+                  {{ t("global.save") }}
+                  <ion-icon :icon="checkmarkOutline" slot="end"></ion-icon>
+                </ion-button>
+              </ion-item>
+              <ion-item button detail="false"
+                        v-long-press="handleItemLongPress"
+                        @click.self="toggleUsingItem(sectionIndex, itemIndex, !item.done, $event)"
+                        v-if="!item.editing">
+                <ion-reorder slot="start"/>
+                <ion-text @click.self="toggleItem(item)">{{ item.name }}</ion-text>
+                <ion-text class="o-list__item__quantity"
+                          @click="event => showQuantityChange(sectionIndex, itemIndex, event)"> x {{ item.quantity }}
+                </ion-text>
+                <ion-checkbox :checked="item.done" slot="end"/>
+              </ion-item>
+            </ion-item-sliding>
+            <NewItemForm @form-submit="value => createNewItem(sectionIndex, value)" text="items.addNewItem"/>
+          </template>
+        </ion-reorder-group>
       </ion-list>
-
       <ion-list>
         <NewItemForm @form-submit="createNewSection" text="sections.addNewSection"/>
       </ion-list>
@@ -99,7 +107,7 @@ import {
   IonItemSliding, IonLabel,
   IonList,
   IonListHeader,
-  IonPage,
+  IonPage, IonReorder, IonReorderGroup,
   IonText,
   IonTitle,
   IonToolbar, popoverController
@@ -139,6 +147,8 @@ export default {
     IonBackButton,
     IonButtons,
     IonLabel,
+    IonReorder,
+    IonReorderGroup,
   },
   setup() {
     const route = useRoute();
@@ -152,6 +162,7 @@ export default {
     const {showNumberAlert, showInfoAlert} = useAlert();
     const {showConfirm} = useConfirm();
     const {defineInputFocus} = useInputFocus(refs);
+    const isReorderActive = ref(false);
 
     const newSectionName = ref("");
 
@@ -270,7 +281,81 @@ export default {
       }), t('modals.shareInfo.title'))
     }
     const toggleUsingItem = async (sectionIndex, itemIndex, done, event) => {
-      await toggleItemDone(sectionIndex, itemIndex, done, event)
+      if(!isReorderActive.value) {
+        await toggleItemDone(sectionIndex, itemIndex, done, event)
+      }
+    }
+
+    const handleItemLongPress = () => {
+      console.log('long pressed !')
+      isReorderActive.value = true;
+    }
+
+    const disableReorder = () => {
+      isReorderActive.value = false;
+    }
+
+    const getSectionFromDomIndex = (domIndex) => {
+      let expectedSectionStartIndex = 0;
+
+      for(let i = 0; i < list.value.sections.length; i ++) {
+        const currentSection = list.value.sections[i];
+
+        if(domIndex > expectedSectionStartIndex + 1 && domIndex <= (expectedSectionStartIndex + currentSection.items.length)) {
+          return [i, domIndex - expectedSectionStartIndex - 1];
+        }
+
+        expectedSectionStartIndex += currentSection.items.length + 2
+      }
+
+
+      return [-1, -1];
+    }
+
+    const getOriginalIndexFromSections = (originalIndex) => {
+      const [givenSectionIndex, expectedSectionDomIndexStart] = getSectionFromDomIndex(originalIndex);
+
+      return [givenSectionIndex, originalIndex - expectedSectionDomIndexStart - (2 * givenSectionIndex) - 1];
+    }
+
+    const saveUpdatedList = async (newIndex, oldIndex) => {
+      const [oldSectionIndex, oldItemInOldSection] = getOriginalIndexFromSections(oldIndex);
+
+      if(oldSectionIndex >= 0 && oldItemInOldSection >= 0) {
+        const originalItemClone = list.value.sections[oldSectionIndex].items[oldItemInOldSection].clone();
+
+        const [newSectionIndex, newIndexInNewSection] = getOriginalIndexFromSections(newIndex);
+
+        const listClone = list.value.clone();
+
+        listClone.sections[oldSectionIndex].removeItem(oldItemInOldSection);
+        listClone.sections[newSectionIndex].insertItem(originalItemClone, newIndexInNewSection)
+
+        await updateList(listClone);
+      }
+    }
+
+    const handleReorder = async (event) => {
+      const changingIndex = event.detail.to;
+
+      const reorderGroupChildren = event.target.querySelectorAll('ion-item, ion-list-header');
+
+      let shouldCompleteReorder = true;
+
+      const replacedWithItem = reorderGroupChildren[changingIndex];
+
+      const changeDirection = event.detail.to < event.detail.from ? 'reorderBefore' : 'reorderAfter';
+
+      if(changeDirection in replacedWithItem.dataset && replacedWithItem.dataset[changeDirection] === 'false') {
+        shouldCompleteReorder = false;
+      }
+
+      if(shouldCompleteReorder) {
+        event.detail.complete(true);
+        await saveUpdatedList(event.detail.to, event.detail.from);
+      } else {
+        event.detail.complete(false);
+      }
     }
 
     return {
@@ -292,9 +377,13 @@ export default {
       newSectionName,
       handleItemBlur,
       toggleItemDone,
+      disableReorder,
       createNewSection,
+      isReorderActive,
       showShareInfoModal,
       showQuantityChange,
+      handleItemLongPress,
+      handleReorder,
       handleEditingSaveClick
     }
   }

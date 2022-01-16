@@ -13,7 +13,15 @@ export const SectionConverter: FirestoreDataConverter<Section> = {
         }
 
         if (data.items) {
-            dto.items = data.items.map((item: any) => ItemConverter.fromFirestore(item))
+            dto.items = data.items.map((item: any, index: number) => {
+                const itemDTO = ItemConverter.fromFirestore(item);
+
+                if(itemDTO.index === null) {
+                    itemDTO.index = index;
+                }
+
+                return itemDTO;
+            });
         }
 
         return dto;

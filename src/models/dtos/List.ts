@@ -1,6 +1,7 @@
 import {Section} from "@/models/dtos/Section";
 import {IdentifiableRecord} from "@/models/Interfaces/IdentifiableRecord";
 import {SharedUser} from "@/models/dtos/SharedUser";
+import Clonable from "@/models/mixins/clonable";
 
 export class List implements IdentifiableRecord {
     private _id: string;
@@ -15,6 +16,8 @@ export class List implements IdentifiableRecord {
     constructor(id: string, name: string) {
         this._id = id;
         this._name = name;
+
+        Object.assign(this, Clonable)
     }
 
     get id(): string {
@@ -44,16 +47,6 @@ export class List implements IdentifiableRecord {
 
     isEqual(other: IdentifiableRecord): boolean {
         return this.id === other.id;
-    }
-
-    clone(): List {
-        const cloned = new List(this.id, this.name);
-
-        cloned.sections = [...this.sections];
-        cloned.originalAuthor = this.originalAuthor;
-        cloned.sharedWiths = [...this.sharedWiths]
-
-        return cloned;
     }
 
     get sharedWiths(): SharedUser[] {

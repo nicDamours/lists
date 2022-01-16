@@ -9,6 +9,7 @@
         :content="cell.content"
         v-for="cell in cells"
         :key="cell.id"
+        :class="{'--today': isCurrentDate(cell) }"
         @change="value => handleCellChange(value, cell)"
     />
   </ion-row>
@@ -17,6 +18,7 @@
 <script>
 import {IonCol, IonRow, IonText} from "@ionic/vue";
 import WeekCell from "./WeekCell";
+import useDates from "@/composable/use-dates";
 
 export default {
   name: "WeekRow",
@@ -43,7 +45,14 @@ export default {
       })
     }
 
+    const { isSameDay } = useDates();
+
+    const isCurrentDate = (cell) => {
+      return cell.day.date && isSameDay(cell.day.date, new Date());
+    }
+
     return {
+      isCurrentDate,
       handleCellChange
     }
   }
@@ -51,20 +60,28 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.week-row {
-  border-bottom: solid 1px lightgray;
-  min-height: 100px;
+.week {
+  &-row {
+    border-bottom: solid 1px lightgray;
+    min-height: 100px;
 
-  &__title {
-    width: 10px;
-    border-right: solid 1px lightgray;
+    &__title {
+      width: 10px;
+      border-right: solid 1px lightgray;
 
-    &-text {
-      display: flex;
-      width: 100%;
-      height: 100%;
-      justify-content: center;
-      align-items: center;
+      &-text {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+
+  &-cell {
+    &.--today {
+      background-color: var(--ion-color-step-150);
     }
   }
 }

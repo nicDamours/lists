@@ -3,7 +3,7 @@
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-title> {{ t('pages.week.title') }}</ion-title>
-        <ion-buttons slot="end">
+        <ion-buttons slot="end" v-if="false">
           <ion-button @click="handleCopyWeekClick">
             {{ t('pages.week.copyWeek') }}
           </ion-button>

@@ -271,6 +271,24 @@ describe("useReorderItems", () => {
                     }
                 }
             },
+            {
+                sections: [
+                    4,
+                    0
+                ],
+                items: {
+                    from: {
+                        section: 0,
+                        index: 0,
+                        domIndex: NaN
+                    },
+                    to: {
+                        section: 0,
+                        index: 1,
+                        domIndex: 0
+                    }
+                }
+            },
         ]
 
         return input.map(item => {

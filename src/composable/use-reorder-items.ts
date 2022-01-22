@@ -73,8 +73,13 @@ export default function useReorderItems(list: Ref<ClonableList>) {
             const originalItemClone = list.value.sections[oldSectionIndex].items[oldItemInOldSection].clone();
 
             const newDomIndexModifier = newDomIndex > oldDomIndex ? 1 : 0;
-            const [newSectionIndex, newIndexInNewSection] = getOriginalIndexFromSections(newDomIndex + newDomIndexModifier);
+            const newIndexes = getOriginalIndexFromSections(newDomIndex + newDomIndexModifier);
+            const newSectionIndex = newIndexes[0];
+            let newIndexInNewSection = newIndexes[1];
 
+            if(newSectionIndex === oldSectionIndex) {
+                newIndexInNewSection = newIndexInNewSection - newDomIndexModifier;
+            }
             const listClone = list.value.clone();
 
             listClone.sections[oldSectionIndex].removeItem(oldItemInOldSection);

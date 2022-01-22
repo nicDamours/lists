@@ -1,7 +1,9 @@
-import {Section} from "@/models/dtos/Section";
 import {IdentifiableRecord} from "@/models/Interfaces/IdentifiableRecord";
 import {SharedUser} from "@/models/dtos/SharedUser";
-import Clonable from "@/models/mixins/clonable";
+import ClonableMixin, { Clonable } from "@/models/mixins/clonable";
+import {Section} from "@/models/dtos/Section";
+
+export type ClonableList = List & Clonable;
 
 export class List implements IdentifiableRecord {
     private _id: string;
@@ -17,7 +19,7 @@ export class List implements IdentifiableRecord {
         this._id = id;
         this._name = name;
 
-        Object.assign(this, Clonable)
+        Object.assign(this, ClonableMixin)
     }
 
     get id(): string {

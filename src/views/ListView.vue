@@ -123,6 +123,7 @@ import useInputFocus from "@/composable/use-input-focus";
 import useListService from "@/composable/use-list-service";
 import ListOptionsPopOver from "@/components/ListOptionsPopOver";
 import SharedListOptionsPopOver from "@/components/SharedListOptionsPopOver";
+import useReorderItems from "@/composable/use-reorder-items";
 
 export default {
   name: "ListView",
@@ -167,6 +168,8 @@ export default {
     const newSectionName = ref("");
 
     const list = computed(() => store.getters['lists/getListById'](currentListId.value));
+
+    const { reorderItemsInList } = useReorderItems(list);
 
     const toggleItemDone = async (sectionIndex, itemIndex, value, $event) => {
       const target = $event.target;
@@ -287,7 +290,6 @@ export default {
     }
 
     const handleItemLongPress = () => {
-      console.log('long pressed !')
       isReorderActive.value = true;
     }
 
@@ -295,43 +297,11 @@ export default {
       isReorderActive.value = false;
     }
 
-    const getSectionFromDomIndex = (domIndex) => {
-      let expectedSectionStartIndex = 0;
-
-      for(let i = 0; i < list.value.sections.length; i ++) {
-        const currentSection = list.value.sections[i];
-
-        if(domIndex > expectedSectionStartIndex + 1 && domIndex <= (expectedSectionStartIndex + currentSection.items.length)) {
-          return [i, domIndex - expectedSectionStartIndex - 1];
-        }
-
-        expectedSectionStartIndex += currentSection.items.length + 2
-      }
-
-
-      return [-1, -1];
-    }
-
-    const getOriginalIndexFromSections = (originalIndex) => {
-      const [givenSectionIndex, expectedSectionDomIndexStart] = getSectionFromDomIndex(originalIndex);
-
-      return [givenSectionIndex, originalIndex - expectedSectionDomIndexStart - (2 * givenSectionIndex) - 1];
-    }
-
     const saveUpdatedList = async (newIndex, oldIndex) => {
-      const [oldSectionIndex, oldItemInOldSection] = getOriginalIndexFromSections(oldIndex);
+      const updatedList = reorderItemsInList(newIndex, oldIndex);
 
-      if(oldSectionIndex >= 0 && oldItemInOldSection >= 0) {
-        const originalItemClone = list.value.sections[oldSectionIndex].items[oldItemInOldSection].clone();
-
-        const [newSectionIndex, newIndexInNewSection] = getOriginalIndexFromSections(newIndex);
-
-        const listClone = list.value.clone();
-
-        listClone.sections[oldSectionIndex].removeItem(oldItemInOldSection);
-        listClone.sections[newSectionIndex].insertItem(originalItemClone, newIndexInNewSection)
-
-        await updateList(listClone);
+      if(updatedList !== null) {
+        await updateList(updatedList);
       }
     }
 

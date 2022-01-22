@@ -1,11 +1,11 @@
-import {Item} from "@/models/dtos/Item";
+import {ClonableItem} from "@/models/dtos/Item";
 import {IdentifiableRecord} from "@/models/Interfaces/IdentifiableRecord";
 
 export class Section implements IdentifiableRecord{
     private _id: string;
     private _name = "";
 
-    private _items: Item[] = [];
+    private _items: ClonableItem[] = [];
 
     constructor(id: string) {
         this._id = id;
@@ -27,11 +27,11 @@ export class Section implements IdentifiableRecord{
         this._name = value;
     }
 
-    get items(): Item[] {
+    get items(): ClonableItem[] {
         return this._items;
     }
 
-    set items(value: Item[]) {
+    set items(value: ClonableItem[]) {
         this._items = value;
     }
 
@@ -44,14 +44,14 @@ export class Section implements IdentifiableRecord{
         this.items.splice(index, 1);
     }
 
-    insertItem(item: Item, index: number = this.items.length) {
+    insertItem(item: ClonableItem, index: number = this.items.length) {
         this.items.splice(index, 0, item);
         this._updateItemsIndexes();
     }
 
     _updateItemsIndexes() {
         this.items.forEach((item, index) => {
-            item.index = index;
-        })
+            this.items[index].index = index;
+        });
     }
 }

@@ -6,7 +6,6 @@ export default function useListService() {
     const { callAsync} = useLoading();
 
     const updateList = async (list: List) => {
-        console.log('new list', list);
        return callAsync(ListService.updateList, list);
     }
 

@@ -1,5 +1,8 @@
 import {IdentifiableRecord} from "@/models/Interfaces/IdentifiableRecord";
-import Clonable from "@/models/mixins/clonable";
+import ClonableMixin, {Clonable} from "@/models/mixins/clonable";
+
+
+export type ClonableItem = Item & Clonable;
 
 export class Item implements IdentifiableRecord{
     private _id: string;
@@ -13,7 +16,7 @@ export class Item implements IdentifiableRecord{
         this._id = id;
         this._name = name;
 
-        Object.assign(this, Clonable);
+        Object.assign(this, ClonableMixin);
     }
 
     get id(): string {

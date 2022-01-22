@@ -1,4 +1,8 @@
-export default {
+export interface Clonable {
+    clone(): any;
+}
+
+const ClonableMixin: Clonable = {
     clone(): any {
         const clone = Object.assign(Object.create(Object.getPrototypeOf(this)));
 
@@ -22,3 +26,5 @@ export default {
         return clone;
     }
 };
+
+export default ClonableMixin

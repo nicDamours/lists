@@ -25,6 +25,7 @@ const OnLongPress = {
         el.addEventListener('mousedown', tapStartHandler);
 
         el.addEventListener('touchend', tapEndHandler);
+        el.addEventListener('touchmove', tapEndHandler)
         el.addEventListener('mouseup', tapEndHandler);
     }
 }

@@ -1,0 +1,21 @@
+.theme-selector {
+  padding: 10px;
+
+  &--default {
+    --background: #2dd36f;
+    --color: #222428;
+  }
+
+  &--pink {
+    --background: #C51162
+  }
+
+  &--blue {
+    --background: #304FFE
+  }
+
+  &--yellow {
+    --background: #FFD600;
+    --color: #222428;
+  }
+}

@@ -1,18 +1,21 @@
 import * as dateFns from "date-fns";
+import {Interval} from "date-fns";
 import useLocale from "@/composable/use-locale";
 import useStrings from "@/composable/use-strings";
 import {computed} from "vue";
 
 export default function useDates() {
-    const { preferredDateLocale } = useLocale();
+    const getDateFormat = () => 'yyyy-MM-dd';
 
-    const { capitalize } = useStrings();
+    const {preferredDateLocale} = useLocale();
+
+    const {capitalize} = useStrings();
 
     const addDays = (date: Date, days: number) => {
         return dateFns.addDays(date, days)
     }
 
-    const subDays = (date: Date, days: number ) => {
+    const subDays = (date: Date, days: number) => {
         return dateFns.subDays(date, days);
     }
 
@@ -62,18 +65,46 @@ export default function useDates() {
     }
 
     const isSameDay = (firstDate: Date, secondDate: Date) => {
-        return dateFns.format(firstDate, 'yyyy-MM-dd') === dateFns.format(secondDate, 'yyyy-MM-dd');
+        return dateFns.format(firstDate, getDateFormat()) === dateFns.format(secondDate, getDateFormat());
+    }
+
+    const getWeek = (date: Date) => {
+        return dateFns.getWeek(date);
+    }
+
+    const startOfWeek = (date: Date) => {
+        return dateFns.startOfWeek(date);
+    }
+
+    const endOfWeek = (date: Date) => {
+        return dateFns.endOfWeek(date);
+    }
+
+    const eachDayOfInterval = (interval: Interval) => {
+        return dateFns.eachDayOfInterval(interval);
+    }
+
+    const getDatesInWeek = (date: Date) => {
+        const firstDayOfWeek = startOfWeek(date);
+        const lastDayOfWeek = endOfWeek(date)
+
+        return eachDayOfInterval({start: firstDayOfWeek, end: lastDayOfWeek});
     }
 
     return {
         parse,
         toISO,
         format,
+        getWeek,
         subDays,
         addDays,
         parseISO,
+        endOfWeek,
         isSameDay,
+        startOfWeek,
         getEndOfWeek,
+        getDateFormat,
+        getDatesInWeek,
         getStartOfWeek,
         getDaysFromDates,
         formatDateForDayOfWeek,

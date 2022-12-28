@@ -1,12 +1,12 @@
 import * as functions from "firebase-functions";
 import {getApp} from "./app-instance";
 import {firestore} from "firebase-admin/lib/firestore";
+import {auth} from "firebase-admin/lib/auth";
 import DocumentSnapshot = firestore.DocumentSnapshot;
 import DocumentData = firestore.DocumentData;
-import {auth} from "firebase-admin/lib/auth";
 import UserRecord = auth.UserRecord;
 
-const shareWithEmail = functions.https.onCall((data: any, context) => {
+const shareListWithEmail = functions.https.onCall((data: any, context) => {
   const payload = JSON.parse(data.text);
   if (!context.auth) {
     throw new functions.https.HttpsError("failed-precondition",
@@ -63,4 +63,4 @@ const shareWithEmail = functions.https.onCall((data: any, context) => {
   });
 });
 
-export default shareWithEmail;
+export default shareListWithEmail;

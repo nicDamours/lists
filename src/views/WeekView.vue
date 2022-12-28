@@ -3,9 +3,12 @@
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-title> {{ t('pages.week.title') }}</ion-title>
-        <ion-buttons slot="end" v-if="false">
-          <ion-button @click="handleCopyWeekClick">
+        <ion-buttons slot="end">
+          <ion-button v-if="false" @click="handleCopyWeekClick">
             {{ t('pages.week.copyWeek') }}
+          </ion-button>
+          <ion-button @click="openPopover">
+            <ion-icon slot="icon-only" :icon="settingsOutline"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
@@ -30,13 +33,25 @@
 </template>
 
 <script>
-import {IonButtons, IonCard, IonCardContent, IonContent, IonHeader, IonPage, IonTitle, IonToolbar} from "@ionic/vue";
+import {
+  IonButtons,
+  IonCard,
+  IonCardContent,
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  popoverController
+} from "@ionic/vue";
 import {useI18n} from "vue-i18n";
 import WeekPlanner from "@/components/WeekPlanner";
 import useWeeKPlans from "@/composable/use-week-plans";
-import { ref } from "vue";
+import {ref} from "vue";
 import WeekSelector from "@/components/week/WeekSelector";
 import useWeekService from "@/composable/use-week-service";
+import WeekOptionPopOver from "@/components/WeekOptionPopOver.vue";
+import {settingsOutline} from "ionicons/icons";
 
 export default {
   name: "WeekView",
@@ -83,9 +98,29 @@ export default {
       console.log('empty week clicked');
     }
 
+    const openPopover = async (ev) => {
+      const popover = await popoverController
+          .create({
+            component: WeekOptionPopOver,
+            componentProps: {
+              dates: {
+                startDate: currentWeekPlan.value.startDate,
+                endDate: currentWeekPlan.value.endDate
+              }
+            },
+            event: ev,
+            translucent: true
+          })
+      await popover.present();
+
+      await popover.onDidDismiss();
+    }
+
     return {
       t,
       viewDate,
+      openPopover,
+      settingsOutline,
       currentWeekPlan,
       showCopyWeekModal,
       hideCopyWeekModal,

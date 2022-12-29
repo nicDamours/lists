@@ -4,7 +4,7 @@ export class Container {
     private static instance: Container;
     private readonly singletonsInstances!: { [className: string]: Injectable };
     private aliases: { [aliasName: string]: string };
-    private classes: { [className: string]: unknown }
+    private classes: { [className: string]: unknown };
 
     private constructor() {
         this.singletonsInstances = {};
@@ -27,7 +27,7 @@ export class Container {
             containerInstance.getClassByName(className);
 
         if (!containerInstance.hasSingletonInstance(actualClassName)) {
-            containerInstance.registerSingletonInstance(actualClassName, args);
+            containerInstance.registerSingletonInstance(actualClassName, ...args);
         }
 
         return containerInstance.retrieveSingletonInstance<C>(actualClassName);

@@ -10,7 +10,7 @@ type globalType = typeof globalThis & {
 }
 
 if (!hasAppInstance) {
-  (global as globalType)[APP_KEY] = admin.initializeApp();
+    (global as globalType)[APP_KEY] = admin.initializeApp();
 }
 type singletonType = {
     app: admin.app.App
@@ -18,17 +18,17 @@ type singletonType = {
 const singleton= {};
 
 Object.defineProperty(singleton, "app", {
-  get: function() {
-    return (global as globalType)[APP_KEY];
-  },
+    get: function () {
+        return (global as globalType)[APP_KEY];
+    },
 });
 
 Object.freeze(singleton);
 
 const getApp = (): admin.app.App => {
-  return (singleton as singletonType).app;
+    return (singleton as singletonType).app;
 };
 
 export {
-  getApp,
+    getApp,
 };

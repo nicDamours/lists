@@ -1,11 +1,11 @@
 import {firestoreMutations} from "@/store/modules/firestoreModule";
-import ShareRequest from "@/models/dtos/ShareRequest";
+import ShareListRequest from "@/models/dtos/ShareListRequest";
 import {VuexFunction} from "@/store";
 
 export const namespaced = true;
 
 export type ShareRequestState = {
-    shareRequests: ShareRequest[];
+    shareRequests: ShareListRequest[];
 }
 
 export const state: ShareRequestState = {

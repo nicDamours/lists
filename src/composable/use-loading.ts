@@ -19,7 +19,7 @@ export default function useLoading() {
         try {
             await startLoading();
 
-            await cb.call({}, ...args);
+            return await cb.call({}, ...args);
         } finally {
             await stopLoading();
         }

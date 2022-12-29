@@ -22,9 +22,9 @@ import {FirebaseDatabaseService} from "@/services/FirebaseDatabaseService";
 import LoadingBar from "@/components/LoadingBar.vue";
 import useLoading from "@/composable/use-loading";
 import {ShareRequestConverter} from "@/models/converter/ShareRequestConverter";
-import ShareRequest from "@/models/dtos/ShareRequest";
 import WeekConverter from "@/models/converter/WeekConverter";
 import {WeekPlan} from "@/models/dtos/WeekPlan/WeekPlan";
+import ShareRequest from "@/models/dtos/ShareRequest";
 
 export default defineComponent({
   name: 'App',

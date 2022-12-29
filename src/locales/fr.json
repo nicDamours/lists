@@ -65,8 +65,20 @@
   },
   "shareRequest": {
     "item": {
-      "textReceived": "{authorName} veux partager la liste \"{listName}\" avec vous.",
-      "textSent": "Demande envoyée à {targetName} pour la liste \"{listName}\".",
+      "list": {
+        "textReceived": "{authorName} veux partager la liste \"{listName}\" avec vous.",
+        "textSent": "Demande envoyée à {targetName} pour la liste \"{listName}\"."
+      },
+      "week": {
+        "single": {
+          "textReceived": "{authorName} veux partager la semaine du {startDate} au {endDate} avec vous.",
+          "textSent": "Demande envoyée à {targetName} pour la semaine du {startDate} au {endDate}."
+        },
+        "all": {
+          "textReceived": "{authorName} veux partager toutes les semaines avec vous.",
+          "textSent": "Demande envoyée à {targetName} pour toutes les semaines."
+        }
+      },
       "decline": "Refuser",
       "accept": "Accepter",
       "revoke": "Annuler"
@@ -78,7 +90,7 @@
     "issuedRequest": "Demande(s) envoyée(s)"
   },
   "tabs": {
-    "lists" : "Listes",
+    "lists": "Listes",
     "week": "Semaine"
   },
   "WeekPlanner": {
@@ -87,5 +99,9 @@
       "supper": "Souper",
       "activities": "Activités"
     }
+  },
+  "shareWeekSelector": {
+    "shareAllWeeks": "Partager toutes les semaines",
+    "shareSpecificWeek": "Partager une semaine en particulier"
   }
 }

@@ -1,7 +1,8 @@
 <template>
   <ShareWithUserModal @submit-click="handleSubmitClick">
-    <template #default="{emailInput, updateEmailInput}">
-      <ShareWithUserForm :model-value="emailInput" @update:modelValue="updateEmailInput"/>
+    <template #default="{emailInput, updateEmailInput, emailInputErrors, updateEmailInputErrors}">
+      <ShareWithUserForm :errors="emailInputErrors" :model-value="emailInput" @update:modelValue="updateEmailInput"
+                         @update:errors="updateEmailInputErrors"/>
       <div class="ion-padding">
         <ShareWeekSelector v-model="datesModel" v-model:share-all-weeks="shareAllWeekModel"/>
       </div>

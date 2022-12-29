@@ -29,7 +29,7 @@ export default {
     const selectedDates = computed(() => {
       const weekDates = getDatesInWeek(modelValue.value.startDate)
 
-      return weekDates.map(date => format(date, getDateFormat()).value)
+      return weekDates.map(date => format(date, getDateFormat()))
     })
 
 

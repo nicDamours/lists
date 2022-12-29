@@ -8,7 +8,7 @@
 
 <script>
 import {ref} from "vue";
-import {IonFabButton, IonIcon} from "@ionic/vue";
+import {IonFabButton, IonFabList, IonIcon} from "@ionic/vue";
 import {useColorMode} from "@vueuse/core";
 import {checkmark} from "ionicons/icons";
 
@@ -16,6 +16,7 @@ export default {
   name: "ThemeColorSelector",
   components: {
     IonIcon,
+    IonFabList,
     IonFabButton
   },
   setup() {

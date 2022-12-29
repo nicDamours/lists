@@ -65,8 +65,20 @@
   },
   "shareRequest": {
     "item": {
-      "textReceived": "{authorName} wants to share the list \"{listName}\" with you.",
-      "textSent": "Share request sent to {targetName} for the list \"{listName}\".",
+      "list": {
+        "textReceived": "{authorName} wants to share the list \"{listName}\" with you.",
+        "textSent": "Share request sent to {targetName} for the list \"{listName}\"."
+      },
+      "week": {
+        "single": {
+          "textReceived": "{authorName} wants to share the week starting on {startDate} to {endDate} with you.",
+          "textSent": "Share request sent to {targetName} for the week starting on {startDate} to {endDate}."
+        },
+        "all": {
+          "textReceived": "{authorName} wants to share all weeks with you",
+          "textSent": "Share request sent to  {targetName} for all weeks."
+        }
+      },
       "decline": "Decline",
       "accept": "Accept",
       "revoke": "Revoke"
@@ -78,7 +90,7 @@
     "issuedRequest": "Sent requests"
   },
   "tabs": {
-    "lists" : "Lists",
+    "lists": "Lists",
     "week": "Week"
   },
   "WeekPlanner": {
@@ -87,5 +99,9 @@
       "supper": "Diner",
       "activities": "Activities"
     }
+  },
+  "shareWeekSelector": {
+    "shareAllWeeks": "Share all weeks",
+    "shareSpecificWeek": "Share a single week"
   }
 }

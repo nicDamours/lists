@@ -73,6 +73,7 @@ export default {
       if(value.data) {
         try {
           await callFunction('shareWithEmail', {
+            type: "list",
             list: list.value.id,
             email: value.data
           });

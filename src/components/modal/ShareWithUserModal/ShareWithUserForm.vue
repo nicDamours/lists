@@ -1,20 +1,20 @@
 <template>
-  <div class="o-form ion-padding">
+  <form class="o-form ion-padding">
     <ion-title size="h2">{{ t('shareWithUserModal.formTitle') }}</ion-title>
     <div class="o-form__group ion-padding">
       <ion-text>{{ t('shareWithUserModal.form.headerText') }}</ion-text>
     </div>
     <div class="o-form__group ion-padding">
-      <container-with-errors :errors="errors">
+      <container-with-errors :errors="errorsModel">
         <ion-item>
-          <ion-label position="floating">{{ t('shareWithUserModal.form.email')}}</ion-label>
-          <ion-input type="text" @ionChange="handleInputChange" v-model="model" debounce="500"/>
-          <ion-icon slot="end" :icon="iconForStatus" :color="colorForStatus" v-if="status !== null && !pending" />
+          <ion-label position="floating">{{ t('shareWithUserModal.form.email') }}</ion-label>
+          <ion-input v-model="model" debounce="500" required type="text" @ionChange="handleInputChange"/>
+          <ion-icon v-if="!pending" slot="end" :color="colorForStatus" :icon="iconForStatus"/>
           <ion-spinner v-if="pending" name="dots" slot="end"/>
         </ion-item>
       </container-with-errors>
     </div>
-  </div>
+  </form>
 </template>
 
 <script>
@@ -29,24 +29,43 @@ import {useI18n} from "vue-i18n";
 
 export default {
   name: "ShareWithUserForm",
-  components: { ContainerWithErrors, IonText, IonIcon, IonItem, IonLabel, IonInput, IonSpinner, IonTitle },
-  emits: ["update:modelValue"],
+  components: {ContainerWithErrors, IonText, IonIcon, IonItem, IonLabel, IonInput, IonSpinner, IonTitle},
+  emits: ["update:modelValue", "update:errors"],
   props: {
     modelValue: {
       type: String,
       required: false
+    },
+    errors: {
+      type: Array,
+      required: false,
+      default() {
+        return []
+      }
     }
   },
-  setup(props, { emit }){
-    const { t } = useI18n();
-    const { modelValue } = toRefs(props);
-    const { doesUserExists } = useUsers();
-    const { getCurrentUser } = useCurrentUser();
-    const { validateEmail } = useValidation();
+  setup(props, {emit}) {
+    const {t} = useI18n();
+    const {modelValue, errors} = toRefs(props);
+    const {doesUserExists} = useUsers();
+    const {getCurrentUser} = useCurrentUser();
+    const {validateEmail} = useValidation();
 
-    const errors = ref([]);
-    const status = ref(null);
+    const errorsModel = computed({
+      get() {
+        return errors.value
+      },
+      set(value) {
+        emit("update:errors", value);
+      }
+    })
+
     const pending = ref(false);
+
+
+    const status = computed(() => {
+      return errorsModel.value.length === 0;
+    })
 
     const model = computed({
       get() {
@@ -58,9 +77,8 @@ export default {
     })
 
     const addError = (error) => {
-      if(!errors.value.includes(error)) {
-        errors.value.push(error)
-        status.value = false;
+      if (!errorsModel.value.includes(error)) {
+        errorsModel.value.push(error)
         pending.value = false;
       }
     }
@@ -70,7 +88,7 @@ export default {
     }
 
     const handleInputChange = async () => {
-      errors.value = [];
+      errorsModel.value = [];
       if(modelValue.value !== '') {
         if(validateEmail(modelValue.value)) {
           if(!isCurrentUserEmail(modelValue.value)) {
@@ -80,8 +98,7 @@ export default {
             if(!existingUserPredicate) {
               addError('errors.userDoesntExists');
             } else {
-              errors.value = [];
-              status.value = true;
+              errorsModel.value = [];
             }
           } else {
             addError('errors.cannotShareListWithYourself');
@@ -106,8 +123,8 @@ export default {
       t,
       model,
       status,
-      errors,
       pending,
+      errorsModel,
       iconForStatus,
       colorForStatus,
       handleInputChange
@@ -115,7 +132,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

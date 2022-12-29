@@ -2,7 +2,8 @@
   <BaseModal :title="t('shareWithUserModal.title')">
     <template #default>
       <div class="o-share-with-user-model__content">
-        <slot :email-input="emailInput" :update-email-input="handleEmailInputUpdate"></slot>
+        <slot :email-input="emailInput" :email-input-errors="emailInputErrors"
+              :update-email-input="handleEmailInputUpdate" :update-email-input-errors="updateEmailInputErrors"></slot>
       </div>
     </template>
     <template #buttons>
@@ -35,9 +36,15 @@ export default {
   setup(_, {emit}) {
     const {t} = useI18n();
     const emailInput = ref("");
+    const emailInputErrors = ref([]);
 
     const handleEmailInputUpdate = value => {
+      emailInputErrors.value = [];
       emailInput.value = value
+    }
+
+    const updateEmailInputErrors = value => {
+      emailInputErrors.value.push(...value);
     }
 
     const dismiss = (value) => {
@@ -45,15 +52,25 @@ export default {
     }
 
     const handleSubmitClick = () => {
-      emit("submit-click", emailInput.value)
+      if (emailInput.value === "") {
+        const errorMessage = t('validation.required');
+
+        if (!emailInputErrors.value.includes(errorMessage)) {
+          emailInputErrors.value.push(errorMessage)
+        }
+      } else {
+        emit("submit-click", emailInput.value)
+      }
     }
 
     return {
       t,
       dismiss,
       emailInput,
+      emailInputErrors,
       handleSubmitClick,
-      handleEmailInputUpdate
+      handleEmailInputUpdate,
+      updateEmailInputErrors
     }
   }
 }

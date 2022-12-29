@@ -1,52 +1,41 @@
 <template>
-  <ion-item>
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <i18n-t keypath="shareRequest.item.textSent" tag="ion-note">
-            <template v-slot:targetName>
-              <ion-text class="--bold">{{ item.targetEmail }}</ion-text>
-            </template>
-            <template v-slot:listName>
-              <ion-text class="--bold">{{ item.listName }}</ion-text>
-            </template>
-          </i18n-t>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-button color="danger" fill="clear" @click="handleRevokeRequestClick">
-            <ion-text>{{ t('shareRequest.item.revoke') }}</ion-text>
-            <ion-icon slot="end" :icon="trashOutline"></ion-icon>
-          </ion-button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-item>
+  <ShareRequestItem :accept-visible="false" decline-text="shareRequest.item.revoke"
+                    @decline-click="handleRevokeRequestClick">
+    <i18n-t keypath="shareRequest.item.list.textSent" tag="ion-note">
+      <template v-slot:targetName>
+        <ion-text class="--bold">{{ item.targetEmail }}</ion-text>
+      </template>
+      <template v-slot:listName>
+        <ion-text class="--bold">{{ item.listName }}</ion-text>
+      </template>
+    </i18n-t>
+  </ShareRequestItem>
 </template>
 
 <script>
-import {IonButton, IonCol, IonGrid, IonIcon, IonItem, IonRow, IonText, modalController} from "@ionic/vue";
-import ShareRequest from "../models/dtos/ShareRequest";
+import {IonText} from "@ionic/vue";
+import ShareListRequest from "../models/dtos/ShareListRequest";
 import {useI18n} from "vue-i18n";
 import {toRefs} from "vue";
 import useToast from "../composable/use-toast";
 import useShareRequests from "../composable/use-share-requests";
 import {trashOutline} from "ionicons/icons";
+import ShareRequestItem from "@/components/ShareRequestItem.vue";
 
 export default {
   name: "ShareRequestListItemSent",
-  components: { IonItem, IonText, IonGrid, IonCol, IonRow, IonIcon, IonButton},
+  components: {ShareRequestItem, IonText},
+  emits: ["share-list-change"],
   props: {
     item: {
       type: Object,
       require: true,
       validator(value) {
-        return value instanceof ShareRequest
+        return value instanceof ShareListRequest
       }
     }
   },
-  setup(props) {
+  setup(props, {emit}) {
     const {t} = useI18n();
     const {item} = toRefs(props);
 
@@ -57,7 +46,7 @@ export default {
       try {
         await deleteRequest(item.value);
         await successToast(t('shareRequest.successfullyRevokedRequest'))
-        await modalController.dismiss();
+        emit('share-list-change');
       } catch (e) {
         await dangerToast(e.message);
       }

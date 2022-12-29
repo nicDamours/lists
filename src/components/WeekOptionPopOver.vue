@@ -17,6 +17,7 @@ import useToast from "@/composable/use-toast";
 import {IonContent, IonIcon, IonItem, IonList, IonText, modalController, popoverController} from "@ionic/vue";
 import {closeCircleOutline, settingsOutline, shareOutline} from "ionicons/icons";
 import ShareWeekWithUserModal from "@/components/modal/ShareWeekWithUserModal/ShareWeekWithUserModal.vue";
+import useDates from "@/composable/use-dates";
 
 export default {
   name: "WeekOptionPopOver",
@@ -35,6 +36,7 @@ export default {
     const {t} = useI18n();
     const {callFunction} = useCloudFunctions();
     const {dangerToast, successToast} = useToast();
+    const {format} = useDates()
 
     const handleShare = async () => {
       const modal = await modalController
@@ -53,10 +55,17 @@ export default {
           const payload = {
             email: value.data.email,
             shareAllWeeks: value.data.shareAllWeeks,
-            dates: value.data.dates ?? {}
+            type: "week"
           }
 
-          await callFunction('shareWeekWithEmail', payload);
+          if (value.data.weekDates) {
+            payload.dates = {
+              startDate: format(value.data.weekDates.startDate, 'yyyy-MM-dd'),
+              endDate: format(value.data.weekDates.endDate, 'yyyy-MM-dd'),
+            }
+          }
+
+          await callFunction('shareWithEmail', payload);
 
           await successToast(t('shareWithUserModal.successfullySentShareRequest'))
         } catch (e) {

@@ -2,52 +2,52 @@ import * as functions from "firebase-functions";
 import {getApp} from "./app-instance";
 
 const unShareWithEmail = functions.https.onCall((data: any, context) => {
-  const app = getApp();
-  const payload = JSON.parse(data.text);
-  if (!context.auth) {
-    throw new functions.https.HttpsError("failed-precondition",
-        "This function must be called while authenticated");
-  }
-
-  const {list, email} = payload;
-  app.firestore().doc(`/lists/${list}`).get().then((documentData) => {
-    if (!documentData.exists) {
-      throw new functions.https.HttpsError(
-          "not-found", "list with this id cannot be found");
+    const app = getApp();
+    const payload = JSON.parse(data.text);
+    if (!context.auth) {
+        throw new functions.https.HttpsError("failed-precondition",
+            "This function must be called while authenticated");
     }
 
-    const listOwner = documentData.get("user");
+    const {list, email} = payload;
+    app.firestore().doc(`/lists/${list}`).get().then((documentData) => {
+        if (!documentData.exists) {
+            throw new functions.https.HttpsError(
+                "not-found", "list with this id cannot be found");
+        }
 
-    if (listOwner !== context.auth?.uid) {
-      throw new functions.https.HttpsError("failed-precondition",
-          "You don't have access to this list");
-    }
+        const listOwner = documentData.get("user");
 
-    app.auth().getUserByEmail(email).then((relatedUser) => {
-      if (relatedUser.uid === context.auth?.uid) {
-        throw new functions.https.HttpsError("failed-precondition",
-            "You cannot unshare a list with yourself");
-      }
+        if (listOwner !== context.auth?.uid) {
+            throw new functions.https.HttpsError("failed-precondition",
+                "You don't have access to this list");
+        }
 
-      const currentlySharedWithUsers: {[key: string]: string} = documentData.get("sharedWith") ?? {};
+        app.auth().getUserByEmail(email).then((relatedUser) => {
+            if (relatedUser.uid === context.auth?.uid) {
+                throw new functions.https.HttpsError("failed-precondition",
+                    "You cannot unshare a list with yourself");
+            }
 
-      if (!currentlySharedWithUsers[relatedUser.uid]) {
-        throw new functions.https.HttpsError("failed-precondition",
-            "this list is not share with this user");
-      }
-      delete currentlySharedWithUsers[relatedUser.uid];
+            const currentlySharedWithUsers: { [key: string]: string } = documentData.get("sharedWith") ?? {};
 
-      app.firestore().doc(`/lists/${list}`).update("sharedWith", currentlySharedWithUsers).then(() => {
-        console.log("successfully shared list with user");
-      });
+            if (!currentlySharedWithUsers[relatedUser.uid]) {
+                throw new functions.https.HttpsError("failed-precondition",
+                    "this list is not share with this user");
+            }
+            delete currentlySharedWithUsers[relatedUser.uid];
+
+            app.firestore().doc(`/lists/${list}`).update("sharedWith", currentlySharedWithUsers).then(() => {
+                console.log("successfully shared list with user");
+            });
+        }).catch(() => {
+            throw new functions.https.HttpsError(
+                "not-found", "User with this email cannot be found");
+        });
     }).catch(() => {
-      throw new functions.https.HttpsError(
-          "not-found", "User with this email cannot be found");
+        throw new functions.https.HttpsError(
+            "not-found", "List with this id cannot be found");
     });
-  }).catch(() => {
-    throw new functions.https.HttpsError(
-        "not-found", "List with this id cannot be found");
-  });
 });
 
 export default unShareWithEmail;

@@ -34,11 +34,13 @@
 
 <script>
 import {
+  IonButton,
   IonButtons,
   IonCard,
   IonCardContent,
   IonContent,
   IonHeader,
+  IonIcon,
   IonPage,
   IonTitle,
   IonToolbar,
@@ -64,6 +66,8 @@ export default {
     IonButtons,
     WeekPlanner,
     WeekSelector,
+    IonButton,
+    IonIcon,
     IonCard,
     IonCardContent
   },

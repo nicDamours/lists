@@ -1,10 +1,10 @@
 <template>
   <ion-app>
-    <LoadingBar />
+    <LoadingBar/>
 
     <ion-router-outlet/>
 
-    <OrganismPreferences />
+    <OrganismPreferences/>
   </ion-app>
 </template>
 
@@ -25,6 +25,8 @@ import {ShareRequestConverter} from "@/models/converter/ShareRequestConverter";
 import WeekConverter from "@/models/converter/WeekConverter";
 import {WeekPlan} from "@/models/dtos/WeekPlan/WeekPlan";
 import ShareRequest from "@/models/dtos/ShareRequest";
+import {WeekSharing} from "@/models/dtos/WeekPlan/WeekSharing";
+import {WeekSharingConverter} from "@/models/converter/WeekSharingConverter";
 
 export default defineComponent({
   name: 'App',
@@ -35,7 +37,7 @@ export default defineComponent({
     IonRouterOutlet
   },
   setup() {
-    const { startLoading } = useLoading();
+    const {startLoading} = useLoading();
     const {registerBindings} = useFirestoreBinding()
     const db = Container.get<FirebaseDatabaseService>('FirebaseDatabaseService').db
 
@@ -43,8 +45,8 @@ export default defineComponent({
       useBindAuthentication().then((user) => {
         registerBindings<List>("lists",
             [
-                query(collection(db, "lists"), where('user', '==', user.uid)),
-                query(collection(db, "lists"), where( 'sharedWith.' +  user.uid, '!=', null)),
+              query(collection(db, "lists"), where('user', '==', user.uid)),
+              query(collection(db, "lists"), where('sharedWith.' + user.uid, '!=', null)),
             ],
             {
               storePath: "lists/",
@@ -54,16 +56,24 @@ export default defineComponent({
         registerBindings<WeekPlan>("weeks",
             [
               query(collection(db, "weeks"), where('user', '==', user.uid)),
+              query(collection(db, "weeks"), where('user', '==', user.uid)),
             ],
             {
               storePath: "weeks/",
               converter: WeekConverter
             });
 
+        registerBindings<WeekSharing>("weeksSharing", [
+          query(collection(db, "weekSharing"), where('targetId', '==', user.uid))
+        ], {
+          storePath: "weeksSharing/",
+          converter: WeekSharingConverter
+        })
+
         registerBindings<ShareRequest>("shareRequests", [
-            query(collection(db, "shareRequest"), where("targetId", '==', user.uid)),
-            query(collection(db, "shareRequest"), where("authorId", '==', user.uid))
-        ],{
+          query(collection(db, "shareRequest"), where("targetId", '==', user.uid)),
+          query(collection(db, "shareRequest"), where("authorId", '==', user.uid))
+        ], {
           storePath: "shareRequests/",
           converter: ShareRequestConverter
         })

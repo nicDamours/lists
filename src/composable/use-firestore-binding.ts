@@ -19,7 +19,7 @@ export default function useFirestoreBinding() {
 
     const { startLoading, stopLoading } = useLoading();
 
-    const registerBindings = <S extends IdentifiableRecord>(storeProperty: string, collectionQueries: Query[], options: FireStoreBindingOptions<S>) => {
+    const registerBindings = <S extends IdentifiableRecord>(storeProperty: string, collectionQueries: Iterable<Query>, options: FireStoreBindingOptions<S>) => {
         const allOptions: FireStoreBindingOptions<S> = {
             collectionName: storeProperty,
             storePath: "",
@@ -29,8 +29,8 @@ export default function useFirestoreBinding() {
 
         const unSubscribeFunctions: Unsubscribe[] = [];
 
-        collectionQueries.forEach(collectionQuery => {
-            if(allOptions.converter) {
+        for (const collectionQuery of collectionQueries) {
+            if (allOptions.converter) {
                 collectionQuery.withConverter(allOptions.converter);
             }
 
@@ -39,7 +39,7 @@ export default function useFirestoreBinding() {
 
                 snapshot.docChanges().forEach((change) => {
                     let data;
-                    if(allOptions.converter) {
+                    if (allOptions.converter) {
                         data =  allOptions.converter.fromFirestore(change.doc);
                     } else {
                         data = change.doc.data();
@@ -61,7 +61,7 @@ export default function useFirestoreBinding() {
 
                 await stopLoading();
             }));
-        })
+        }
 
         onBeforeUnmount(() => {
             unSubscribeFunctions.forEach((unSubscribeFn: Unsubscribe) => {

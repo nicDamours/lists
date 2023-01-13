@@ -69,12 +69,27 @@ export class SingleWeekSharingService implements ISingleWeekSharingService<WeekS
         const shareRequestStartDate = payloadShareRequest.get("dates.startDate");
         const shareRequestEndDate = payloadShareRequest.get("dates.endDate");
 
+        const [authorUser, currentUser, week] = await Promise.all([
+            await this.app.auth().getUser(shareRequestAuthor),
+            await this.app.auth().getUser(currentUserId),
+            await this.app.firestore().collection("/weeks")
+                .where("user", "==", shareRequestAuthor)
+                .where("startDate", "==", shareRequestStartDate)
+                .where("endDate", "==", shareRequestEndDate),
+        ]);
+
+        const relevantWeek = await week.get();
+
+
         const results = await this.app.firestore().collection("/weekSharing").add({
             type: "week",
+            authorEmail: authorUser.email,
             authorId: shareRequestAuthor,
             startDate: shareRequestStartDate,
             endDate: shareRequestEndDate,
             targetId: currentUserId,
+            targetEmail: currentUser.email,
+            weeks: relevantWeek.docs,
         });
 
 

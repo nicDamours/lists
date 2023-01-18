@@ -23,9 +23,10 @@
 
       <ion-card>
         <ion-card-content>
+          <WeekSharingSelector v-model="selectedSharing"/>
           <WeekSelector v-model="viewDate" />
 
-          <WeekPlanner :plan="currentWeekPlan" @update-plan="handleWeekPlanChange" />
+          <WeekPlanner :plan="selectedWeekPlan" @update-plan="handleWeekPlanChange"/>
         </ion-card-content>
       </ion-card>
     </ion-content>
@@ -49,15 +50,18 @@ import {
 import {useI18n} from "vue-i18n";
 import WeekPlanner from "@/components/WeekPlanner";
 import useWeeKPlans from "@/composable/use-week-plans";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import WeekSelector from "@/components/week/WeekSelector";
 import useWeekService from "@/composable/use-week-service";
 import WeekOptionPopOver from "@/components/WeekOptionPopOver.vue";
 import {settingsOutline} from "ionicons/icons";
+import WeekSharingSelector from "@/components/week/WeekSharingSelector.vue";
+import useWeekSharing from "@/composable/use-week-sharing";
 
 export default {
   name: "WeekView",
   components: {
+    WeekSharingSelector,
     IonPage,
     IonHeader,
     IonContent,
@@ -72,17 +76,21 @@ export default {
     IonCardContent
   },
   setup() {
-    const { t } = useI18n();
+    const {t} = useI18n();
     const viewDate = ref(new Date())
-    const {updateWeekPlan, createWeekPlan } = useWeekService()
-    const { currentWeekPlan } = useWeeKPlans(viewDate);
+    const {updateWeekPlan, createWeekPlan} = useWeekService()
+    const {currentWeekPlan} = useWeeKPlans(viewDate);
+    const selectedSharing = ref(null);
+    const {currentSharedWeekForUser} = useWeekSharing(selectedSharing, viewDate)
     const copyWeekModalVisible = ref(false);
 
     const handleWeekPlanChange = async (updatedValue) => {
-      if(updatedValue.id !== "") {
-        await updateWeekPlan(updatedValue);
-      } else {
-        await createWeekPlan(updatedValue)
+      if (selectedSharing.value === null) {
+        if (updatedValue.id !== "") {
+          await updateWeekPlan(updatedValue);
+        } else {
+          await createWeekPlan(updatedValue)
+        }
       }
     }
 
@@ -120,12 +128,22 @@ export default {
       await popover.onDidDismiss();
     }
 
+    const selectedWeekPlan = computed(() => {
+      if (selectedSharing.value === null) {
+        return currentWeekPlan.value;
+      }
+
+      return currentSharedWeekForUser.value;
+    })
+
     return {
       t,
       viewDate,
       openPopover,
+      selectedSharing,
       settingsOutline,
       currentWeekPlan,
+      selectedWeekPlan,
       showCopyWeekModal,
       hideCopyWeekModal,
       handleWeekPlanChange,

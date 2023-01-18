@@ -1,14 +1,16 @@
-import {createStore, createLogger} from 'vuex'
+import {createLogger, createStore} from 'vuex'
 import * as lists from "./modules/lists";
 import * as loading from "./modules/loading"
 import * as shareRequests from "./modules/shareRequests"
 import * as weeks from "./modules/weeks";
+import * as weekSharing from "./modules/weekSharing"
 
 export default createStore({
     modules: {
         lists,
         weeks,
         loading,
+        weekSharing,
         shareRequests
     },
     plugins: process.env.NODE_ENV !== "production"

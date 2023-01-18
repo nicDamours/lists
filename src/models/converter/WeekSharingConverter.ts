@@ -7,15 +7,11 @@ export const WeekSharingConverter: FirestoreDataConverter<WeekSharing> = {
     fromFirestore: function (snapshot: QueryDocumentSnapshot, options: SnapshotOptions): WeekSharing {
         const data = snapshot.data(options);
 
-        const weeks = data.weeks.map(async (weekDocumentReference: Promise<any>) => {
-            const weekData = await weekDocumentReference.get();
+        const weekAuthor = new SharedUser(data.user, data.email);
 
-            return weekFactory(weekData.id, weekData)
-        })
+        const week = weekFactory(snapshot.id, data);
 
-        const weekAuthor = new SharedUser(data.authorId, data.authorEmail);
-
-        const dto = new WeekSharing(snapshot.id, weekAuthor, weeks);
+        const dto = new WeekSharing(snapshot.id, weekAuthor, week);
 
         return dto;
     },

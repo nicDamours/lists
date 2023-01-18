@@ -1,15 +1,20 @@
-import {IdentifiableRecord} from "@/models/Interfaces/IdentifiableRecord";
 import {SharedUser} from "@/models/dtos/SharedUser";
 import {WeekPlan} from "@/models/dtos/WeekPlan/WeekPlan";
+import {IdentifiableRecord} from "@/models/Interfaces/IdentifiableRecord";
 
 export class WeekSharing implements IdentifiableRecord {
-    constructor(id: string, weekAuthor: SharedUser, weeks: Array<WeekPlan> = []) {
+
+    private _weekAuthor: SharedUser;
+
+    constructor(id: string, weekAuthor: SharedUser, week: WeekPlan) {
         this._id = id;
-        this._weekAuthor = weekAuthor;
-        this._weeks = weeks
+        this._weekAuthor = weekAuthor
+        this._week = week;
     }
 
     private _id: string;
+
+    private _week: WeekPlan;
 
     get id(): string {
         return this._id;
@@ -19,8 +24,6 @@ export class WeekSharing implements IdentifiableRecord {
         this._id = value;
     }
 
-    private _weekAuthor: SharedUser;
-
     get weekAuthor(): SharedUser {
         return this._weekAuthor;
     }
@@ -29,17 +32,15 @@ export class WeekSharing implements IdentifiableRecord {
         this._weekAuthor = value;
     }
 
-    private _weeks: WeekPlan[] = [];
-
-    get weeks(): WeekPlan[] {
-        return this._weeks;
+    get week(): WeekPlan {
+        return this._week;
     }
 
-    set weeks(value: WeekPlan[]) {
-        this._weeks = value;
+    set week(value: WeekPlan) {
+        this._week = value;
     }
 
     isEqual(other: IdentifiableRecord): boolean {
-        return false;
+        return this.id === other.id;
     }
 }

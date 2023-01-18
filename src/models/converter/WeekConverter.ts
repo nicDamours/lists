@@ -37,8 +37,9 @@ export const WeekConverter: FirestoreDataConverter<WeekPlan> = {
         return {
             id: modelObject.id,
             user: auth.currentUser.uid,
-            startDate: new Timestamp(modelObject.startDate.getTime() / 1000 , 0),
-            endDate: new Timestamp(modelObject.endDate.getTime() / 1000 , 0),
+            email: auth.currentUser.email,
+            startDate: new Timestamp(modelObject.startDate.getTime() / 1000, 0),
+            endDate: new Timestamp(modelObject.endDate.getTime() / 1000, 0),
             days: modelObject.days.map(day => WeekDayConverter.toFirestore(day))
         }
     }

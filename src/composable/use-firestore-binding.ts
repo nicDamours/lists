@@ -1,11 +1,9 @@
 import {useStore} from "vuex";
 import {FirestoreDataConverter, onSnapshot, Query} from "firebase/firestore";
 import {MUTATION_NAME_ADD, MUTATION_NAME_DELETE, MUTATION_NAME_UPDATE} from "@/store/modules/firestoreModule";
-import {onBeforeUnmount} from "vue";
 import {IdentifiableRecord} from "@/models/Interfaces/IdentifiableRecord";
 import useLoading from "@/composable/use-loading";
 import firebase from "firebase/compat";
-
 import Unsubscribe = firebase.Unsubscribe;
 
 export interface FireStoreBindingOptions<S extends IdentifiableRecord> {
@@ -55,7 +53,7 @@ export default function useFirestoreBinding() {
                         }, { root: true})
                     }
                     if (change.type === "removed") {
-                        store.commit(`${allOptions.storePath}${MUTATION_NAME_DELETE}${storeProperty.toUpperCase()}`, change.doc.id, { root: true})
+                        store.commit(`${allOptions.storePath}${MUTATION_NAME_DELETE}${storeProperty.toUpperCase()}`, change.doc.id, {root: true})
                     }
                 });
 
@@ -63,14 +61,38 @@ export default function useFirestoreBinding() {
             }));
         }
 
-        onBeforeUnmount(() => {
-            unSubscribeFunctions.forEach((unSubscribeFn: Unsubscribe) => {
-                unSubscribeFn();
-            })
-        })
+        return unSubscribeFunctions;
+    }
+
+    const registerDynamicBindings = (collectionQueries: Iterable<Query>, callback: (data: any) => Unsubscribe[]) => {
+        const unSubscribeFunctions: Unsubscribe[] = [];
+
+        for (const collectionQuery of collectionQueries) {
+            unSubscribeFunctions.push(onSnapshot(collectionQuery, async (snapshot) => {
+                await startLoading()
+                const data: Record<string, unknown>[] = [];
+
+                snapshot.forEach(doc => {
+                    data.push(doc.data())
+                })
+
+                const callbackUnsubscribeFunctions: Unsubscribe[] = [];
+
+                if (callbackUnsubscribeFunctions.length !== null) {
+                    for (const callbackUnsubscribeFunction of callbackUnsubscribeFunctions) {
+                        callbackUnsubscribeFunction();
+                    }
+                }
+
+                callbackUnsubscribeFunctions.push(...callback(data));
+
+                await stopLoading();
+            }));
+        }
     }
 
     return {
-        registerBindings
+        registerBindings,
+        registerDynamicBindings
     }
 }

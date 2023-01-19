@@ -85,12 +85,10 @@ export default {
     const copyWeekModalVisible = ref(false);
 
     const handleWeekPlanChange = async (updatedValue) => {
-      if (selectedSharing.value === null) {
-        if (updatedValue.id !== "") {
-          await updateWeekPlan(updatedValue);
-        } else {
-          await createWeekPlan(updatedValue)
-        }
+      if (updatedValue.id !== "") {
+        await updateWeekPlan(updatedValue);
+      } else {
+        await createWeekPlan(updatedValue)
       }
     }
 

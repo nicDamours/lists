@@ -1,8 +1,9 @@
 <template>
-  <ShareWithUserModal @submit-click="handleSubmitClick">
+  <ShareWithUserModal :title="t('shareWithUserModal.title')" @submit-click="handleSubmitClick">
     <template #default="{emailInput, updateEmailInput}">
       <ShareWithUserList :list="list"/>
-      <ShareWithUserForm :model-value="emailInput" @update:modelValue="updateEmailInput"/>
+      <ShareWithUserForm :header-text="t('shareWithUserModal.form.headerText')" :model-value="emailInput"
+                         @update:modelValue="updateEmailInput"/>
     </template>
   </ShareWithUserModal>
 </template>
@@ -15,6 +16,7 @@ import useLists from "@/composable/use-lists";
 import ShareWithUserForm from "@/components/modal/ShareWithUserModal/ShareWithUserForm.vue";
 import ShareWithUserList from "@/components/modal/ShareWithUserModal/ShareWithUserList.vue";
 import {modalController} from "@ionic/vue";
+import {useI18n} from "vue-i18n";
 
 export default {
   name: "ShareListWithUserModal",
@@ -26,6 +28,7 @@ export default {
     }
   },
   setup(props) {
+    const {t} = useI18n();
     const {listId} = toRefs(props);
     const {getListById} = useLists();
 
@@ -36,6 +39,7 @@ export default {
     }
 
     return {
+      t,
       list,
       handleSubmitClick
     }

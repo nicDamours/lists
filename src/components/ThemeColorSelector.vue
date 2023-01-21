@@ -1,21 +1,23 @@
 <template>
   <ion-fab-list side="top">
-    <ion-fab-button v-for="(theme, $index) in possibleTheme" :key="$index" :class="`theme-selector--${theme}`">
-      <ion-icon :icon="checkmark" @click="handleThemeSelect(theme)"/>
+    <ion-fab-button v-for="(theme, $index) in possibleTheme" :key="$index" :class="`theme-selector--${theme}`"
+                    @click="handleThemeSelect(theme)">
+      <font-awesome-icon :icon="['fal', 'paint-brush-alt']"/>
     </ion-fab-button>
   </ion-fab-list>
 </template>
 
 <script>
 import {ref} from "vue";
-import {IonFabButton, IonFabList, IonIcon} from "@ionic/vue";
+import {IonFabButton, IonFabList} from "@ionic/vue";
 import {useColorMode} from "@vueuse/core";
 import {checkmark} from "ionicons/icons";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 export default {
   name: "ThemeColorSelector",
   components: {
-    IonIcon,
+    FontAwesomeIcon,
     IonFabList,
     IonFabButton
   },

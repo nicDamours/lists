@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import {getApp} from "./app-instance";
 
-const unShareWithEmail = functions.https.onCall((data: any, context) => {
+const unshareListWithEmail = functions.https.onCall((data: any, context) => {
     const app = getApp();
     const payload = JSON.parse(data.text);
     if (!context.auth) {
@@ -50,4 +50,4 @@ const unShareWithEmail = functions.https.onCall((data: any, context) => {
     });
 });
 
-export default unShareWithEmail;
+export default unshareListWithEmail;

@@ -1,17 +1,10 @@
 import {ListSharingPayload} from "../Interfaces/Lists/ListSharingPayload";
 import {IListServiceSharing} from "../Interfaces/Lists/IListServiceSharing";
-import {app} from "firebase-admin";
 import {HttpsError} from "../Errors/HttpsError";
 import {SharingRequestResponsePayload} from "../Interfaces/ShareRequestResponsePayload";
-import App = app.App;
+import {AbstractAppService} from "./AbstractAppService";
 
-export class ListSharingService implements IListServiceSharing<ListSharingPayload, SharingRequestResponsePayload> {
-    private app: App;
-
-    constructor(app: App) {
-        this.app = app;
-    }
-
+export class ListSharingService extends AbstractAppService implements IListServiceSharing<ListSharingPayload, SharingRequestResponsePayload> {
     async assertShareRequestPayloadIsValid(payload: ListSharingPayload, currentUserId: string): Promise<void> {
         const documentData = await this.app.firestore().doc(`/lists/${payload.list}`).get();
         if (!documentData.exists) {

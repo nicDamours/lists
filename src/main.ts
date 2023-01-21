@@ -1,8 +1,8 @@
-import { createApp } from 'vue'
+import {createApp} from 'vue'
 import App from './App.vue'
 import router from './router';
 
-import { IonicVue } from '@ionic/vue';
+import {IonicVue} from '@ionic/vue';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
@@ -38,18 +38,23 @@ import {FirebaseAppService} from "@/services/FirebaseAppService";
 import "./registerServiceWorker";
 
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faBurgerSoda as falBurgerAndSoda, faBiking as falBiking, faUtensils as falUtensils } from '@fortawesome/pro-light-svg-icons'
+import {library} from '@fortawesome/fontawesome-svg-core'
+import {
+    faBiking as falBiking,
+    faBurgerSoda as falBurgerAndSoda,
+    faPaintBrushAlt,
+    faUtensils as falUtensils
+} from '@fortawesome/pro-light-svg-icons'
 import OnLongPress from "@/directive/on-long-press";
 
 containerRegistrationFunction();
 
 const currentLocale = window.localStorage.getItem("preferred-locale");
 
-library.add(falBurgerAndSoda, falBiking, falUtensils)
+library.add(falBurgerAndSoda, falBiking, falUtensils, faPaintBrushAlt)
 
 const i18n = createI18n({
-  legacy: false,
+    legacy: false,
   locale: currentLocale || 'en',
   fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'en',
   messages: loadLocaleMessages()

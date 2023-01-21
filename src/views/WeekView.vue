@@ -88,6 +88,9 @@ export default {
       if (updatedValue.id !== "") {
         await updateWeekPlan(updatedValue);
       } else {
+        if (selectedSharing.value !== null) {
+          updatedValue.author = selectedSharing.value.author
+        }
         await createWeekPlan(updatedValue)
       }
     }

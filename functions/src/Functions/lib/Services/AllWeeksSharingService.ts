@@ -63,14 +63,10 @@ export class AllWeeksSharingService implements IAllWeeksSharingService<WeekShari
 
         const shareRequestAuthor = payloadShareRequest.get("authorId");
 
-        const [authorUser, currentUser, weeks] = await Promise.all([
+        const [authorUser, currentUser] = await Promise.all([
             await this.app.auth().getUser(shareRequestAuthor),
             await this.app.auth().getUser(currentUserId),
-            await this.app.firestore().collection("/weeks")
-                .where("user", "==", shareRequestAuthor),
         ]);
-
-        const existingWeeks = await weeks.get();
 
         const results = await this.app.firestore().collection("/weekSharing").add({
             type: "week",
@@ -79,7 +75,6 @@ export class AllWeeksSharingService implements IAllWeeksSharingService<WeekShari
             allWeeks: true,
             targetId: currentUserId,
             targetEmail: currentUser.email,
-            weeks: existingWeeks.docs,
         });
 
         const insertedData = await results.get();

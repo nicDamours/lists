@@ -2,7 +2,7 @@ import {SharedUser} from "@/models/dtos/SharedUser";
 import {WeekPlan} from "@/models/dtos/WeekPlan/WeekPlan";
 import {IdentifiableRecord} from "@/models/Interfaces/IdentifiableRecord";
 
-export class WeekSharing implements IdentifiableRecord {
+export class SharedWeek implements IdentifiableRecord {
 
     private _weekAuthor: SharedUser;
 

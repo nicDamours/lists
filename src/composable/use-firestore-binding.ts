@@ -15,9 +15,9 @@ export interface FireStoreBindingOptions<S extends IdentifiableRecord> {
 export default function useFirestoreBinding() {
     const store = useStore();
 
-    const { startLoading, stopLoading } = useLoading();
+    const {startLoading, stopLoading} = useLoading();
 
-    const registerBindings = <S extends IdentifiableRecord>(storeProperty: string, collectionQueries: Iterable<Query>, options: FireStoreBindingOptions<S>) => {
+    const registerBindings = <S extends IdentifiableRecord>(storeProperty: string, collectionQueries: Iterable<Query>, options: FireStoreBindingOptions<S>, callback: ((data: any) => Unsubscribe[]) | null = null) => {
         const allOptions: FireStoreBindingOptions<S> = {
             collectionName: storeProperty,
             storePath: "",
@@ -38,24 +38,42 @@ export default function useFirestoreBinding() {
                 snapshot.docChanges().forEach((change) => {
                     let data;
                     if (allOptions.converter) {
-                        data =  allOptions.converter.fromFirestore(change.doc);
+                        data = allOptions.converter.fromFirestore(change.doc);
                     } else {
                         data = change.doc.data();
                     }
 
                     if (change.type === "added") {
-                        store.commit(`${allOptions.storePath}${MUTATION_NAME_ADD}${storeProperty.toUpperCase()}`, data, { root: true})
+                        store.commit(`${allOptions.storePath}${MUTATION_NAME_ADD}${storeProperty.toUpperCase()}`, data, {root: true})
                     }
                     if (change.type === "modified") {
                         store.commit(`${allOptions.storePath}${MUTATION_NAME_UPDATE}${storeProperty.toUpperCase()}`, {
                             id: change.doc.id,
                             value: data
-                        }, { root: true})
+                        }, {root: true})
                     }
                     if (change.type === "removed") {
                         store.commit(`${allOptions.storePath}${MUTATION_NAME_DELETE}${storeProperty.toUpperCase()}`, change.doc.id, {root: true})
                     }
                 });
+
+                if (callback !== null) {
+                    const data: Record<string, unknown>[] = [];
+
+                    snapshot.forEach(doc => {
+                        data.push(doc.data())
+                    })
+
+                    const callbackUnsubscribeFunctions: Unsubscribe[] = [];
+
+                    if (callbackUnsubscribeFunctions.length > 0) {
+                        for (const callbackUnsubscribeFunction of callbackUnsubscribeFunctions) {
+                            callbackUnsubscribeFunction();
+                        }
+                    }
+
+                    callbackUnsubscribeFunctions.push(...callback(data));
+                }
 
                 await stopLoading();
             }));
@@ -78,7 +96,7 @@ export default function useFirestoreBinding() {
 
                 const callbackUnsubscribeFunctions: Unsubscribe[] = [];
 
-                if (callbackUnsubscribeFunctions.length !== null) {
+                if (callbackUnsubscribeFunctions.length > 0) {
                     for (const callbackUnsubscribeFunction of callbackUnsubscribeFunctions) {
                         callbackUnsubscribeFunction();
                     }

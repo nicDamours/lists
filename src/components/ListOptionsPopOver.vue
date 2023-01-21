@@ -52,7 +52,7 @@ export default {
 
         await deleteList(list.value);
 
-        await router.push({name: "Home"})
+        await router.push({name: "ListIndex"})
 
         await popoverController.dismiss();
       }

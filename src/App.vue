@@ -25,9 +25,11 @@ import {ShareRequestConverter} from "@/models/converter/ShareRequestConverter";
 import WeekConverter from "@/models/converter/WeekConverter";
 import {WeekPlan} from "@/models/dtos/WeekPlan/WeekPlan";
 import ShareRequest from "@/models/dtos/ShareRequest";
-import {WeekSharing} from "@/models/dtos/WeekPlan/WeekSharing";
-import {WeekSharingConverter} from "@/models/converter/WeekSharingConverter";
+import {SharedWeek} from "@/models/dtos/WeekPlan/SharedWeek";
+import {SharedWeekConverter} from "@/models/converter/SharedWeekConverter";
 import firebase from "firebase/compat";
+import {WeekSharingConverter} from "@/models/converter/WeekSharingConverter";
+import {WeekSharing} from "@/models/dtos/WeekSharing";
 import Unsubscribe = firebase.Unsubscribe;
 
 export default defineComponent({
@@ -40,7 +42,7 @@ export default defineComponent({
   },
   setup() {
     const {startLoading} = useLoading();
-    const {registerBindings, registerDynamicBindings} = useFirestoreBinding()
+    const {registerBindings} = useFirestoreBinding()
     const db = Container.get<FirebaseDatabaseService>('FirebaseDatabaseService').db
 
     const unSubscribeFunctions: Unsubscribe[] = [];
@@ -62,7 +64,6 @@ export default defineComponent({
         const weekUnSubscribeFunctions = registerBindings<WeekPlan>("weeks",
             [
               query(collection(db, "weeks"), where('user', '==', user.uid)),
-              query(collection(db, "weeks"), where('user', '==', user.uid)),
             ],
             {
               storePath: "weeks/",
@@ -71,27 +72,35 @@ export default defineComponent({
 
         unSubscribeFunctions.push(...weekUnSubscribeFunctions)
 
-
-        registerDynamicBindings([
-          query(collection(db, "weekSharing"), where("targetId", '==', user.uid))
-        ], (data) => {
-
-          const shareWeeksOwner: string[] = data.map((share: any) => share.authorId);
-
-          let unSubscribeFunctions: Unsubscribe[] = [];
-          if (shareWeeksOwner.length) {
-            unSubscribeFunctions = registerBindings<WeekSharing>("weekSharing", [
-              query(collection(db, "weeks"), where('user', 'in', shareWeeksOwner))
+        const weekSharingUnsubscribeFunctions = registerBindings<WeekSharing>("weekSharing", [
+              query(collection(db, "weekSharing"), where("targetId", '==', user.uid)),
+              query(collection(db, "weekSharing"), where("authorId", '==', user.uid))
             ], {
               storePath: "weekSharing/",
               converter: WeekSharingConverter
-            })
-          }
+            }, (data) => {
+              const shareWeeksOwner: string[] = data.map((share: any) => share.authorId);
+
+              let unSubscribeFunctions: Unsubscribe[] = [];
+              if (shareWeeksOwner.length) {
 
 
-          return unSubscribeFunctions;
+                unSubscribeFunctions = registerBindings<SharedWeek>("sharedWeeks", [
+                      query(collection(db, "weeks"), where('user', 'in', shareWeeksOwner))
+                    ], {
+                      storePath: "sharedWeeks/",
+                      converter: SharedWeekConverter
+                    }
+                )
+              }
 
-        })
+
+              return unSubscribeFunctions;
+
+            }
+        )
+
+        unSubscribeFunctions.push(...weekSharingUnsubscribeFunctions);
 
         const shareRequestUnSubscribeFunctions = registerBindings<ShareRequest>("shareRequests", [
           query(collection(db, "shareRequest"), where("targetId", '==', user.uid)),

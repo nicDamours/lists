@@ -63,6 +63,12 @@
       "email": "Email address"
     }
   },
+  "ShareWeekWithUserModal": {
+    "title": "Partage de semaine",
+    "form": {
+      "headerText": "To share all weeks with someone, please enter their email address below. Please note that they need an account."
+    }
+  },
   "shareRequest": {
     "item": {
       "list": {

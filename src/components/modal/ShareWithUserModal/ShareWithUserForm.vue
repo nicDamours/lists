@@ -2,7 +2,7 @@
   <form class="o-form ion-padding">
     <ion-title size="h2">{{ t('shareWithUserModal.formTitle') }}</ion-title>
     <div class="o-form__group ion-padding">
-      <ion-text>{{ t('shareWithUserModal.form.headerText') }}</ion-text>
+      <ion-text>{{ headerText }}</ion-text>
     </div>
     <div class="o-form__group ion-padding">
       <container-with-errors :errors="errorsModel">
@@ -42,6 +42,10 @@ export default {
       default() {
         return []
       }
+    },
+    headerText: {
+      type: String,
+      required: true
     }
   },
   setup(props, {emit}) {

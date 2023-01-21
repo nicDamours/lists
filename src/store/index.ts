@@ -4,6 +4,7 @@ import * as loading from "./modules/loading"
 import * as shareRequests from "./modules/shareRequests"
 import * as weeks from "./modules/weeks";
 import * as weekSharing from "./modules/weekSharing"
+import * as sharedWeeks from "./modules/sharedWeeks"
 
 export default createStore({
     modules: {
@@ -11,6 +12,7 @@ export default createStore({
         weeks,
         loading,
         weekSharing,
+        sharedWeeks,
         shareRequests
     },
     plugins: process.env.NODE_ENV !== "production"

@@ -1,21 +1,15 @@
-import {app, firestore} from "firebase-admin";
+import {firestore} from "firebase-admin";
 import {ISingleWeekSharingService} from "../Interfaces/Weeks/ISingleWeekSharingService";
 import {WeekSharingPayload} from "../Interfaces/Weeks/WeekSharingPayload";
 import {HttpsError} from "../Errors/HttpsError";
 import {SharingRequestResponsePayload} from "../Interfaces/ShareRequestResponsePayload";
-import App = app.App;
+import {AbstractAppService} from "./AbstractAppService";
 import DocumentReference = firestore.DocumentReference;
 
 /**
  * handle single week sharing operation
  */
-export class SingleWeekSharingService implements ISingleWeekSharingService<WeekSharingPayload, SharingRequestResponsePayload> {
-    private app: App;
-
-    constructor(app: App) {
-        this.app = app;
-    }
-
+export class SingleWeekSharingService extends AbstractAppService implements ISingleWeekSharingService<WeekSharingPayload, SharingRequestResponsePayload> {
     async createNewSharingRequest(payload: WeekSharingPayload, currentUserId: string): Promise<DocumentReference<unknown>> {
         const targetUser = await this.app.auth().getUserByEmail(payload.email);
 

@@ -1,6 +1,6 @@
 <template>
   <ion-row v-if="hasWeekSharingUser" class="week-sharing-selector">
-    <ion-col class="week-sharing-selector__cell" size="2">
+    <ion-col class="week-sharing-selector__cell" size-lg="2" size-md="4" size-sm="12">
       <ion-select v-model="model">
         <ion-select-option v-for="(option, $index) in weekSharingUserOptions" :key="$index" :value="option.value">
           {{ option.label }}
@@ -15,6 +15,8 @@ import {useI18n} from "vue-i18n";
 import {computed, toRefs} from "vue";
 import {IonCol, IonRow, IonSelect, IonSelectOption} from "@ionic/vue";
 import useWeekSharingUsers from "@/composable/use-week-sharing-users";
+import {WeekSharing} from "@/models/dtos/WeekSharing";
+import useCurrentUser from "@/composable/use-current-user";
 
 export default {
   name: "WeekSharingSelector",
@@ -22,8 +24,11 @@ export default {
   components: {IonSelect, IonSelectOption, IonCol, IonRow},
   props: {
     modelValue: {
-      type: [String, null],
+      type: [Object, null],
       required: true,
+      validator(value) {
+        return value === null || value instanceof WeekSharing
+      }
     }
   },
   setup(props, {emit}) {
@@ -31,15 +36,24 @@ export default {
 
     const {t} = useI18n();
 
-    const {weekSharingUsers} = useWeekSharingUsers()
+    const {weekSharingUsers, getWeekSharingUserByID} = useWeekSharingUsers()
+
+    const {currentUser} = useCurrentUser();
 
     const model = computed({
       get() {
-        return modelValue.value
+        return modelValue.value?.author.id ?? null
       },
       set(value) {
+        if (value !== null) {
+          value = getWeekSharingUserByID(value);
+        }
         emit('update:modelValue', value)
       }
+    })
+
+    const weekSharingForCurrentUser = computed(() => {
+      return weekSharingUsers.value.filter(sharing => sharing.target.id === currentUser.value.uid);
     })
 
     const weekSharingUserOptions = computed(() => {
@@ -50,10 +64,10 @@ export default {
         }
       ]
 
-      weekSharingUsers.value.forEach(user => {
+      weekSharingForCurrentUser.value.forEach(sharing => {
         options.push({
-          value: user.id,
-          label: `${user.email}'s week`
+          value: sharing.author.id,
+          label: `${sharing.author.email}'s week`
         })
       })
 
@@ -61,14 +75,14 @@ export default {
     })
 
     const hasWeekSharingUser = computed(() => {
-      return weekSharingUsers.value.length > 0
+      return weekSharingForCurrentUser.value.length > 0
     })
 
     return {
       model,
-      weekSharingUsers,
       hasWeekSharingUser,
-      weekSharingUserOptions
+      weekSharingUserOptions,
+      weekSharingForCurrentUser
     }
   }
 }

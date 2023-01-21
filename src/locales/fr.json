@@ -63,6 +63,12 @@
       "email": "Address courriel"
     }
   },
+  "ShareWeekWithUserModal": {
+    "title": "Partage de semaine",
+    "form": {
+      "headerText": "Pour partager toutes les semaines avec quelqu'un, veuillez entrer son address courriel ici. Veuillez noter que l'adresse courriel doit être associé à un compte."
+    }
+  },
   "shareRequest": {
     "item": {
       "list": {

@@ -1,17 +1,15 @@
 import {DocumentData, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions} from "firebase/firestore";
 import {SharedUser} from "@/models/dtos/SharedUser";
-import {WeekSharing} from "@/models/dtos/WeekPlan/WeekSharing";
-import {weekFactory} from "@/models/converter/WeekConverter";
+import {WeekSharing} from "@/models/dtos/WeekSharing";
 
 export const WeekSharingConverter: FirestoreDataConverter<WeekSharing> = {
     fromFirestore: function (snapshot: QueryDocumentSnapshot, options: SnapshotOptions): WeekSharing {
         const data = snapshot.data(options);
 
-        const weekAuthor = new SharedUser(data.user, data.email);
+        const weekTarget = new SharedUser(data.targetId, data.targetEmail);
+        const weekAuthor = new SharedUser(data.authorId, data.authorEmail);
 
-        const week = weekFactory(snapshot.id, data);
-
-        const dto = new WeekSharing(snapshot.id, weekAuthor, week);
+        const dto = new WeekSharing(snapshot.id, weekAuthor, weekTarget);
 
         return dto;
     },

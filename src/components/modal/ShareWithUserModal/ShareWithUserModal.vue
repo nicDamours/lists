@@ -1,5 +1,5 @@
 <template>
-  <BaseModal :title="t('shareWithUserModal.title')">
+  <BaseModal :title="title">
     <template #default>
       <div class="o-share-with-user-model__content">
         <slot :email-input="emailInput" :email-input-errors="emailInputErrors"
@@ -33,6 +33,12 @@ export default {
   name: "ShareWithUserModal",
   emits: ["submit-click"],
   components: {BaseModal, IonButton, IonToolbar, IonButtons},
+  props: {
+    title: {
+      type: String,
+      required: true
+    }
+  },
   setup(_, {emit}) {
     const {t} = useI18n();
     const emailInput = ref("");

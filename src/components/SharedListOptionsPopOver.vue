@@ -12,7 +12,7 @@
 
 <script>
 import {IonContent, IonIcon, IonItem, IonList, IonText, popoverController} from "@ionic/vue";
-import { trashOutline } from "ionicons/icons"
+import {trashOutline} from "ionicons/icons"
 import {useI18n} from "vue-i18n";
 import ListOptionsEmpty from "@/components/ListOptionsEmpty";
 import useCloudFunctions from "@/composable/use-cloud-functions";
@@ -56,7 +56,7 @@ export default {
 
           await popoverController.dismiss();
 
-          await router.push({ name: "Home"})
+          await router.push({name: "ListIndex"})
 
           await successToast(t('lists.successfullyCanceledShare'));
         }

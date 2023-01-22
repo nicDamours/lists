@@ -111,6 +111,8 @@
     }
   },
   "shareWeekSelector": {
+    "sharedWeek": "{email}'s week",
+    "yourWeek": "Your week",
     "shareAllWeeks": "Share all weeks",
     "shareSpecificWeek": "Share a single week"
   }

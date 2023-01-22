@@ -1,7 +1,7 @@
 <template>
   <ion-row v-if="hasWeekSharingUser" class="week-sharing-selector">
     <ion-col class="week-sharing-selector__cell" size-lg="2" size-md="4" size-sm="12">
-      <ion-select v-model="model">
+      <ion-select v-model="model" interface="action-sheet">
         <ion-select-option v-for="(option, $index) in weekSharingUserOptions" :key="$index" :value="option.value">
           {{ option.label }}
         </ion-select-option>
@@ -34,7 +34,7 @@ export default {
   setup(props, {emit}) {
     const {modelValue} = toRefs(props);
 
-    const {t} = useI18n();
+    const {t, locale} = useI18n();
 
     const {weekSharingUsers, getWeekSharingUserByID} = useWeekSharingUsers()
 
@@ -57,19 +57,23 @@ export default {
     })
 
     const weekSharingUserOptions = computed(() => {
+      console.log('locale', locale.value);
       const options = [
         {
           value: "null",
-          label: "Your week"
+          label: t('shareWeekSelector.yourWeek')
         }
       ]
 
-      weekSharingForCurrentUser.value.forEach(sharing => {
+      for (const sharing of weekSharingForCurrentUser.value) {
         options.push({
+          locale: locale.value,
           value: sharing.author.id,
-          label: `${sharing.author.email}'s week`
+          label: t('shareWeekSelector.sharedWeek', {
+            email: sharing.author.email
+          })
         })
-      })
+      }
 
       return options;
     })

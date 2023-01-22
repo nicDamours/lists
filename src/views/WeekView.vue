@@ -139,7 +139,7 @@ export default {
 
       const {data} = await popover.onDidDismiss();
 
-      if ('changeWeekSharing' in data && data.changeWeekSharing) {
+      if (data && 'changeWeekSharing' in data && data.changeWeekSharing) {
         selectedSharing.value = null;
       }
     }

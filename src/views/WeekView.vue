@@ -23,7 +23,7 @@
 
       <ion-card>
         <ion-card-content>
-          <WeekSharingSelector v-model="selectedSharing"/>
+          <WeekSharingSelector v-model="selectedSharingModel"/>
           <WeekSelector v-model="viewDate" />
 
           <WeekPlanner :plan="selectedWeekPlan" @update-plan="handleWeekPlanChange"/>
@@ -57,6 +57,7 @@ import WeekOptionPopOver from "@/components/WeekOptionPopOver.vue";
 import {settingsOutline} from "ionicons/icons";
 import WeekSharingSelector from "@/components/week/WeekSharingSelector.vue";
 import useWeekSharing from "@/composable/use-week-sharing";
+import SharedWeekOptionPopOver from "@/components/SharedWeekOptionPopOver.vue";
 
 export default {
   name: "WeekView",
@@ -88,7 +89,7 @@ export default {
       if (updatedValue.id !== "") {
         await updateWeekPlan(updatedValue);
       } else {
-        if (selectedSharing.value !== null) {
+        if (selectedSharing.value) {
           updatedValue.author = selectedSharing.value.author
         }
         await createWeekPlan(updatedValue)
@@ -111,30 +112,53 @@ export default {
       console.log('empty week clicked');
     }
 
-    const openPopover = async (ev) => {
-      const popover = await popoverController
+    const getPopOverComponent = (ev) => {
+      const popOverComponent = selectedSharing.value ? SharedWeekOptionPopOver : WeekOptionPopOver
+
+      const popOverProps = selectedSharing.value ? {
+        sharing: selectedSharing.value
+      } : {
+        dates: {
+          startDate: currentWeekPlan.value.startDate,
+          endDate: currentWeekPlan.value.endDate
+        }
+      }
+
+      return popoverController
           .create({
-            component: WeekOptionPopOver,
-            componentProps: {
-              dates: {
-                startDate: currentWeekPlan.value.startDate,
-                endDate: currentWeekPlan.value.endDate
-              }
-            },
+            component: popOverComponent,
+            componentProps: popOverProps,
             event: ev,
             translucent: true
           })
+    }
+
+    const openPopover = async (ev) => {
+      const popover = await getPopOverComponent(ev);
       await popover.present();
 
-      await popover.onDidDismiss();
+      const {data} = await popover.onDidDismiss();
+
+      if ('changeWeekSharing' in data && data.changeWeekSharing) {
+        selectedSharing.value = null;
+      }
     }
 
     const selectedWeekPlan = computed(() => {
-      if (selectedSharing.value === null) {
+      if (!selectedSharing.value) {
         return currentWeekPlan.value;
       }
 
       return currentSharedWeekForUser.value;
+    })
+
+    const selectedSharingModel = computed({
+      get() {
+        return selectedSharing.value ? selectedSharing.value : null
+      },
+      set(value) {
+        selectedSharing.value = value;
+      }
     })
 
     return {
@@ -147,6 +171,7 @@ export default {
       selectedWeekPlan,
       showCopyWeekModal,
       hideCopyWeekModal,
+      selectedSharingModel,
       handleWeekPlanChange,
       handleEmptyWeekClick,
       handleCopyWeekSelection

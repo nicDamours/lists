@@ -6,7 +6,11 @@ export default function useWeekSharing(selectedSharing: Ref<WeekSharing>, select
     const store = useStore();
 
     const currentSharedWeekForUser = computed(() => {
-        return store.getters["sharedWeeks/currentSharedWeekForUser"](selectedSharing.value.author.id, selectedDate.value)
+        if (selectedSharing.value !== null) {
+            return store.getters["sharedWeeks/currentSharedWeekForUser"](selectedSharing.value.author.id, selectedDate.value)
+        }
+
+        return null;
     })
 
     return {

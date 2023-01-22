@@ -34,6 +34,10 @@
     "confirmCancelShare": "Are you sure you want to cancel the sharing of this list",
     "successfullyCanceledShare": "The sharing was canceled successfully"
   },
+  "weeks": {
+    "confirmCancelShare": "Are you sure you want to stop sharing this week ?",
+    "successfullyCanceledShare": "Successfully canceled week sharing."
+  },
   "sections": {
     "addNewSection": "Add a new section",
     "confirmDeleteSection": "Are you sure you want to delete this section ?"

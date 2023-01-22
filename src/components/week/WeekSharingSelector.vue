@@ -42,7 +42,7 @@ export default {
 
     const model = computed({
       get() {
-        return modelValue.value?.author.id ?? null
+        return modelValue.value?.author.id ?? "null"
       },
       set(value) {
         if (value !== null) {
@@ -59,7 +59,7 @@ export default {
     const weekSharingUserOptions = computed(() => {
       const options = [
         {
-          value: null,
+          value: "null",
           label: "Your week"
         }
       ]

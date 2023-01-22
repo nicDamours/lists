@@ -21,7 +21,11 @@ export const getters = {
     sharedWeeksForUser: (state: SharedWeeksState) => (id: string) => {
         return state.sharedWeeks.filter(sharing => sharing.weekAuthor.id === id).map(sharing => sharing.week);
     },
-    currentSharedWeekForUser: (state: SharedWeeksState) => (id: string, date: Date) => {
+    currentSharedWeekForUser: (state: SharedWeeksState) => (id: string | null, date: Date) => {
+        if (id === null) {
+            return null;
+        }
+
         const startOfCurrentWeek = startOfWeek(date);
         const endOfCurrentWeek = addDays(startOfCurrentWeek, 6);
 

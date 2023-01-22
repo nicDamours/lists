@@ -42,7 +42,7 @@ export default {
 
     const revoke = async (user) => {
       try {
-        await callFunction("unshareWithEmail", {list: list.value.id, email: user.email})
+        await callFunction("unshareWithEmail", {list: list.value.id, email: user.email, type: 'list'})
         await successToast(t("shareWithUserModal.revokeSuccessful"))
       } catch(e) {
         await dangerToast(e.message)

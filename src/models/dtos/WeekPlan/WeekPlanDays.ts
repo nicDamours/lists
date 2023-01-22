@@ -1,4 +1,5 @@
 import {IdentifiableRecord} from "@/models/Interfaces/IdentifiableRecord";
+import {SharedUser} from "@/models/dtos/SharedUser";
 
 export class WeekPlanDays implements IdentifiableRecord {
     id: string;
@@ -7,6 +8,8 @@ export class WeekPlanDays implements IdentifiableRecord {
     private _supper = "";
     private _activities = "";
     private _date: Date;
+
+    private _author: SharedUser | null = null;
 
     constructor(id: string, dinner: string, supper: string, activities: string, date: Date) {
         this.id = id;
@@ -49,6 +52,13 @@ export class WeekPlanDays implements IdentifiableRecord {
         this._date = value;
     }
 
+    get author(): SharedUser | null {
+        return this._author;
+    }
+
+    set author(value: SharedUser | null) {
+        this._author = value;
+    }
 
     isEqual(other: IdentifiableRecord): boolean {
         return this.id === other.id;

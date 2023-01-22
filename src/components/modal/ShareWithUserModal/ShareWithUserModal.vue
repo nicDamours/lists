@@ -1,9 +1,9 @@
 <template>
-  <BaseModal :title="t('shareWithUserModal.title')">
+  <BaseModal :title="title">
     <template #default>
       <div class="o-share-with-user-model__content">
-        <ShareWithUserList :list="list" />
-        <ShareWithUserForm v-model="emailInput"/>
+        <slot :email-input="emailInput" :email-input-errors="emailInputErrors"
+              :update-email-input="handleEmailInputUpdate" :update-email-input-errors="updateEmailInputErrors"></slot>
       </div>
     </template>
     <template #buttons>
@@ -14,7 +14,7 @@
           </ion-button>
         </ion-buttons>
         <ion-buttons slot="end">
-          <ion-button color="primary" slot="end" @click="() => dismiss(emailInput)">
+          <ion-button slot="end" color="primary" @click="handleSubmitClick">
             {{ t('global.submit') }}
           </ion-button>
         </ion-buttons>
@@ -27,38 +27,56 @@
 import BaseModal from "../BaseModal";
 import {useI18n} from "vue-i18n";
 import {IonButton, IonButtons, IonToolbar, modalController} from "@ionic/vue";
-import ShareWithUserForm from "@/components/modal/ShareWithUserModal/ShareWithUserForm";
-import {computed, ref} from "vue";
-import ShareWithUserList from "@/components/modal/ShareWithUserModal/ShareWithUserList";
-import useLists from "@/composable/use-lists";
-import {toRefs} from "@vueuse/core";
+import {ref} from "vue";
 
 export default {
   name: "ShareWithUserModal",
-  components: {ShareWithUserList, ShareWithUserForm, BaseModal, IonButton, IonToolbar, IonButtons },
+  emits: ["submit-click"],
+  components: {BaseModal, IonButton, IonToolbar, IonButtons},
   props: {
-    listId: {
-      type: [String, Number],
+    title: {
+      type: String,
       required: true
     }
   },
-  setup(props) {
-    const { t } = useI18n();
-    const { listId } = toRefs(props);
+  setup(_, {emit}) {
+    const {t} = useI18n();
     const emailInput = ref("");
-    const { getListById } = useLists();
+    const emailInputErrors = ref([]);
+
+    const handleEmailInputUpdate = value => {
+      emailInputErrors.value = [];
+      emailInput.value = value
+    }
+
+    const updateEmailInputErrors = value => {
+      emailInputErrors.value.push(...value);
+    }
 
     const dismiss = (value) => {
       modalController.dismiss(value);
     }
 
-    const list = computed(() => getListById(listId.value))
+    const handleSubmitClick = () => {
+      if (emailInput.value === "") {
+        const errorMessage = t('validation.required');
+
+        if (!emailInputErrors.value.includes(errorMessage)) {
+          emailInputErrors.value.push(errorMessage)
+        }
+      } else {
+        emit("submit-click", emailInput.value)
+      }
+    }
 
     return {
       t,
-      list,
       dismiss,
-      emailInput
+      emailInput,
+      emailInputErrors,
+      handleSubmitClick,
+      handleEmailInputUpdate,
+      updateEmailInputErrors
     }
   }
 }

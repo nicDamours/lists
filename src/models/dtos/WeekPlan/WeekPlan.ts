@@ -2,6 +2,7 @@ import {addDays, differenceInDays} from "date-fns";
 import {IdentifiableRecord} from "@/models/Interfaces/IdentifiableRecord";
 import {WeekPlanDays} from "@/models/dtos/WeekPlan/WeekPlanDays";
 import UUID from "@/utils/UUID";
+import {SharedUser} from "@/models/dtos/SharedUser";
 
 export class WeekPlan implements IdentifiableRecord {
 
@@ -10,6 +11,8 @@ export class WeekPlan implements IdentifiableRecord {
     private _days: Array<WeekPlanDays> = [];
     private _startDate: Date;
     private _endDate: Date;
+
+    private _author: SharedUser | null = null;
 
     constructor(id: string, startDate: Date, endDate: Date) {
         this.id = id;
@@ -45,10 +48,18 @@ export class WeekPlan implements IdentifiableRecord {
         this._endDate = value;
     }
 
+    get author(): SharedUser | null {
+        return this._author;
+    }
+
+    set author(value: SharedUser | null) {
+        this._author = value;
+    }
+
     setDay(day: WeekPlanDays, date: Date) {
         const index = this.days.findIndex(day => day.date.getTime() === date.getTime());
 
-        if(index !== -1) {
+        if (index !== -1) {
             this.days[index] = day;
         }
     }

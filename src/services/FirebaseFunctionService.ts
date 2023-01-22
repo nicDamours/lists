@@ -1,6 +1,6 @@
 import {Container} from "@/utils/Container";
 import {FirebaseAppService} from "@/services/FirebaseAppService";
-import { getFunctions, connectFunctionsEmulator, Functions} from "firebase/functions";
+import {connectFunctionsEmulator, Functions, getFunctions} from "firebase/functions";
 
 export class FirebaseFunctionService {
     private readonly _functions: Functions ;
@@ -10,8 +10,8 @@ export class FirebaseFunctionService {
 
         this._functions = getFunctions(app);
 
-        if(!process.env.VUE_APP_RUN_PRODUCTION_FUNCTIONS) {
-            connectFunctionsEmulator(this._functions, "localhost", 5001);
+        if (process.env.VUE_APP_RUN_PRODUCTION_FUNCTIONS !== "true") {
+            connectFunctionsEmulator(this._functions, "localhost", process.env.VUE_APP_FUNCTIONS_EMULATOR_PORT);
         }
     }
 

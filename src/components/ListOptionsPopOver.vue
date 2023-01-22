@@ -22,10 +22,10 @@ import {toRefs} from "vue";
 import useConfirm from "@/composable/use-confirm";
 import useListService from "@/composable/use-list-service";
 import {useRouter} from "vue-router";
-import ShareWithUserModal from "@/components/modal/ShareWithUserModal/ShareWithUserModal";
 import useCloudFunctions from "@/composable/use-cloud-functions";
 import useToast from "@/composable/use-toast";
 import ListOptionsEmpty from "@/components/ListOptionsEmpty";
+import ShareListWithUserModal from "@/components/modal/ShareWithUserModal/ShareListWithUserModal.vue";
 
 export default {
   name: "ListOptionsPopOver",
@@ -52,7 +52,7 @@ export default {
 
         await deleteList(list.value);
 
-        await router.push({name: "Home"})
+        await router.push({name: "ListIndex"})
 
         await popoverController.dismiss();
       }
@@ -61,7 +61,7 @@ export default {
     const handleShare = async () => {
       const modal = await modalController
           .create({
-            component: ShareWithUserModal,
+            component: ShareListWithUserModal,
             componentProps: {
               listId: list.value.id
             }
@@ -73,6 +73,7 @@ export default {
       if(value.data) {
         try {
           await callFunction('shareWithEmail', {
+            type: "list",
             list: list.value.id,
             email: value.data
           });
@@ -100,7 +101,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

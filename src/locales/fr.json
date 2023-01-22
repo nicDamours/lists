@@ -34,6 +34,10 @@
     "keepSections": "Garder les sections.",
     "successfullyCanceledShare": "Le partage à été arrêter avec succès"
   },
+  "weeks": {
+    "confirmCancelShare": "Êtes-vous sûr de vouloir arrêter ce partage de semaine?",
+    "successfullyCanceledShare": "Le partage de semaine à été arrêté avec succès."
+  },
   "sections": {
     "addNewSection": "Ajouter une nouvelle section",
     "confirmDeleteSection": "Êtes-vous sûr de vouloir supprimer cette section ?"
@@ -63,10 +67,28 @@
       "email": "Address courriel"
     }
   },
+  "ShareWeekWithUserModal": {
+    "title": "Partage de semaine",
+    "form": {
+      "headerText": "Pour partager toutes les semaines avec quelqu'un, veuillez entrer son address courriel ici. Veuillez noter que l'adresse courriel doit être associé à un compte."
+    }
+  },
   "shareRequest": {
     "item": {
-      "textReceived": "{authorName} veux partager la liste \"{listName}\" avec vous.",
-      "textSent": "Demande envoyée à {targetName} pour la liste \"{listName}\".",
+      "list": {
+        "textReceived": "{authorName} veux partager la liste \"{listName}\" avec vous.",
+        "textSent": "Demande envoyée à {targetName} pour la liste \"{listName}\"."
+      },
+      "week": {
+        "single": {
+          "textReceived": "{authorName} veux partager la semaine du {startDate} au {endDate} avec vous.",
+          "textSent": "Demande envoyée à {targetName} pour la semaine du {startDate} au {endDate}."
+        },
+        "all": {
+          "textReceived": "{authorName} veux partager toutes les semaines avec vous.",
+          "textSent": "Demande envoyée à {targetName} pour toutes les semaines."
+        }
+      },
       "decline": "Refuser",
       "accept": "Accepter",
       "revoke": "Annuler"
@@ -78,7 +100,7 @@
     "issuedRequest": "Demande(s) envoyée(s)"
   },
   "tabs": {
-    "lists" : "Listes",
+    "lists": "Listes",
     "week": "Semaine"
   },
   "WeekPlanner": {
@@ -87,5 +109,11 @@
       "supper": "Souper",
       "activities": "Activités"
     }
+  },
+  "shareWeekSelector": {
+    "sharedWeek": "semaine de {email}",
+    "yourWeek": "Votre semaine",
+    "shareAllWeeks": "Partager toutes les semaines",
+    "shareSpecificWeek": "Partager une semaine en particulier"
   }
 }

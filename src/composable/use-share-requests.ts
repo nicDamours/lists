@@ -1,8 +1,8 @@
 import {useStore} from "vuex";
 import {computed} from "vue";
-import ShareRequest from "@/models/dtos/ShareRequest";
 import ShareRequestService from "@/services/ShareRequestService";
 import useLoading from "@/composable/use-loading";
+import ShareRequest from "@/models/dtos/ShareRequest";
 
 export default function useShareRequests() {
     const store = useStore();
@@ -14,7 +14,7 @@ export default function useShareRequests() {
     }
 
     const emptyShareRequest = async () => {
-        await store.dispatch("shareRequest/emptyShareRequest");
+        await store.dispatch("shareRequests/emptyShareRequest");
     }
 
     return {

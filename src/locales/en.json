@@ -34,6 +34,10 @@
     "confirmCancelShare": "Are you sure you want to cancel the sharing of this list",
     "successfullyCanceledShare": "The sharing was canceled successfully"
   },
+  "weeks": {
+    "confirmCancelShare": "Are you sure you want to stop sharing this week ?",
+    "successfullyCanceledShare": "Successfully canceled week sharing."
+  },
   "sections": {
     "addNewSection": "Add a new section",
     "confirmDeleteSection": "Are you sure you want to delete this section ?"
@@ -63,10 +67,28 @@
       "email": "Email address"
     }
   },
+  "ShareWeekWithUserModal": {
+    "title": "Partage de semaine",
+    "form": {
+      "headerText": "To share all weeks with someone, please enter their email address below. Please note that they need an account."
+    }
+  },
   "shareRequest": {
     "item": {
-      "textReceived": "{authorName} wants to share the list \"{listName}\" with you.",
-      "textSent": "Share request sent to {targetName} for the list \"{listName}\".",
+      "list": {
+        "textReceived": "{authorName} wants to share the list \"{listName}\" with you.",
+        "textSent": "Share request sent to {targetName} for the list \"{listName}\"."
+      },
+      "week": {
+        "single": {
+          "textReceived": "{authorName} wants to share the week starting on {startDate} to {endDate} with you.",
+          "textSent": "Share request sent to {targetName} for the week starting on {startDate} to {endDate}."
+        },
+        "all": {
+          "textReceived": "{authorName} wants to share all weeks with you",
+          "textSent": "Share request sent to  {targetName} for all weeks."
+        }
+      },
       "decline": "Decline",
       "accept": "Accept",
       "revoke": "Revoke"
@@ -78,7 +100,7 @@
     "issuedRequest": "Sent requests"
   },
   "tabs": {
-    "lists" : "Lists",
+    "lists": "Lists",
     "week": "Week"
   },
   "WeekPlanner": {
@@ -87,5 +109,11 @@
       "supper": "Diner",
       "activities": "Activities"
     }
+  },
+  "shareWeekSelector": {
+    "sharedWeek": "{email}'s week",
+    "yourWeek": "Your week",
+    "shareAllWeeks": "Share all weeks",
+    "shareSpecificWeek": "Share a single week"
   }
 }

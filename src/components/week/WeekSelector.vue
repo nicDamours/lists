@@ -77,8 +77,8 @@ export default {
     })
 
     const formattedModelValue = computed(() => {
-      const startOfGivenWeek = format(getStartOfWeek(modelValue.value), 'ccc d MMM').value;
-      const endOfGivenWeek = format(getEndOfWeek(modelValue.value), 'ccc d MMM').value;
+      const startOfGivenWeek = format(getStartOfWeek(modelValue.value), 'ccc d MMM');
+      const endOfGivenWeek = format(getEndOfWeek(modelValue.value), 'ccc d MMM');
 
       return `${startOfGivenWeek} - ${endOfGivenWeek}`;
     })

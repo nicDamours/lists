@@ -34,7 +34,7 @@ export default {
     const { startDate, endDate } = toRefs(props);
     const { getDaysFromDates, isSameDay } = useDates()
 
-    const daysOfWeek = computed(() => getDaysFromDates(startDate.value, endDate.value).value);
+    const daysOfWeek = computed(() => getDaysFromDates(startDate.value, endDate.value));
 
     const isCurrentDate = (date) => {
       return date && isSameDay(date, new Date());

@@ -1,16 +1,16 @@
 <template>
   <ion-app>
-    <LoadingBar />
+    <LoadingBar/>
 
     <ion-router-outlet/>
 
-    <OrganismPreferences />
+    <OrganismPreferences/>
   </ion-app>
 </template>
 
 <script lang="ts">
 import {IonApp, IonRouterOutlet} from '@ionic/vue';
-import {defineComponent} from 'vue';
+import {defineComponent, onBeforeUnmount} from 'vue';
 import useFirestoreBinding from "@/composable/use-firestore-binding";
 import ListConverter from "@/models/converter/ListConverter";
 import {List} from "@/models/dtos/List";
@@ -22,9 +22,15 @@ import {FirebaseDatabaseService} from "@/services/FirebaseDatabaseService";
 import LoadingBar from "@/components/LoadingBar.vue";
 import useLoading from "@/composable/use-loading";
 import {ShareRequestConverter} from "@/models/converter/ShareRequestConverter";
-import ShareRequest from "@/models/dtos/ShareRequest";
 import WeekConverter from "@/models/converter/WeekConverter";
 import {WeekPlan} from "@/models/dtos/WeekPlan/WeekPlan";
+import ShareRequest from "@/models/dtos/ShareRequest";
+import {SharedWeek} from "@/models/dtos/WeekPlan/SharedWeek";
+import {SharedWeekConverter} from "@/models/converter/SharedWeekConverter";
+import firebase from "firebase/compat";
+import {WeekSharingConverter} from "@/models/converter/WeekSharingConverter";
+import {WeekSharing} from "@/models/dtos/WeekSharing";
+import Unsubscribe = firebase.Unsubscribe;
 
 export default defineComponent({
   name: 'App',
@@ -35,23 +41,27 @@ export default defineComponent({
     IonRouterOutlet
   },
   setup() {
-    const { startLoading } = useLoading();
+    const {startLoading} = useLoading();
     const {registerBindings} = useFirestoreBinding()
     const db = Container.get<FirebaseDatabaseService>('FirebaseDatabaseService').db
 
+    const unSubscribeFunctions: Unsubscribe[] = [];
+
     startLoading().then(() => {
       useBindAuthentication().then((user) => {
-        registerBindings<List>("lists",
+        const listUnSubscribeFunctions = registerBindings<List>("lists",
             [
-                query(collection(db, "lists"), where('user', '==', user.uid)),
-                query(collection(db, "lists"), where( 'sharedWith.' +  user.uid, '!=', null)),
+              query(collection(db, "lists"), where('user', '==', user.uid)),
+              query(collection(db, "lists"), where('sharedWith.' + user.uid, '!=', null)),
             ],
             {
               storePath: "lists/",
               converter: ListConverter
             });
 
-        registerBindings<WeekPlan>("weeks",
+        unSubscribeFunctions.push(...listUnSubscribeFunctions)
+
+        const weekUnSubscribeFunctions = registerBindings<WeekPlan>("weeks",
             [
               query(collection(db, "weeks"), where('user', '==', user.uid)),
             ],
@@ -60,14 +70,54 @@ export default defineComponent({
               converter: WeekConverter
             });
 
-        registerBindings<ShareRequest>("shareRequests", [
-            query(collection(db, "shareRequest"), where("targetId", '==', user.uid)),
-            query(collection(db, "shareRequest"), where("authorId", '==', user.uid))
-        ],{
+        unSubscribeFunctions.push(...weekUnSubscribeFunctions)
+
+        const weekSharingUnsubscribeFunctions = registerBindings<WeekSharing>("weekSharing", [
+              query(collection(db, "weekSharing"), where("targetId", '==', user.uid)),
+              query(collection(db, "weekSharing"), where("authorId", '==', user.uid))
+            ], {
+              storePath: "weekSharing/",
+              converter: WeekSharingConverter
+            }, (data) => {
+              const shareWeeksOwner: string[] = data.map((share: any) => share.authorId);
+
+              let unSubscribeFunctions: Unsubscribe[] = [];
+              if (shareWeeksOwner.length) {
+
+
+                unSubscribeFunctions = registerBindings<SharedWeek>("sharedWeeks", [
+                      query(collection(db, "weeks"), where('user', 'in', shareWeeksOwner))
+                    ], {
+                      storePath: "sharedWeeks/",
+                      converter: SharedWeekConverter
+                    }
+                )
+              }
+
+
+              return unSubscribeFunctions;
+
+            }
+        )
+
+        unSubscribeFunctions.push(...weekSharingUnsubscribeFunctions);
+
+        const shareRequestUnSubscribeFunctions = registerBindings<ShareRequest>("shareRequests", [
+          query(collection(db, "shareRequest"), where("targetId", '==', user.uid)),
+          query(collection(db, "shareRequest"), where("authorId", '==', user.uid))
+        ], {
           storePath: "shareRequests/",
           converter: ShareRequestConverter
         })
+
+        unSubscribeFunctions.push(...shareRequestUnSubscribeFunctions);
       });
+    })
+
+    onBeforeUnmount(() => {
+      unSubscribeFunctions.forEach((unSubscribeFn: Unsubscribe) => {
+        unSubscribeFn();
+      })
     })
   }
 });

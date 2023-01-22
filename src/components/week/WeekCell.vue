@@ -34,7 +34,7 @@ export default {
     });
 
     return {
-      contentModel
+      contentModel,
     };
   }
 }

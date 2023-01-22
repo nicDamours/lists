@@ -1,11 +1,9 @@
 import {useStore} from "vuex";
 import {FirestoreDataConverter, onSnapshot, Query} from "firebase/firestore";
 import {MUTATION_NAME_ADD, MUTATION_NAME_DELETE, MUTATION_NAME_UPDATE} from "@/store/modules/firestoreModule";
-import {onBeforeUnmount} from "vue";
 import {IdentifiableRecord} from "@/models/Interfaces/IdentifiableRecord";
 import useLoading from "@/composable/use-loading";
 import firebase from "firebase/compat";
-
 import Unsubscribe = firebase.Unsubscribe;
 
 export interface FireStoreBindingOptions<S extends IdentifiableRecord> {
@@ -17,9 +15,9 @@ export interface FireStoreBindingOptions<S extends IdentifiableRecord> {
 export default function useFirestoreBinding() {
     const store = useStore();
 
-    const { startLoading, stopLoading } = useLoading();
+    const {startLoading, stopLoading} = useLoading();
 
-    const registerBindings = <S extends IdentifiableRecord>(storeProperty: string, collectionQueries: Query[], options: FireStoreBindingOptions<S>) => {
+    const registerBindings = <S extends IdentifiableRecord>(storeProperty: string, collectionQueries: Iterable<Query>, options: FireStoreBindingOptions<S>, callback: ((data: any) => Unsubscribe[]) | null = null) => {
         const allOptions: FireStoreBindingOptions<S> = {
             collectionName: storeProperty,
             storePath: "",
@@ -29,8 +27,8 @@ export default function useFirestoreBinding() {
 
         const unSubscribeFunctions: Unsubscribe[] = [];
 
-        collectionQueries.forEach(collectionQuery => {
-            if(allOptions.converter) {
+        for (const collectionQuery of collectionQueries) {
+            if (allOptions.converter) {
                 collectionQuery.withConverter(allOptions.converter);
             }
 
@@ -39,38 +37,80 @@ export default function useFirestoreBinding() {
 
                 snapshot.docChanges().forEach((change) => {
                     let data;
-                    if(allOptions.converter) {
-                        data =  allOptions.converter.fromFirestore(change.doc);
+                    if (allOptions.converter) {
+                        data = allOptions.converter.fromFirestore(change.doc);
                     } else {
                         data = change.doc.data();
                     }
 
                     if (change.type === "added") {
-                        store.commit(`${allOptions.storePath}${MUTATION_NAME_ADD}${storeProperty.toUpperCase()}`, data, { root: true})
+                        store.commit(`${allOptions.storePath}${MUTATION_NAME_ADD}${storeProperty.toUpperCase()}`, data, {root: true})
                     }
                     if (change.type === "modified") {
                         store.commit(`${allOptions.storePath}${MUTATION_NAME_UPDATE}${storeProperty.toUpperCase()}`, {
                             id: change.doc.id,
                             value: data
-                        }, { root: true})
+                        }, {root: true})
                     }
                     if (change.type === "removed") {
-                        store.commit(`${allOptions.storePath}${MUTATION_NAME_DELETE}${storeProperty.toUpperCase()}`, change.doc.id, { root: true})
+                        store.commit(`${allOptions.storePath}${MUTATION_NAME_DELETE}${storeProperty.toUpperCase()}`, change.doc.id, {root: true})
                     }
                 });
 
+                if (callback !== null) {
+                    const data: Record<string, unknown>[] = [];
+
+                    snapshot.forEach(doc => {
+                        data.push(doc.data())
+                    })
+
+                    const callbackUnsubscribeFunctions: Unsubscribe[] = [];
+
+                    if (callbackUnsubscribeFunctions.length > 0) {
+                        for (const callbackUnsubscribeFunction of callbackUnsubscribeFunctions) {
+                            callbackUnsubscribeFunction();
+                        }
+                    }
+
+                    callbackUnsubscribeFunctions.push(...callback(data));
+                }
+
                 await stopLoading();
             }));
-        })
+        }
 
-        onBeforeUnmount(() => {
-            unSubscribeFunctions.forEach((unSubscribeFn: Unsubscribe) => {
-                unSubscribeFn();
-            })
-        })
+        return unSubscribeFunctions;
+    }
+
+    const registerDynamicBindings = (collectionQueries: Iterable<Query>, callback: (data: any) => Unsubscribe[]) => {
+        const unSubscribeFunctions: Unsubscribe[] = [];
+
+        for (const collectionQuery of collectionQueries) {
+            unSubscribeFunctions.push(onSnapshot(collectionQuery, async (snapshot) => {
+                await startLoading()
+                const data: Record<string, unknown>[] = [];
+
+                snapshot.forEach(doc => {
+                    data.push(doc.data())
+                })
+
+                const callbackUnsubscribeFunctions: Unsubscribe[] = [];
+
+                if (callbackUnsubscribeFunctions.length > 0) {
+                    for (const callbackUnsubscribeFunction of callbackUnsubscribeFunctions) {
+                        callbackUnsubscribeFunction();
+                    }
+                }
+
+                callbackUnsubscribeFunctions.push(...callback(data));
+
+                await stopLoading();
+            }));
+        }
     }
 
     return {
-        registerBindings
+        registerBindings,
+        registerDynamicBindings
     }
 }

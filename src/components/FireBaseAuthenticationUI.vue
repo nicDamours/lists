@@ -24,20 +24,23 @@ export default {
     const isMobile = computed(() => false)
 
     onMounted(() => {
-      if(!isMobile.value) {
-        UI.value.start('#firebase-authentication-ui', {
-          callbacks: {
-            signInSuccessWithAuthResult: () => {
-              emit("authentication-success")
-              return false;
-            }
+      UI.value.start('#firebase-authentication-ui', {
+        signInFlow: 'popup',
+        callbacks: {
+          signInSuccessWithAuthResult: (value) => {
+            console.log('sign in success', value)
+            emit("authentication-success")
+            return false;
           },
-          signInOptions: [
-            GoogleAuthProvider.PROVIDER_ID,
-            EmailAuthProvider.PROVIDER_ID,
-          ]
-        });
-      }
+          signInFailure: (error) => {
+            return Promise.reject(error.code);
+          }
+        },
+        signInOptions: [
+          GoogleAuthProvider.PROVIDER_ID,
+          EmailAuthProvider.PROVIDER_ID,
+        ]
+      });
     });
 
     return {

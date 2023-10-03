@@ -21,5 +21,8 @@ module.exports = {
     manifestOptions: {
       start_url: "https://lists-bl5q.onrender.com?v=" + version
     }
+  },
+  devServer: {
+    port: 8100
   }
 }

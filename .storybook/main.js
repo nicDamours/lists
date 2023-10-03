@@ -26,21 +26,29 @@ module.exports = {
 
     return config;
   },
+
   babel: async () => ({
     presets: ["@vue/cli-plugin-babel/preset"]
   }),
+
   "stories": [
     "../src/stories/**/*.stories.mdx",
     "../src/stories/**/*.stories.@(js|jsx|ts|tsx)"
   ],
+
   "addons": [
     "@storybook/addon-links",
     "@storybook/preset-scss",
     "@storybook/addon-essentials",
     "@storybook/addon-interactions"
   ],
-  "framework": "@storybook/vue3",
-  "core": {
-    "builder": "@storybook/builder-webpack5"
+
+  "framework": {
+    name: "@storybook/vue3-webpack5",
+    options: {}
+  },
+
+  docs: {
+    autodocs: true
   }
 }

@@ -46,6 +46,8 @@ import {
     faUtensils as falUtensils
 } from '@fortawesome/pro-light-svg-icons'
 import OnLongPress from "@/directive/on-long-press";
+import Bugsnag from "@bugsnag/js";
+import BugsnagPluginVue from "@bugsnag/plugin-vue";
 
 containerRegistrationFunction();
 
@@ -55,18 +57,34 @@ library.add(falBurgerAndSoda, falBiking, falUtensils, faPaintBrushAlt)
 
 const i18n = createI18n({
     legacy: false,
-  locale: currentLocale || 'en',
-  fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'en',
-  messages: loadLocaleMessages()
+    locale: currentLocale || 'en',
+    fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'en',
+    messages: loadLocaleMessages()
 })
 
 Container.get<FirebaseAppService>('FirebaseAppService');
 
+
+Bugsnag.start({
+    apiKey: process.env.VUE_APP_BUGSNAG_API_KEY,
+    enabledReleaseStages: ["production"],
+    releaseStage: process.env.VUE_APP_BUGSNAG_STAGE,
+    plugins: [new BugsnagPluginVue()]
+})
+
+
+const bugsnagVue = Bugsnag.getPlugin('vue');
+
+if (!bugsnagVue) {
+    throw new Error("Could not initialize bugsnag")
+}
+
 const app = createApp(App)
     .use(i18n)
-  .use(store)
-  .use(IonicVue)
-  .use(router);
+    .use(store)
+    .use(IonicVue)
+    .use(bugsnagVue)
+    .use(router);
 
 app.component('font-awesome-icon', FontAwesomeIcon)
 

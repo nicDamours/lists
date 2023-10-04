@@ -25,8 +25,6 @@ import {ShareRequestConverter} from "@/models/converter/ShareRequestConverter";
 import WeekConverter from "@/models/converter/WeekConverter";
 import {WeekPlan} from "@/models/dtos/WeekPlan/WeekPlan";
 import ShareRequest from "@/models/dtos/ShareRequest";
-import {SharedWeek} from "@/models/dtos/WeekPlan/SharedWeek";
-import {SharedWeekConverter} from "@/models/converter/SharedWeekConverter";
 import firebase from "firebase/compat";
 import {WeekSharingConverter} from "@/models/converter/WeekSharingConverter";
 import {WeekSharing} from "@/models/dtos/WeekSharing";
@@ -64,6 +62,7 @@ export default defineComponent({
         const weekUnSubscribeFunctions = registerBindings<WeekPlan>("weeks",
             [
               query(collection(db, "weeks"), where('user', '==', user.uid)),
+              query(collection(db, "weeks"), where('sharedWith.' + user.uid, '!=', null)),
             ],
             {
               storePath: "weeks/",
@@ -78,26 +77,7 @@ export default defineComponent({
             ], {
               storePath: "weekSharing/",
               converter: WeekSharingConverter
-            }, (data) => {
-              const shareWeeksOwner: string[] = data.map((share: any) => share.authorId);
-
-              let unSubscribeFunctions: Unsubscribe[] = [];
-              if (shareWeeksOwner.length) {
-
-
-                unSubscribeFunctions = registerBindings<SharedWeek>("sharedWeeks", [
-                      query(collection(db, "weeks"), where('user', 'in', shareWeeksOwner))
-                    ], {
-                      storePath: "sharedWeeks/",
-                      converter: SharedWeekConverter
-                    }
-                )
-              }
-
-
-              return unSubscribeFunctions;
-
-            }
+            },
         )
 
         unSubscribeFunctions.push(...weekSharingUnsubscribeFunctions);

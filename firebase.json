@@ -20,5 +20,9 @@
       "enabled": true
     },
     "singleProjectMode": true
+  },
+  "firestore": {
+    "rules": "./functions/firestore.rules",
+    "indexes": "./functions/firestore.indexes.json"
   }
 }

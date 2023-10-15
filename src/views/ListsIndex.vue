@@ -4,6 +4,9 @@
       <ion-toolbar>
         <ion-title> {{ t('pages.lists.title') }}</ion-title>
         <ion-buttons slot="end">
+          <ion-button fill="clear" @click="showAboutModal">
+            <ion-icon slot="icon-only" :icon="informationCircleOutline"></ion-icon>
+          </ion-button>
           <FloatingBadge :value="shareRequestCount" v-if="hasShareRequest">
             <ion-button fill="clear" @click="showRequestModal">
               <ion-icon slot="icon-only" :icon="peopleOutline"></ion-icon>
@@ -48,7 +51,8 @@ import {
   IonPage,
   IonText,
   IonTitle,
-  IonToolbar, modalController
+  IonToolbar,
+  modalController
 } from '@ionic/vue';
 import {computed} from 'vue';
 import {useStore} from "vuex";
@@ -56,7 +60,7 @@ import {List} from "@/models/dtos/List";
 import {useRouter} from "vue-router";
 import NewItemForm from "@/components/NewItemForm.vue";
 import {signOut} from "firebase/auth"
-import {arrowForwardOutline, logOutOutline, peopleOutline} from 'ionicons/icons';
+import {arrowForwardOutline, informationCircleOutline, logOutOutline, peopleOutline} from 'ionicons/icons';
 import {useI18n} from "vue-i18n";
 import {Container} from "@/utils/Container";
 import useListService from "@/composable/use-list-service";
@@ -65,6 +69,7 @@ import FloatingBadge from "@/components/FloatingBadge";
 import {useMediaQuery} from "@vueuse/core";
 import ShareRequestModal from "@/components/modal/ShareRequestModal";
 import useLists from "@/composable/use-lists";
+import AboutModal from "@/components/modal/AboutModal.vue";
 
 export default {
   name: 'ListsIndex',
@@ -130,9 +135,18 @@ export default {
 
       await modal.present();
     }
+
+    const showAboutModal = async () => {
+      const modal = await modalController.create({
+        component: AboutModal
+      })
+
+      await modal.present();
+    }
     return {
       t,
       arrowForwardOutline,
+      informationCircleOutline,
       logOutOutline,
       peopleOutline,
       lists,
@@ -140,6 +154,7 @@ export default {
       shareRequestCount,
       showRequestModal,
       openList,
+      showAboutModal,
       isSmallScreen,
       logOutCurrentUser,
       handleNewListSubmit

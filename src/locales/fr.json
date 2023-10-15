@@ -54,6 +54,16 @@
     "shareInfo": {
       "message": "Cette liste vous à été partagé par <b>{author}</b>. Vous ne pouvez la supprimer, mais vous pouvez y effectuer des modifications",
       "title": "Ceci est une liste partagée"
+    },
+    "about": {
+      "title": "À propos",
+      "author": "Créer avec amour par",
+      "foundABug": "Vous avez trouvé un bug ? Ça arrive.",
+      "reportIssue": "Vous pouvez ouvrir une issue!",
+      "softwareCost": "Cette application vous est offerte gratuitement, puisque je m'en sert personellement et que t'en qu'a m'en servir, je vais la partager avec le monde!",
+      "showSupport": "Vous voulez m'aider dans le développement de cette app?",
+      "buyMeACoffee": "Achetez-moi un café!",
+      "contribute": "Ou bien vous pouvez contribuer sur"
     }
   },
   "shareWithUserModal": {

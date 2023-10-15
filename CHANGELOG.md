@@ -2,6 +2,7 @@
 
 ## 1.5.0
 
+- Upgraded to ionic 7 ([#9](https://github.com/nicDamours/lists/issues/9))
 - Added option to fully swipe item to delete it without
   confirmation ([#5](https://github.com/nicDamours/lists/issues/5))
 

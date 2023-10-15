@@ -5,6 +5,9 @@
 - Fixed week sharing rules.
 - Fixed missing translations ( [#4](https://github.com/nicDamours/lists/issues/4) )
 - Fixed error state reset after input update ( [#8](https://github.com/nicDamours/lists/issues/8) )
+- Fixed z-index of fab button, so it doesn't go over the submit button in
+  modals ( [#3](https://github.com/nicDamours/lists/issues/3) )
+
 ## 1.4.0
 
 - Added support to share a weeks
@@ -14,7 +17,6 @@
 - Refractored functions to use shared services.
 - Added support for dynamic firebase request. One firebase request can now be based on another one.
 - Updated dependencies.
--
 
 ## 1.1.0
 

@@ -54,6 +54,16 @@
     "shareInfo": {
       "message": "This this has been shared to you by <b>{author}</b>. You cannot delete it, but you can make changes to it.",
       "title": "this is a shared list"
+    },
+    "about": {
+      "title": "About",
+      "author": "Created with love by Nicolas D'Amours <https://github.com/nicDamours>.",
+      "foundABug": "You found a bug ? It happens.",
+      "reportIssue": "Open an issue!",
+      "softwareCost": "This app is offered for free, because I'm using it and it doesn't cost me a dime to host. Enjoy !",
+      "showSupport": "If you want to show your support, you can always",
+      "buyMeACoffee": "Buy me a coffee!",
+      "contribute": "Or you could contribute on"
     }
   },
   "shareWithUserModal": {

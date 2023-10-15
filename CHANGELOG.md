@@ -1,5 +1,10 @@
 # Change log
 
+## 1.5.0
+
+- Added option to fully swipe item to delete it without
+  confirmation ([#5](https://github.com/nicDamours/lists/issues/5))
+
 ## 1.4.1
 
 - Fixed week sharing rules.

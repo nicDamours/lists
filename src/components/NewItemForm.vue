@@ -11,7 +11,8 @@
         <ion-item class="o-form__group-input">
           <ContainerWithErrors  :errors="inputErrors">
             <ion-label position="floating" :color="hasErrors ? 'danger' : 'primary'" >{{ t(text) }}</ion-label>
-            <ion-input type="text" v-model="newItemName" :ref="el => refs[uuid] = el" :color="hasErrors ? 'danger' : 'dark'" class="o-form__input"/>
+            <ion-input :ref="el => refs[uuid] = el" v-model="newItemModel" :color="hasErrors ? 'danger' : 'dark'"
+                       class="o-form__input" type="text"/>
           </ContainerWithErrors>
         </ion-item>
         <ion-button slot="end" type="submit" color="success" fill="clear" class="o-form__submit-button">
@@ -53,18 +54,28 @@ export default {
     const uuid = ref(UUID.uuidv4());
     const refs = ref({});
     const inputErrors = ref([]);
-    const { defineInputFocus } = useInputFocus(refs);
+    const {defineInputFocus} = useInputFocus(refs);
 
     const hasFocus = ref(false);
 
     const newItemName = ref("");
 
-    const { t } = useI18n();
+    const newItemModel = computed({
+      get() {
+        return newItemName.value
+      },
+      set(value) {
+        newItemName.value = value;
+        inputErrors.value = [];
+      }
+    })
+
+    const {t} = useI18n();
 
     const validateInputs = () => {
       inputErrors.value = [];
 
-      if(newItemName.value === "") {
+      if (newItemModel.value === "") {
         inputErrors.value.push("errors.fieldCannotBeEmpty");
       }
 
@@ -73,9 +84,9 @@ export default {
 
     const handleSubmit = async () => {
       if(validateInputs()) {
-        emit("form-submit", `${newItemName.value}`)
+        emit("form-submit", `${newItemModel.value}`)
 
-        newItemName.value = ""
+        newItemModel.value = ""
         await defineInputFocus(uuid.value, false);
       } else {
         await defineInputFocus(uuid.value, true);
@@ -104,7 +115,7 @@ export default {
       hasErrors,
       addOutline,
       inputErrors,
-      newItemName,
+      newItemModel,
       handleSubmit,
       handleGroupBlur,
       handleLabelClick

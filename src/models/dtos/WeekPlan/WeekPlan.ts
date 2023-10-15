@@ -12,17 +12,21 @@ export class WeekPlan implements IdentifiableRecord {
     private _startDate: Date;
     private _endDate: Date;
 
-    private _author: SharedUser | null = null;
-
     constructor(id: string, startDate: Date, endDate: Date) {
         this.id = id;
         this._startDate = startDate;
         this._endDate = endDate;
 
+        this._sharingId = null;
+
         this._days = new Array(Math.abs(differenceInDays(startDate, endDate)) + 1).fill(undefined).map((_, index) => {
             return new WeekPlanDays(UUID.uuidv4(), "", "", "", addDays(new Date(startDate), index))
         });
     }
+
+    private _author: SharedUser | null = null;
+
+    private _sharingId: string | null;
 
     get days(): Array<WeekPlanDays> {
         return this._days;
@@ -54,6 +58,14 @@ export class WeekPlan implements IdentifiableRecord {
 
     set author(value: SharedUser | null) {
         this._author = value;
+    }
+
+    get sharingId(): string | null {
+        return this._sharingId;
+    }
+
+    set sharingId(value: string | null) {
+        this._sharingId = value;
     }
 
     setDay(day: WeekPlanDays, date: Date) {

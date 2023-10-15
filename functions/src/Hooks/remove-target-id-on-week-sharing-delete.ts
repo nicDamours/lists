@@ -5,14 +5,17 @@ export default async function removeTargetIdFromWeekSharingOnWeekSharingDelete(s
     const app = getApp();
 
     const sharingAuthorId = snapshot.get("authorId");
+    const sharingTargetId = snapshot.get("targetId");
 
     const weeksForAuthor = await app.firestore().collection("/weeks").where("user", "==", sharingAuthorId).get();
 
     await weeksForAuthor.forEach(async (week) => {
-        const sharingForTargetUser = await app.firestore().collection(`/weeks/${week.id}/sharedWith`).where("userId", "==", snapshot.get("targetId")).get();
+        const weekExistingSharing = week.get("sharedWith");
 
-        await sharingForTargetUser.forEach(async (sharing) => {
-            await app.firestore().doc(`/weeks/${week.id}/sharedWith/${sharing.id}`).delete();
-        });
+        if (sharingTargetId in week.get("sharedWith")) {
+            delete weekExistingSharing[sharingTargetId];
+
+            await app.firestore().doc(`/weeks/${week.id}`).update("sharedWith", weekExistingSharing);
+        }
     });
 }

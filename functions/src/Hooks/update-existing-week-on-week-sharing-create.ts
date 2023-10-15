@@ -6,16 +6,18 @@ export default async function updateExistingWeekOnWeekSharingCreate(snapshot: Qu
 
     const sharingAuthorId = snapshot.get("authorId");
 
-
     const weeksForAuthor = await app.firestore().collection("/weeks").where("user", "==", sharingAuthorId).get();
 
-    weeksForAuthor.forEach(async (week) => {
-        const existingSharingForTarget = await app.firestore().collection(`/weeks/${week.id}/sharedWith`).where("userId", "==", snapshot.get("targetId")).get();
+    const weekSharingTargetId = snapshot.get("targetId");
+    const weekSharingTargetEmail = snapshot.get("targetEmail");
 
-        if (existingSharingForTarget.empty) {
-            await app.firestore().collection(`/weeks/${week.id}/sharedWith`).add({
-                userId: snapshot.get("targetId"),
-            });
+    await weeksForAuthor.forEach(async (week) => {
+        const existingSharingForTarget = week.get("sharedWith");
+
+        if (!(weekSharingTargetId in existingSharingForTarget)) {
+            existingSharingForTarget[weekSharingTargetId] = weekSharingTargetEmail;
+
+            await app.firestore().doc(`/weeks/${week.id}`).update("sharedWith", existingSharingForTarget);
         }
     });
 }

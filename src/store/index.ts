@@ -33,5 +33,5 @@ type VuexDispatchContext = {
 export type VuexFunction<mutationObject> = {
     commit: (mutation: keyof mutationObject, value?: any) => void;
     dispatch: (Context: VuexDispatchContext, ...args: any[]) => Promise<any>;
-    getters: object;
+    getters: { [key: string]: any };
 }

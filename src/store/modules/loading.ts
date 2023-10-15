@@ -3,26 +3,31 @@ import {VuexFunction} from "@/store";
 export const namespaced = true;
 
 type LoadingState = {
-    loading: boolean;
+    loadingCount: number;
 }
 export const state: LoadingState = {
-    loading: false
+    loadingCount: 0
 }
 
 export const getters = {
     isLoading(state: LoadingState) {
-        return state.loading;
+        return state.loadingCount > 0;
     }
 }
 
 export const mutations = {
-    SET_LOADING_STATE(state: LoadingState, value: boolean) {
-        state.loading = value;
+    INCREMENT_LOADING_COUNT(state: LoadingState) {
+        state.loadingCount += 1
+    },
+    DECREMENT_LOADING_COUNT(state: LoadingState) {
+        state.loadingCount -= 1;
     }
 }
-
 export const actions = {
-    defineLoadingState({ commit }: VuexFunction<typeof mutations>, value: boolean) {
-        commit('SET_LOADING_STATE', value);
+    incrementLoadingCount({commit}: VuexFunction<typeof mutations>) {
+        commit('INCREMENT_LOADING_COUNT');
+    },
+    decrementLoadingCount({commit}: VuexFunction<typeof mutations>) {
+        commit('DECREMENT_LOADING_COUNT')
     }
 }

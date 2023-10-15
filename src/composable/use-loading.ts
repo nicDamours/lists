@@ -5,7 +5,9 @@ export default function useLoading() {
     const store = useStore();
 
     const defineLoadingState = async (state: boolean) => {
-        return store.dispatch('loading/defineLoadingState', state, {root: true});
+        const actionName = state ? 'incrementLoadingCount' : 'decrementLoadingCount';
+
+        return store.dispatch(`loading/${actionName}`, null, {root: true});
     }
 
     const startLoading = async () => {

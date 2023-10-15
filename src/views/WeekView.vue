@@ -91,6 +91,7 @@ export default {
       } else {
         if (selectedSharing.value) {
           updatedValue.author = selectedSharing.value.author
+          updatedValue.sharingId = selectedSharing.value.id
         }
         await createWeekPlan(updatedValue)
       }

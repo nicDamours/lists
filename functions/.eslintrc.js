@@ -25,6 +25,7 @@ module.exports = {
         "quotes": ["error", "double"],
         "require-jsdoc": 0,
         "no-tabs": 0,
+        "space-before-function-paren": "off",
         "indent": ["error", 4],
     },
 };

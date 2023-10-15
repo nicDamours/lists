@@ -21,5 +21,5 @@ exports.removeCurrentUserFromShare = removeCurrentUserFromShare;
 
 
 exports.updateWeekSharingOnWeekUpdate = functions.firestore.document("/weeks/{weekId}").onWrite(updateWeekSharingOnWeekUpdate);
-exports.updateExistingWeekOnWeekSharingCreate = functions.firestore.document("/weekSharing").onCreate(updateExistingWeekOnWeekSharingCreate);
-exports.removeTargetIdFromWeekSharingOnWeekSharingDelete = functions.firestore.document("/weekSharing").onDelete(removeTargetIdFromWeekSharingOnWeekSharingDelete);
+exports.updateExistingWeekOnWeekSharingCreate = functions.firestore.document("/weekSharing/{weekSharing}").onCreate(updateExistingWeekOnWeekSharingCreate);
+exports.removeTargetIdFromWeekSharingOnWeekSharingDelete = functions.firestore.document("/weekSharing/{weekSharing}").onDelete(removeTargetIdFromWeekSharingOnWeekSharingDelete);

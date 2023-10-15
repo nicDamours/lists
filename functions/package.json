@@ -1,9 +1,9 @@
 {
   "name": "functions",
-  "version": "1.3.3",
+  "version": "1.5.0",
   "scripts": {
     "lint": "eslint --ext .js,.ts .",
-    "build": "tsc",
+    "build": "tsc --project .",
     "watch": "tsc --watch",
     "serve": "concurrently --kill-others \"npm run watch\" \"firebase emulators:start --inspect-functions --import ./data/2022-12-28T18:24:09_54011\"",
     "shell": "npm run build && firebase functions:shell",

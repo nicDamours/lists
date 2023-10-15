@@ -19,7 +19,7 @@ module.exports = {
     themeColor: "#2dd36f",
     msTileColor: "#ffffff",
     manifestOptions: {
-      start_url: "https://lists-bl5q.onrender.com?v=" + version
+      start_url: "https://maliste.app?v=" + version
     }
   },
   devServer: {

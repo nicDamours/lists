@@ -1,9 +1,8 @@
 import * as functions from "firebase-functions";
 import {getApp} from "./app-instance";
 import {auth, firestore} from "firebase-admin";
-import firebase from "firebase/compat";
 import DocumentSnapshot = firestore.DocumentSnapshot;
-import DocumentData = firebase.firestore.DocumentData;
+import DocumentData = firestore.DocumentData;
 import UserRecord = auth.UserRecord;
 
 const shareListWithEmail = functions.https.onCall((data: any, context) => {

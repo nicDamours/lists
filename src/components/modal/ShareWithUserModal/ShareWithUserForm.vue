@@ -8,7 +8,7 @@
       <container-with-errors :errors="errorsModel">
         <ion-item>
           <ion-label position="floating">{{ t('shareWithUserModal.form.email') }}</ion-label>
-          <ion-input v-model="model" debounce="500" required type="text" @ionChange="handleInputChange"/>
+          <ion-input v-model="model" debounce="200" required type="text" @ionChange="handleInputChange"/>
           <ion-icon v-if="!pending" slot="end" :color="colorForStatus" :icon="iconForStatus"/>
           <ion-spinner v-if="pending" name="dots" slot="end"/>
         </ion-item>

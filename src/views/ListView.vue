@@ -87,11 +87,11 @@ import {useStore} from "vuex";
 import {computed, ref} from "vue";
 import {
   addOutline,
-  removeOutline,
-  trashOutline,
   checkmarkOutline,
+  peopleOutline,
+  removeOutline,
   settingsOutline,
-  peopleOutline
+  trashOutline
 } from 'ionicons/icons';
 import {
   IonBackButton,
@@ -100,17 +100,22 @@ import {
   IonCheckbox,
   IonContent,
   IonHeader,
-  IonIcon, IonInput,
+  IonIcon,
+  IonInput,
   IonItem,
   IonItemOption,
   IonItemOptions,
-  IonItemSliding, IonLabel,
+  IonItemSliding,
+  IonLabel,
   IonList,
   IonListHeader,
-  IonPage, IonReorder, IonReorderGroup,
+  IonPage,
+  IonReorder,
+  IonReorderGroup,
   IonText,
   IonTitle,
-  IonToolbar, popoverController
+  IonToolbar,
+  popoverController
 } from "@ionic/vue";
 import {Item} from "@/models/dtos/Item";
 import UUID from "@/utils/UUID";
@@ -267,7 +272,7 @@ export default {
           .create({
             component: popoverComponent,
             componentProps: {
-              list
+              list: list.value
             },
             cssClass: 'my-custom-class',
             event: ev,

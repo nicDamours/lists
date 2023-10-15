@@ -3,6 +3,7 @@
     <template #default="{emailInput, updateEmailInput}">
       <ShareWithUserList :list="list"/>
       <ShareWithUserForm :header-text="t('shareWithUserModal.form.headerText')" :model-value="emailInput"
+                         v-model:errors="errors"
                          @update:modelValue="updateEmailInput"/>
     </template>
   </ShareWithUserModal>
@@ -10,7 +11,7 @@
 
 <script>
 import ShareWithUserModal from "@/components/modal/ShareWithUserModal/ShareWithUserModal.vue";
-import {computed} from "vue";
+import {computed, ref} from "vue";
 import {toRefs} from "@vueuse/core";
 import useLists from "@/composable/use-lists";
 import ShareWithUserForm from "@/components/modal/ShareWithUserModal/ShareWithUserForm.vue";
@@ -31,6 +32,7 @@ export default {
     const {t} = useI18n();
     const {listId} = toRefs(props);
     const {getListById} = useLists();
+    const errors = ref([]);
 
     const list = computed(() => getListById(listId.value));
 
@@ -41,6 +43,7 @@ export default {
     return {
       t,
       list,
+      errors,
       handleSubmitClick
     }
   }

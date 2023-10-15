@@ -1,5 +1,10 @@
 # Change log
 
+## 1.4.1
+
+- Fixed week sharing rules.
+- Fixed missing translations ( [#4](https://github.com/nicDamours/lists/issues/4) )
+
 ## 1.4.0
 
 - Added support to share a weeks

@@ -40,8 +40,8 @@
               </ion-button>
             </ion-list-header>
             <ion-item-sliding v-for="(item, itemIndex) in section.items" :key="item.id" class="o-list__item">
-              <ion-item-options side="start">
-                <ion-item-option @click="deleteItem(sectionIndex, item.id)" color="danger">
+              <ion-item-options side="start" @ionSwipe="deleteItemWithoutConfirm(sectionIndex, item.id)">
+                <ion-item-option color="danger" expandable @click="deleteItem(sectionIndex, item.id)">
                   {{ t('global.remove') }}
                   <ion-icon :icon="trashOutline" slot="end"></ion-icon>
                 </ion-item-option>
@@ -222,11 +222,15 @@ export default {
       const results = await showConfirm(t("items.confirmDeleteItem"));
 
       if (results) {
-        const copiedList = list.value.clone();
-        copiedList.sections[sectionIndex].items = copiedList.sections[sectionIndex].items.filter(item => item.id !== itemId);
-
-        await updateList(copiedList);
+        await deleteItemWithoutConfirm(sectionIndex, itemId)
       }
+    }
+
+    const deleteItemWithoutConfirm = async (sectionIndex, itemId) => {
+      const copiedList = list.value.clone();
+      copiedList.sections[sectionIndex].items = copiedList.sections[sectionIndex].items.filter(item => item.id !== itemId);
+
+      await updateList(copiedList);
     }
 
 
@@ -359,7 +363,8 @@ export default {
       showQuantityChange,
       handleItemLongPress,
       handleReorder,
-      handleEditingSaveClick
+      handleEditingSaveClick,
+      deleteItemWithoutConfirm
     }
   }
 }

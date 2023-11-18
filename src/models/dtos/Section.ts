@@ -54,4 +54,8 @@ export class Section implements IdentifiableRecord{
             this.items[index].index = index;
         });
     }
+
+    get isDefault() {
+        return false
+    }
 }

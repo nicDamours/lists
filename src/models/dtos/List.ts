@@ -1,7 +1,8 @@
 import {IdentifiableRecord} from "@/models/Interfaces/IdentifiableRecord";
 import {SharedUser} from "@/models/dtos/SharedUser";
-import ClonableMixin, { Clonable } from "@/models/mixins/clonable";
+import ClonableMixin, {Clonable} from "@/models/mixins/clonable";
 import {Section} from "@/models/dtos/Section";
+import {DefaultSection} from "@/models/dtos/DefaultSection";
 
 export type ClonableList = List & Clonable;
 
@@ -11,13 +12,14 @@ export class List implements IdentifiableRecord {
     private _isSharedWithCurrentUser = false;
     private _originalAuthor: string | null = null;
     private _originalAuthorEmail: string | null = null;
-
     private _sections: Section[] = [];
     private _sharedWiths: SharedUser[] = [];
 
     constructor(id: string, name: string) {
         this._id = id;
         this._name = name;
+
+        this._sections = [new DefaultSection("irrelevent")];
 
         Object.assign(this, ClonableMixin)
     }
@@ -39,7 +41,15 @@ export class List implements IdentifiableRecord {
     }
 
     get sections(): Section[] {
-        return this._sections;
+        return this._sections.sort((a, b) => {
+            if (a instanceof DefaultSection) {
+                return -1
+            } else if (b instanceof DefaultSection) {
+                return 1
+            }
+
+            return 0
+        });
     }
 
     set sections(value: Section[]) {

@@ -33,7 +33,7 @@
       <ion-list>
         <ion-reorder-group :disabled="!isReorderActive" @ionItemReorder="handleReorder($event)">
           <template v-for="(section, sectionIndex) in list.sections" :key="section.id">
-            <ion-list-header lines="full" data-reorder-before="false">
+            <ion-list-header v-if="!section.isDefault" data-reorder-before="false" lines="full">
               <ion-label>{{ section.name }}</ion-label>
               <ion-button color="danger" @click="deleteSection(section.id)">
                 <ion-icon :icon="removeOutline" slot="icon-only"></ion-icon>

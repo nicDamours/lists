@@ -16,7 +16,7 @@ const OnLongPress = {
         };
 
         const tapEndHandler = () => {
-            if(currentTimeout.value !== null) {
+            if (currentTimeout.value !== null) {
                 clearTimeout(currentTimeout.value);
                 currentTimeout.value = null;
             }
@@ -26,6 +26,8 @@ const OnLongPress = {
 
         el.addEventListener('touchend', tapEndHandler);
         el.addEventListener('touchmove', tapEndHandler)
+        el.addEventListener('touchcancel', tapEndHandler)
+        el.addEventListener('mousemove', tapEndHandler)
         el.addEventListener('mouseup', tapEndHandler);
     }
 }

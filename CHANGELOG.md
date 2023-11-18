@@ -1,5 +1,23 @@
 # Change log
 
+## 1.6.0
+
+- Added support for default section. ([#13](https://github.com/nicDamours/lists/issues/13))
+
+#### bug fixes
+
+- Fixed bug where close button was not present in about modal
+- Fixed long press to be cancelled after a mousemove or touchmove ([#14](https://github.com/nicDamours/lists/issues/14))
+
+## 1.5.2
+
+- Added about modal ([#12](https://github.com/nicDamours/lists/issues/13))
+
+## 1.5.1
+
+- Fixed functions deploy.
+- Changed PWA config for new url.
+
 ## 1.5.0
 
 - Upgraded to ionic 7 ([#9](https://github.com/nicDamours/lists/issues/9))

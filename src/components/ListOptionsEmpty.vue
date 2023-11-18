@@ -11,12 +11,14 @@ import {closeCircleOutline} from "ionicons/icons";
 import {useI18n} from "vue-i18n";
 import useConfirm from "../composable/use-confirm";
 import useListService from "../composable/use-list-service";
-import {List} from "../models/dtos/List";
+import {List} from "@/models/dtos/List";
 import {toRefs} from "vue";
+import {DefaultSection} from "@/models/dtos/DefaultSection";
+import UUID from "@/utils/UUID";
 
 export default {
   name: "ListOptionsEmpty",
-  components: { IonItem, IonText, IonIcon },
+  components: {IonItem, IonText, IonIcon},
   props: {
     list: {
       type: Object,
@@ -56,7 +58,7 @@ export default {
             section.items = [];
           })
         } else {
-          clonedList.sections = [];
+          clonedList.sections = [new DefaultSection(UUID.uuidv4())];
         }
 
         await updateList(clonedList);

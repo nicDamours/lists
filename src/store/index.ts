@@ -5,10 +5,12 @@ import * as shareRequests from "./modules/shareRequests"
 import * as weeks from "./modules/weeks";
 import * as weekSharing from "./modules/weekSharing"
 import * as sharedWeeks from "./modules/sharedWeeks"
+import * as bills from "./modules/bills"
 
 export default createStore({
     modules: {
         lists,
+        bills,
         weeks,
         loading,
         weekSharing,

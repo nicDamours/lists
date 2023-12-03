@@ -1,19 +1,20 @@
-import { createRouter, createWebHistory } from '@ionic/vue-router';
-import { RouteRecordRaw } from 'vue-router';
+import {createRouter, createWebHistory} from '@ionic/vue-router';
+import {RouteRecordRaw} from 'vue-router';
 import ListView from '@/views/ListView.vue'
 import ListsIndex from '@/views/ListsIndex.vue';
 import HomeView from "@/views/HomeView.vue";
 import WeekView from "@/views/WeekView.vue";
+import BillGroupIndex from "@/views/BillGroupIndex.vue";
 
 const routes: Array<RouteRecordRaw> = [
-  {
-    path: '/',
-    redirect: '/tabs/lists'
-  },
-  {
-    path: "/lists",
-    redirect: "/tabs/lists"
-  },
+    {
+        path: '/',
+        redirect: '/tabs/lists'
+    },
+    {
+        path: "/lists",
+        redirect: "/tabs/lists"
+    },
   {
     path: "/tabs",
     component: HomeView,
@@ -27,16 +28,21 @@ const routes: Array<RouteRecordRaw> = [
         name: 'ListIndex',
         component: ListsIndex
       },
-      {
-        path: "lists/:id",
-        name: "ListView",
-        component: ListView
-      },
-      {
-        path: "week",
-        name: "WeekView",
-        component: WeekView
-      }
+        {
+            path: "lists/:id",
+            name: "ListView",
+            component: ListView
+        },
+        {
+            path: "week",
+            name: "WeekView",
+            component: WeekView
+        },
+        {
+            path: "bills",
+            name: "BillsGroupIndex",
+            component: BillGroupIndex
+        },
     ]
   },
 ]
@@ -46,4 +52,5 @@ const router = createRouter({
   routes
 })
 
+console.log(router, routes);
 export default router

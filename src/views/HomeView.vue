@@ -5,13 +5,18 @@
 
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="Lists" href="/tabs/lists">
-          <ion-icon :icon="listOutline" />
+          <ion-icon :icon="listOutline"/>
           <ion-label>{{ t('tabs.lists') }}</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="Week" href="/tabs/week">
-          <ion-icon :icon="calendarOutline" />
+          <ion-icon :icon="calendarOutline"/>
           <ion-label>{{ t('tabs.week') }}</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button href="/tabs/bills" tab="Bills">
+          <ion-icon :icon="cashOutline"/>
+          <ion-label>{{ t('tabs.bills') }}</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
@@ -20,7 +25,7 @@
 
 <script>
 import {IonIcon, IonLabel, IonPage, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs} from "@ionic/vue";
-import { listOutline, calendarOutline } from 'ionicons/icons';
+import {calendarOutline, cashOutline, listOutline} from 'ionicons/icons';
 import {useI18n} from "vue-i18n";
 
 export default {
@@ -31,6 +36,7 @@ export default {
 
     return {
       t,
+      cashOutline,
       listOutline,
       calendarOutline
     }

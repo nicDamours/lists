@@ -30,6 +30,16 @@ export class BillGroup implements IdentifiableRecord {
         this._participants = value;
     }
 
+    getBalanceForParticipant(participantId: string): number {
+        const requestedParticipant = this.participants.find(item => item.id === participantId);
+
+        if (!requestedParticipant) {
+            throw new Error("Could not find participant with in in group")
+        }
+
+        return requestedParticipant.balances.map(item => item.amount).reduce((col, item) => col += item, 0);
+    }
+
     isEqual(other: IdentifiableRecord): boolean {
         return this.id === other.id;
     }

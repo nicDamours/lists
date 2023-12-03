@@ -24,6 +24,9 @@
     },
     "week": {
       "title": "My Week"
+    },
+    "bills": {
+      "title": "Bills splitting"
     }
   },
   "lists": {
@@ -111,7 +114,8 @@
   },
   "tabs": {
     "lists": "Lists",
-    "week": "Week"
+    "week": "Week",
+    "bills": "Split"
   },
   "WeekPlanner": {
     "titles": {

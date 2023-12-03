@@ -38,9 +38,9 @@ module.exports = {
 
   "addons": [
     "@storybook/addon-links",
-    "@storybook/preset-scss",
     "@storybook/addon-essentials",
-    "@storybook/addon-interactions"
+    "@storybook/addon-interactions",
+    "@storybook/addon-styling-webpack"
   ],
 
   "framework": {

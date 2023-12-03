@@ -52,11 +52,13 @@
   "devDependencies": {
     "@babel/core": "^7.20.7",
     "@capacitor/cli": "3.2.0",
+    "@faker-js/faker": "^8.3.1",
     "@intlify/vue-i18n-loader": "^3.0.0",
     "@storybook/addon-actions": "^7.4.6",
     "@storybook/addon-essentials": "^7.4.6",
     "@storybook/addon-interactions": "^7.4.6",
     "@storybook/addon-links": "^7.4.6",
+    "@storybook/addon-styling-webpack": "^0.0.5",
     "@storybook/preset-scss": "^1.0.3",
     "@storybook/testing-library": "^0.2.2",
     "@storybook/vue3": "^7.4.6",

@@ -1,5 +1,5 @@
 <template>
-  <ion-page>
+  <BasePageTemplate>
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-title> {{ t('pages.bills.title') }}</ion-title>
@@ -15,45 +15,70 @@
 
       <ion-list>
         <BillGroupItem v-for="billGroup in billGroups" :key="billGroup.id" :group="billGroup"
-                       @click="openBillGroup(billGroup)"/>
+                       @click="() => handleGroupClick(billGroup)" @delete="() => handleGroupDelete(billGroup)"/>
+        <ion-item v-if="!billGroups.length" class="v-bill-group-index__empty">
+          <ion-text class="v-bill-group-index__empty-text">{{ t('billGroups.empty') }}</ion-text>
+        </ion-item>
       </ion-list>
     </ion-content>
-  </ion-page>
+    <NewBillGroupFabButton @create-group="handleGroupCreate"/>
+  </BasePageTemplate>
 </template>
 
 <script>
-import {BillGroup} from "@/models/dtos/Bills/BillGroup";
-import {ref} from "vue";
-import {IonContent, IonHeader, IonList, IonPage, IonTitle, IonToolbar} from "@ionic/vue";
+import {IonContent, IonHeader, IonItem, IonList, IonText, IonTitle, IonToolbar} from "@ionic/vue";
 import BillGroupItem from "@/components/Bills/BillGroupItem.vue";
 import {useI18n} from "vue-i18n";
+import useBillsGroups from "@/composable/bills/use-bills-groups";
+import {useRouter} from "vue-router";
+import useConfirm from "@/composable/use-confirm";
+import NewBillGroupFabButton from "@/components/Bills/NewBillGroupFabButton.vue";
+import BasePageTemplate from "@/components/template/BasePageTemplate.vue";
 
 export default {
   name: "BillGroupIndex",
   components: {
+    BasePageTemplate,
     IonContent,
     IonHeader,
     IonList,
-    IonPage,
     IonTitle,
+    IonItem,
+    IonText,
     IonToolbar,
-    BillGroupItem
+    BillGroupItem,
+    NewBillGroupFabButton
   },
   setup() {
     const {t} = useI18n();
+    const router = useRouter();
 
-    const testBill = new BillGroup("irrelevent");
-    testBill.name = "test bill group";
+    const {billGroups, createGroup, deleteGroup} = useBillsGroups();
 
-    const billGroups = ref([
-      testBill
-    ])
+    const {showConfirm} = useConfirm();
 
-    const openBillGroup = (bill) => {
-      console.log(bill)
+    const handleGroupClick = async (bill) => {
+      await router.push({
+        name: "BillGroupView",
+        params: {
+          id: bill.id
+        }
+      })
     }
 
-    return {t, billGroups, openBillGroup}
+    const handleGroupCreate = async newGroup => {
+      await createGroup(newGroup)
+    }
+
+    const handleGroupDelete = async (group) => {
+      const confirmResponse = await showConfirm(t("billGroups.deleteConfirm"));
+
+      if (confirmResponse) {
+        await deleteGroup(group);
+      }
+    }
+
+    return {t, billGroups, handleGroupClick, handleGroupCreate, handleGroupDelete}
   }
 }
 </script>

@@ -7,8 +7,7 @@ import {
 export type BillParticipantConverterPayload = {
     id: string,
     email: string,
-    first_name?: string | null,
-    last_name?: string | null,
+    display_name?: string | null,
 
     balances?: Array<BillParticipantBalanceConverterPayload>
 }
@@ -16,12 +15,8 @@ export const BillParticipantConverter = {
     fromFirestore(payload: BillParticipantConverterPayload): BillParticipant {
         const dto = new BillParticipant(payload.id, payload.email);
 
-        if ('first_name' in payload && payload.first_name) {
-            dto.firstName = payload.first_name;
-        }
-
-        if ('last_name' in payload && payload.last_name) {
-            dto.lastName = payload.last_name
+        if ('display_name' in payload && payload.display_name) {
+            dto.displayName = payload.display_name;
         }
 
         if ('balances' in payload && payload.balances) {
@@ -31,6 +26,12 @@ export const BillParticipantConverter = {
         }
 
         return dto;
+    },
+    toFirestore(modelObject: BillParticipant) {
+        return {
+            id: modelObject.id,
+            email: modelObject.email,
+            displayName: modelObject.displayName
+        }
     }
-
 }

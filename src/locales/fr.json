@@ -129,5 +129,13 @@
     "yourWeek": "Votre semaine",
     "shareAllWeeks": "Partager toutes les semaines",
     "shareSpecificWeek": "Partager une semaine en particulier"
+  },
+  "billGroups": {
+    "deleteConfirm": "Êtes-vous sur de vouloir supprimer ce groupe ? Cet action est irreversible.",
+    "empty": "Aucun groupe de facturation, utilisez le bouton '+' pour en créer un nouveau.",
+    "newPrompt": {
+      "namePrompt": "Veuillez entrer le nom du nouveau groupe de facturation",
+      "placeholder": "name"
+    }
   }
 }

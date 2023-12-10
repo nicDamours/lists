@@ -1,24 +1,40 @@
 import {BillGroup} from "@/models/dtos/Bills/BillGroup";
 import BillGroupItem from "@/components/Bills/BillGroupItem.vue";
 import {mount} from "@vue/test-utils";
-import {IonText} from "@ionic/vue";
+import {IonItemOption, IonText} from "@ionic/vue";
 import {faker} from "@faker-js/faker";
+import {mockComposable, setComposableValue} from "../../../utils/mock-composable";
+import * as useAuthentication from "@/composable/use-authentication"
+import {ref} from "vue";
+import {BillParticipant} from "@/models/dtos/Bills/BillParticipant";
+import getMockI18nPlugin from "../../../utils/modifiers/get-mock-i18n-plugin";
 
-const composableFnMock = jest.fn();
+mockComposable("@/composable/use-authentication")
 
-const useAuthenticationMock = jest.mock("@/composable/use-authentication", () => composableFnMock);
 describe("BillGroupItem", () => {
 
     it("should contain bill group name", () => {
+        // given a current user
+        const currentParticipant = new BillParticipant("123", "irrelevent");
+
         // given a bill group with a name
         const givenName = "some name"
         const givenGroup = new BillGroup("id");
         givenGroup.name = givenName;
+        givenGroup.participants = [currentParticipant];
+
+        // and a current user
+        setComposableValue(useAuthentication, {
+            currentUser: ref({id: currentParticipant.id})
+        })
 
         // when rendering the component
         const wrapper = mount(BillGroupItem, {
             props: {
                 group: givenGroup
+            },
+            global: {
+                plugins: [getMockI18nPlugin()]
             }
         })
 
@@ -38,10 +54,17 @@ describe("BillGroupItem", () => {
                 return givenBalance;
             })
 
+        setComposableValue(useAuthentication, {
+            currentUser: ref({id: "123"})
+        })
+
         // when rendering the component
         const wrapper = mount(BillGroupItem, {
             props: {
                 group: billGroup
+            },
+            global: {
+                plugins: [getMockI18nPlugin()]
             }
         })
 
@@ -61,10 +84,18 @@ describe("BillGroupItem", () => {
                 return givenBalance;
             })
 
+
+        setComposableValue(useAuthentication, {
+            currentUser: ref({id: "123"})
+        })
+
         // when rendering the component
         const wrapper = mount(BillGroupItem, {
             props: {
                 group: billGroup
+            },
+            global: {
+                plugins: [getMockI18nPlugin()]
             }
         })
 
@@ -84,10 +115,18 @@ describe("BillGroupItem", () => {
                 return givenBalance;
             })
 
+
+        setComposableValue(useAuthentication, {
+            currentUser: ref({id: "123"})
+        })
+
         // when rendering the component
         const wrapper = mount(BillGroupItem, {
             props: {
                 group: billGroup
+            },
+            global: {
+                plugins: [getMockI18nPlugin()]
             }
         })
 
@@ -108,10 +147,18 @@ describe("BillGroupItem", () => {
                 return givenBalance;
             })
 
+
+        setComposableValue(useAuthentication, {
+            currentUser: ref({id: "123"})
+        })
+
         // when rendering the component
         const wrapper = mount(BillGroupItem, {
             props: {
                 group: billGroup
+            },
+            global: {
+                plugins: [getMockI18nPlugin()]
             }
         })
 
@@ -126,26 +173,62 @@ describe("BillGroupItem", () => {
         const givenCurrentUserId = faker.string.uuid();
         const currentUser = {id: givenCurrentUserId}
 
-        composableFnMock.mockImplementationOnce(() => {
-            return {
-                currentUser: {
-                    value: currentUser
-                }
-            }
+        // and a current user
+        setComposableValue(useAuthentication, {
+            currentUser: ref(currentUser)
         })
 
         // and a group
         const givenGroup = new BillGroup("irrelevent");
-        const getBalanceForParticipantSpy = jest.spyOn(givenGroup, 'getBalanceForParticipant');
+        const getBalanceForParticipantSpy = jest.spyOn(givenGroup, 'getBalanceForParticipant').mockImplementationOnce(() => {
+            return 10;
+        });
 
         // when rendering the component
         const wrapper = mount(BillGroupItem, {
             props: {
                 group: givenGroup
+            },
+            global: {
+                plugins: [getMockI18nPlugin()]
             }
         })
 
         // then the balance function should have been called with the current user
         expect(getBalanceForParticipantSpy).toHaveBeenCalledWith(givenCurrentUserId)
+    });
+
+    it("should trigger 'delete' event when clicking on delete button", async () => {
+        // given a current user
+        const currentParticipant = new BillParticipant("123", "irrelevent");
+
+        // given a bill group with a name
+        const givenName = "some name"
+        const givenGroup = new BillGroup("id");
+        givenGroup.name = givenName;
+        givenGroup.participants = [currentParticipant];
+
+        // and a current user
+        setComposableValue(useAuthentication, {
+            currentUser: ref({id: currentParticipant.id})
+        })
+
+        // and a component
+        const wrapper = mount(BillGroupItem, {
+            props: {
+                group: givenGroup
+            },
+            global: {
+                plugins: [getMockI18nPlugin()]
+            }
+        })
+
+        // when clicking on the delete sliding option
+        const deleteSlidingOptionComponent = wrapper.getComponent(IonItemOption);
+
+        await deleteSlidingOptionComponent.trigger('click');
+
+        // then the component should have triggered a "delete" event
+        expect(wrapper.emitted()).toHaveProperty('delete');
     })
 })

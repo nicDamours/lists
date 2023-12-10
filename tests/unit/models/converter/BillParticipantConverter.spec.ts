@@ -53,36 +53,20 @@ describe("BillParticipantConverter", () => {
             expect(result.email).toEqual(givenEmail)
         })
 
-        it("should define the first name when present", () => {
-            // given a payload with an first name
-            const givenFirstName = faker.person.firstName();
+        it("should define the display anme when present", () => {
+            // given a payload with a display name
+            const givenDisplayName = faker.person.firstName();
             const payload = {
                 id: "irrelevent",
                 email: "irrelevent",
-                first_name: givenFirstName
+                display_name: givenDisplayName
             }
 
             // when creating object using converter
             const result = BillParticipantConverter.fromFirestore(payload);
 
-            // then it should have define the first name
-            expect(result.firstName).toEqual(givenFirstName)
-        })
-
-        it("should define last name when present", () => {
-            // given a payload with a last name
-            const givenLastName = faker.person.lastName();
-            const payload = {
-                id: "irrelevent",
-                email: "irrelevent",
-                last_name: givenLastName
-            }
-
-            // when creating object using converter
-            const result = BillParticipantConverter.fromFirestore(payload);
-
-            // then it should have defined the last name
-            expect(result.lastName).toEqual(givenLastName)
+            // then it should have define the display name
+            expect(result.displayName).toEqual(givenDisplayName)
         })
 
         it("should define participant balance", () => {
@@ -114,6 +98,51 @@ describe("BillParticipantConverter", () => {
 
             // then the result's balance should contain the balances;
             expect(result.balances).toHaveLength(givenBalancesCount);
+        })
+    })
+
+    describe("toFirestore", () => {
+        it("should contain id", () => {
+            // given a billParticipant with an id
+            const givenId = "123";
+            const givenBillParticipant = new BillParticipant(givenId, "test@test.com");
+
+
+            // when sending data using converter
+            const payload = BillParticipantConverter.toFirestore(givenBillParticipant)
+
+            // then it should send the id
+            expect(payload).toHaveProperty("id");
+            expect(payload.id).toEqual(givenId)
+        })
+
+        it("should contain email", () => {
+            // given a billParticipant with an email
+            const givenEmail = "test@test.com";
+            const givenBillParticipant = new BillParticipant("123", givenEmail);
+
+
+            // when sending data using converter
+            const payload = BillParticipantConverter.toFirestore(givenBillParticipant)
+
+            // then it should send the email
+            expect(payload).toHaveProperty("email");
+            expect(payload.email).toEqual(givenEmail)
+        })
+
+        it("should contain display name", () => {
+            // given a billParticipant with a display name
+            const givenDisplayName = "jon doe";
+            const givenBillParticipant = new BillParticipant("123", "test@test.com");
+            givenBillParticipant.displayName = givenDisplayName;
+
+
+            // when sending data using converter
+            const payload = BillParticipantConverter.toFirestore(givenBillParticipant)
+
+            // then it should send the display name
+            expect(payload).toHaveProperty("displayName");
+            expect(payload.displayName).toEqual(givenDisplayName)
         })
     })
 })

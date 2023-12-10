@@ -1,5 +1,5 @@
 <template>
-  <ion-page>
+  <BasePageTemplate>
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-title> {{ t('pages.lists.title') }}</ion-title>
@@ -36,7 +36,7 @@
         <NewItemForm @form-submit="handleNewListSubmit" text="lists.addNewList"/>
       </ion-list>
     </ion-content>
-  </ion-page>
+  </BasePageTemplate>
 </template>
 
 <script>
@@ -48,7 +48,6 @@ import {
   IonIcon,
   IonItem,
   IonList,
-  IonPage,
   IonText,
   IonTitle,
   IonToolbar,
@@ -70,16 +69,17 @@ import {useMediaQuery} from "@vueuse/core";
 import ShareRequestModal from "@/components/modal/ShareRequestModal";
 import useLists from "@/composable/use-lists";
 import AboutModal from "@/components/modal/AboutModal.vue";
+import BasePageTemplate from "@/components/template/BasePageTemplate.vue";
 
 export default {
   name: 'ListsIndex',
   components: {
+    BasePageTemplate,
     FloatingBadge,
     NewItemForm,
     IonContent,
     IonHeader,
     IonList,
-    IonPage,
     IonTitle,
     IonToolbar,
     IonIcon,

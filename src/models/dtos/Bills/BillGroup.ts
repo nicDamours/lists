@@ -3,6 +3,7 @@ import {BillParticipant} from "@/models/dtos/Bills/BillParticipant";
 
 export class BillGroup implements IdentifiableRecord {
     id: string;
+    private _participants: BillParticipant[];
 
     constructor(id: string) {
         this.id = id;
@@ -20,13 +21,12 @@ export class BillGroup implements IdentifiableRecord {
         this._name = value;
     }
 
-    private _participants: Array<BillParticipant>;
 
-    get participants(): Array<BillParticipant> {
+    get participants(): BillParticipant[] {
         return this._participants;
     }
 
-    set participants(value: Array<BillParticipant>) {
+    set participants(value: BillParticipant[]) {
         this._participants = value;
     }
 

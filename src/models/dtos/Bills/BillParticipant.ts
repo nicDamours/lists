@@ -3,46 +3,34 @@ import {BillParticipantBalance} from "@/models/dtos/Bills/BillParticipantBalance
 
 export class BillParticipant implements IdentifiableRecord {
     id: string;
+    private _balances: BillParticipantBalance[]
 
-    constructor(id: string, email: string) {
+    constructor(id: string, email: string | null) {
         this.id = id;
         this._email = email;
-        this._firstName = null;
-        this._lastName = null
+        this._displayName = null;
         this._balances = [];
     }
 
-    private _email: string
+    private _email: string | null
 
-    get email(): string {
+    get email(): string | null {
         return this._email;
     }
 
-    set email(value: string) {
+    set email(value: string | null) {
         this._email = value;
     }
 
-    private _firstName: string | null;
+    private _displayName: string | null;
 
-    get firstName(): string | null {
-        return this._firstName;
+    get displayName(): string | null {
+        return this._displayName;
     }
 
-    set firstName(value: string | null) {
-        this._firstName = value;
+    set displayName(value: string | null) {
+        this._displayName = value;
     }
-
-    private _lastName: string | null;
-
-    get lastName(): string | null {
-        return this._lastName;
-    }
-
-    set lastName(value: string | null) {
-        this._lastName = value;
-    }
-
-    private _balances: Array<BillParticipantBalance>
 
     get balances(): Array<BillParticipantBalance> {
         return this._balances;

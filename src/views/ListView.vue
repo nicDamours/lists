@@ -1,5 +1,5 @@
 <template>
-  <ion-page v-if="list">
+  <BasePageTemplate v-if="list">
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-title size="large">{{ list.name }}</ion-title>
@@ -78,7 +78,7 @@
         <NewItemForm @form-submit="createNewSection" text="sections.addNewSection"/>
       </ion-list>
     </ion-content>
-  </ion-page>
+  </BasePageTemplate>
 </template>
 
 <script>
@@ -109,7 +109,6 @@ import {
   IonLabel,
   IonList,
   IonListHeader,
-  IonPage,
   IonReorder,
   IonReorderGroup,
   IonText,
@@ -129,11 +128,12 @@ import useListService from "@/composable/use-list-service";
 import ListOptionsPopOver from "@/components/ListOptionsPopOver";
 import SharedListOptionsPopOver from "@/components/SharedListOptionsPopOver";
 import useReorderItems from "@/composable/use-reorder-items";
+import BasePageTemplate from "@/components/template/BasePageTemplate.vue";
 
 export default {
   name: "ListView",
   components: {
-    IonPage,
+    BasePageTemplate,
     IonContent,
     IonList,
     IonIcon,

@@ -3,6 +3,7 @@ import {BillGroupConverter} from "@/models/converter/Bill/BillGroupConverter";
 import {DocumentSnapshotMock} from "../../../utils/DocumentSnapshotMock";
 import {faker} from "@faker-js/faker";
 import {BillParticipantConverter} from "@/models/converter/Bill/BillParticipantConverter";
+import {BillParticipant} from "@/models/dtos/Bills/BillParticipant";
 
 describe("BillGroupConverter", () => {
     describe("from firestore", () => {
@@ -89,20 +90,6 @@ describe("BillGroupConverter", () => {
         })
     })
     describe("to firestore", () => {
-        it("should send the id", () => {
-            // given a BillGroup object with an id
-            const givenId = "123";
-
-            const givenGroup = new BillGroup(givenId);
-
-            // when send data to firestore using converter
-            const payload = BillGroupConverter.toFirestore(givenGroup);
-
-            // then it should contain the id
-            expect(payload).toHaveProperty('id');
-            expect(payload.id).toEqual(givenId)
-        })
-
         it("should send the name", () => {
             // given a BillGroup object with a name
             const givenName = "some name";
@@ -117,5 +104,27 @@ describe("BillGroupConverter", () => {
             expect(payload).toHaveProperty('name');
             expect(payload.name).toEqual(givenName)
         });
+
+        it("should format participants as an array of ids", () => {
+            // given a group with some participants
+            const givenParticipantsCount = 3;
+            const givenParticipants = new Array(givenParticipantsCount).fill(undefined).map(() => new BillParticipant(faker.string.uuid(), faker.internet.email()));
+
+            const givenGroup = new BillGroup("123");
+            givenGroup.participants = givenParticipants;
+
+            // when send data to firestore using converter
+            const payload = BillGroupConverter.toFirestore(givenGroup);
+
+            // then it should contain the participants
+            expect(payload).toHaveProperty('participants');
+
+            // and the participants should be formatted as an array of ids
+            expect(payload.participants).toHaveLength(givenParticipantsCount);
+
+            for (const participant of givenParticipants) {
+                expect(payload.participants).toContain(participant.id);
+            }
+        })
     })
 })

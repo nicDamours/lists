@@ -1,20 +1,20 @@
 <template>
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="m-preferences">
+  <ion-fab slot="fixed" class="m-preferences" horizontal="start" vertical="bottom">
     <ion-fab-button>
       <ion-icon :icon="settingsOutline"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="top">
-      <ThemeToggle />
+      <ThemeToggle/>
     </ion-fab-list>
-    <ion-fab-list side="start">
-      <LangSwitcher />
+    <ion-fab-list side="end">
+      <LangSwitcher/>
     </ion-fab-list>
   </ion-fab>
 </template>
 
 <script>
 import {IonFab, IonFabButton, IonFabList, IonIcon} from "@ionic/vue";
-import { settingsOutline } from "ionicons/icons";
+import {settingsOutline} from "ionicons/icons";
 import ThemeToggle from "./ThemeToggle";
 import LangSwitcher from "./LangSwitcher"
 

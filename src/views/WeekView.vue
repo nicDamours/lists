@@ -1,5 +1,5 @@
 <template>
-  <ion-page>
+  <BasePageTemplate>
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-title> {{ t('pages.week.title') }}</ion-title>
@@ -24,13 +24,13 @@
       <ion-card>
         <ion-card-content>
           <WeekSharingSelector v-model="selectedSharingModel"/>
-          <WeekSelector v-model="viewDate" />
+          <WeekSelector v-model="viewDate"/>
 
           <WeekPlanner :plan="selectedWeekPlan" @update-plan="handleWeekPlanChange"/>
         </ion-card-content>
       </ion-card>
     </ion-content>
-  </ion-page>
+  </BasePageTemplate>
 </template>
 
 <script>
@@ -42,7 +42,6 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
-  IonPage,
   IonTitle,
   IonToolbar,
   popoverController
@@ -58,12 +57,13 @@ import {settingsOutline} from "ionicons/icons";
 import WeekSharingSelector from "@/components/week/WeekSharingSelector.vue";
 import useWeekSharing from "@/composable/use-week-sharing";
 import SharedWeekOptionPopOver from "@/components/SharedWeekOptionPopOver.vue";
+import BasePageTemplate from "@/components/template/BasePageTemplate.vue";
 
 export default {
   name: "WeekView",
   components: {
+    BasePageTemplate,
     WeekSharingSelector,
-    IonPage,
     IonHeader,
     IonContent,
     IonToolbar,

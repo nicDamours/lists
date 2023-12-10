@@ -81,10 +81,5 @@
     "vue-jest": "^5.0.0-0",
     "vue-loader": "^16.8.3",
     "vue3-jest": "^27.0.0-alpha.1"
-  },
-  "jest": {
-    "transformIgnorePatterns": [
-      "/node_modules/(?!@ionic/vue|@ionic/vue-router|@ionic/core|@stencil/core|ionicons)"
-    ]
   }
 }

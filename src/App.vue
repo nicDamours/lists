@@ -4,7 +4,6 @@
 
     <ion-router-outlet/>
 
-    <OrganismPreferences/>
   </ion-app>
 </template>
 
@@ -16,7 +15,6 @@ import ListConverter from "@/models/converter/ListConverter";
 import {List} from "@/models/dtos/List";
 import useBindAuthentication from "@/composable/use-bind-authentication";
 import {collection, query, where} from "@firebase/firestore";
-import OrganismPreferences from "@/components/OrganismPreferences.vue";
 import {Container} from "@/utils/Container";
 import {FirebaseDatabaseService} from "@/services/FirebaseDatabaseService";
 import LoadingBar from "@/components/LoadingBar.vue";
@@ -30,25 +28,29 @@ import {WeekSharingConverter} from "@/models/converter/WeekSharingConverter";
 import {WeekSharing} from "@/models/dtos/WeekSharing";
 import {SharedWeekConverter} from "@/models/converter/SharedWeekConverter";
 import {SharedWeek} from "@/models/dtos/WeekPlan/SharedWeek";
+import useAuthentication from "@/composable/use-authentication";
+import {BillGroup} from "@/models/dtos/Bills/BillGroup";
+import {BillGroupConverter} from "@/models/converter/Bill/BillGroupConverter";
 import Unsubscribe = firebase.Unsubscribe;
 
 export default defineComponent({
   name: 'App',
   components: {
     LoadingBar,
-    OrganismPreferences,
     IonApp,
     IonRouterOutlet
   },
   setup() {
     const {startLoading} = useLoading();
     const {registerBindings} = useFirestoreBinding()
+    const {defineCurrentUser} = useAuthentication();
     const db = Container.get<FirebaseDatabaseService>('FirebaseDatabaseService').db
 
     const unSubscribeFunctions: Unsubscribe[] = [];
 
     startLoading().then(() => {
       useBindAuthentication().then((user) => {
+        defineCurrentUser(user);
         const listUnSubscribeFunctions = registerBindings<List>("lists",
             [
               query(collection(db, "lists"), where('user', '==', user.uid)),
@@ -102,6 +104,15 @@ export default defineComponent({
         })
 
         unSubscribeFunctions.push(...shareRequestUnSubscribeFunctions);
+
+        const billingGroupUnsubscribeFunction = registerBindings<BillGroup>("groups", [
+          query(collection(db, "billGroups"), where("participants", "array-contains", user.uid))
+        ], {
+          storePath: "bills/",
+          converter: BillGroupConverter
+        })
+
+        unSubscribeFunctions.push(...billingGroupUnsubscribeFunction);
       });
     })
 

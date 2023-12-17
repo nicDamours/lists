@@ -1,0 +1,13 @@
+.m-bill-group-item {
+  cursor: pointer;
+
+  &__balance {
+    &.--positive {
+      color: darkgreen;
+    }
+
+    &.--negative {
+      color: indianred;
+    }
+  }
+}

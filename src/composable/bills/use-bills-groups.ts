@@ -12,15 +12,20 @@ export default function useBillsGroups() {
         return store.getters["bills/groups"]
     });
 
+    const getGroupById = (groupId: string) => {
+        return store.getters["bills/getGroupById"](groupId)
+    };
+
     const createGroup = async (group: BillGroup) => {
         await callAsync(BillGroupService.addNewBillGroup, group)
     }
 
     const deleteGroup = async (group: BillGroup) => {
-        console.log(group);
+        await callAsync(BillGroupService.deleteGroup, group);
     }
 
     return {
+        getGroupById,
         billGroups,
         createGroup,
         deleteGroup

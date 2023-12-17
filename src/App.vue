@@ -106,7 +106,7 @@ export default defineComponent({
         unSubscribeFunctions.push(...shareRequestUnSubscribeFunctions);
 
         const billingGroupUnsubscribeFunction = registerBindings<BillGroup>("groups", [
-          query(collection(db, "billGroups"), where("participants", "array-contains", user.uid))
+          query(collection(db, "billGroups"), where("participants_uids", "array-contains", user.uid))
         ], {
           storePath: "bills/",
           converter: BillGroupConverter

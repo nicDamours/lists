@@ -5,6 +5,7 @@ import ListsIndex from '@/views/ListsIndex.vue';
 import HomeView from "@/views/HomeView.vue";
 import WeekView from "@/views/WeekView.vue";
 import BillGroupIndex from "@/views/BillGroupIndex.vue";
+import BillGroupView from "@/views/BillGroupView.vue";
 
 export const routes: Array<RouteRecordRaw> = [
     {
@@ -42,6 +43,11 @@ export const routes: Array<RouteRecordRaw> = [
                 path: "bills",
                 name: "BillsGroupIndex",
                 component: BillGroupIndex
+            },
+            {
+                path: "bills/:id",
+                name: "BillGroupView",
+                component: BillGroupView
             },
         ]
     },

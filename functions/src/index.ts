@@ -8,6 +8,7 @@ import unShareWithEmail from "./Functions/unshare-with-email";
 import updateWeekSharingOnWeekUpdate from "./Hooks/update-week-sharing-on-week-update";
 import updateExistingWeekOnWeekSharingCreate from "./Hooks/update-existing-week-on-week-sharing-create";
 import removeTargetIdFromWeekSharingOnWeekSharingDelete from "./Hooks/remove-target-id-on-week-sharing-delete";
+import addParticipantOnBillGroupCreate from "./Hooks/add-participant-on-bill-group-create";
 
 import * as functions from "firebase-functions";
 
@@ -23,3 +24,5 @@ exports.removeCurrentUserFromShare = removeCurrentUserFromShare;
 exports.updateWeekSharingOnWeekUpdate = functions.firestore.document("/weeks/{weekId}").onWrite(updateWeekSharingOnWeekUpdate);
 exports.updateExistingWeekOnWeekSharingCreate = functions.firestore.document("/weekSharing/{weekSharing}").onCreate(updateExistingWeekOnWeekSharingCreate);
 exports.removeTargetIdFromWeekSharingOnWeekSharingDelete = functions.firestore.document("/weekSharing/{weekSharing}").onDelete(removeTargetIdFromWeekSharingOnWeekSharingDelete);
+
+exports.addParticipantOnBillGroupCreate = functions.firestore.document("/billGroups/{billGroup}").onCreate(addParticipantOnBillGroupCreate);

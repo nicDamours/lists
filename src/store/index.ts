@@ -6,11 +6,13 @@ import * as weeks from "./modules/weeks";
 import * as weekSharing from "./modules/weekSharing"
 import * as sharedWeeks from "./modules/sharedWeeks"
 import * as bills from "./modules/bills"
+import * as users from "./modules/users"
 
 export default createStore({
     modules: {
         lists,
         bills,
+        users,
         weeks,
         loading,
         weekSharing,

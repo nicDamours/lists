@@ -47,15 +47,16 @@ export default function useConfirm() {
                     },
                     {
                         text: t('global.confirm'),
-                        handler: () => {
-                            return resolve(true);
-                        },
                     },
                 ],
                 inputs
             });
 
             await confirm.present();
+
+            const {data} = await confirm.onDidDismiss();
+
+            resolve(data);
         });
     }
     return {

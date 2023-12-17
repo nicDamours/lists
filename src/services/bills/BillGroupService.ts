@@ -1,7 +1,7 @@
 import {BillGroup} from "@/models/dtos/Bills/BillGroup";
 import {Container} from "@/utils/Container";
 import {FirebaseDatabaseService} from "@/services/FirebaseDatabaseService";
-import {addDoc, collection} from "firebase/firestore";
+import {addDoc, collection, deleteDoc, doc} from "firebase/firestore";
 import {BillGroupConverter} from "@/models/converter/Bill/BillGroupConverter";
 import {FirebaseAuthService} from "@/services/FirebaseAuthService";
 import {BillParticipant} from "@/models/dtos/Bills/BillParticipant";
@@ -25,5 +25,9 @@ export const BillGroupService = {
 
         const data = BillGroupConverter.toFirestore(group);
         return addDoc(collection(databaseInstance, "billGroups"), data)
+    },
+    async deleteGroup(group: BillGroup) {
+        const databaseInstance = Container.get<FirebaseDatabaseService>('FirebaseDatabaseService').db
+        return deleteDoc(doc(databaseInstance, "billGroups", group.id))
     }
 }

@@ -28,25 +28,24 @@ export default {
     const {showConfirmWithInput} = useConfirm();
     const {currentUser} = useAuthentication();
     const newGroupButtonClick = async () => {
-      let newGroupName = "";
-      const response = await showConfirmWithInput(t("billGroups.newPrompt.namePrompt"), [
+      const data = await showConfirmWithInput(t("billGroups.newPrompt.namePrompt"), [
         {
           type: 'text',
           label: t('billGroups.newPrompt.placeholder'),
           value: '',
+          name: "newName",
           tabindex: 1,
-          handler: function (value) {
-            newGroupName = value.value;
-          },
         },
       ]);
 
-      if (!response) {
+      if (data === false) {
         return;
       }
 
+      const {values} = data
+
       const newGroup = new BillGroup(null);
-      newGroup.name = newGroupName;
+      newGroup.name = values.newName;
       newGroup.participants = [new BillParticipant(currentUser.value.id, currentUser.value.email)]
 
       emit("create-group", newGroup)

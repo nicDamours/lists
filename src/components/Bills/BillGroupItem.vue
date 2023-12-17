@@ -1,12 +1,12 @@
 <template>
-  <ion-item-sliding>
+  <ion-item-sliding class="m-bill-group-item">
     <ion-item-options side="start">
       <ion-item-option color="danger" @click="$emit('delete')">{{ t("global.delete") }}</ion-item-option>
     </ion-item-options>
 
     <ion-item>
       <ion-text>{{ group.name }}</ion-text>
-      <ion-text slot="end" :class="balanceClass" class="m-group-item__balance">{{ formattedBalance }}</ion-text>
+      <ion-text slot="end" :class="balanceClass" class="m-bill-group-item__balance">{{ formattedBalance }}</ion-text>
     </ion-item>
   </ion-item-sliding>
 </template>
@@ -50,7 +50,7 @@ export default {
       if (!groupBalance.value || groupBalance.value === 0) {
         return 'neutral'
       }
-      return groupBalance.value > 0 ? 'positive' : 'negative'
+      return groupBalance.value > 0 ? '--positive' : '--negative'
     })
 
     const formattedBalance = computed(() => {

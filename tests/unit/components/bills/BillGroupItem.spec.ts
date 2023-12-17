@@ -48,6 +48,7 @@ describe("BillGroupItem", () => {
         // given a mock of the group object with a balance
         const givenBalance = 100;
         const billGroup = new BillGroup("irrelevent");
+        billGroup.participants = [new BillParticipant("123", "irrelevent")]
 
         jest.spyOn(billGroup, 'getBalanceForParticipant')
             .mockImplementation(() => {
@@ -78,6 +79,7 @@ describe("BillGroupItem", () => {
         // given a mock of the group object with a negative balance
         const givenBalance = -100;
         const billGroup = new BillGroup("irrelevent");
+        billGroup.participants = [new BillParticipant("123", "irrelevent")]
 
         jest.spyOn(billGroup, 'getBalanceForParticipant')
             .mockImplementation(() => {
@@ -109,6 +111,7 @@ describe("BillGroupItem", () => {
         // given a mock of the group object with a positive balance
         const givenBalance = 100;
         const billGroup = new BillGroup("irrelevent");
+        billGroup.participants = [new BillParticipant("123", "irrelevent")]
 
         jest.spyOn(billGroup, 'getBalanceForParticipant')
             .mockImplementation(() => {
@@ -180,6 +183,7 @@ describe("BillGroupItem", () => {
 
         // and a group
         const givenGroup = new BillGroup("irrelevent");
+        givenGroup.participants = [new BillParticipant(givenCurrentUserId, "irrelevent")]
         const getBalanceForParticipantSpy = jest.spyOn(givenGroup, 'getBalanceForParticipant').mockImplementationOnce(() => {
             return 10;
         });

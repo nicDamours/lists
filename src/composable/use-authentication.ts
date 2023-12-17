@@ -9,7 +9,7 @@ export default function useAuthentication() {
     const currentUser = useStorage('current-user', null);
 
     const defineCurrentUser = async (user: any) => {
-        await store.dispatch("user/defineCurrentUser", user);
+        await store.dispatch("users/defineCurrentUser", user);
         currentUser.value = user;
     }
 

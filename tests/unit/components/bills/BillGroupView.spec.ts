@@ -13,6 +13,7 @@ import {BillParticipantBalance} from "@/models/dtos/Bills/BillParticipantBalance
 import {ref} from "vue";
 import BillTransactionList from "@/components/Bills/BillTransactionList.vue";
 import {BillTransaction} from "@/models/dtos/Bills/BillTransaction";
+import NewBillTransactionFabButton from "@/components/Bills/NewBillTransactionFabButton.vue";
 
 mockComposable("@/composable/bills/use-bills-groups");
 mockComposable("@/composable/use-authentication");
@@ -425,5 +426,71 @@ describe("BillGroupView", () => {
 
         // then fetchTransactions function should have been called
         expect(fetchTransactionsFn).toHaveBeenCalled()
+    })
+
+    it("should contains a fab button to create a new transaction", () => {
+        // given a group with a name
+        const givenGroupName = "someGroupName";
+        const givenGroup = new BillGroup("123");
+        givenGroup.name = givenGroupName;
+
+        const currentParticipantId = "123123ad";
+        const currentParticipant = new BillParticipant(currentParticipantId, "irrelevent");
+        currentParticipant.balances = [
+            new BillParticipantBalance(123, "123123", "CAD")
+        ]
+
+        givenGroup.participants = [currentParticipant];
+
+        // and a mock of the getGroupById that returns that group
+        const getGroupByIdMock = jest.fn().mockReturnValue(givenGroup);
+
+        setComposableValue(useBillsGroups, {
+            getGroupById: getGroupByIdMock
+        })
+
+        setComposableValue(useAuthentication, {
+            currentUser: ref({
+                uid: currentParticipantId
+            })
+        })
+
+        // and a current route containing the group's id
+        const mockedRoute = jest.mocked(useRoute, {shallow: true});
+
+        mockedRoute.mockImplementationOnce(() => {
+            return {
+                name: "irrelevent",
+                matched: [],
+                hash: "",
+                meta: {},
+                path: "",
+                fullPath: "",
+                query: {},
+                redirectedFrom: undefined,
+                params: {
+                    id: givenGroup.id
+                }
+            }
+        })
+
+        // when rendering the component
+        const wrapper = mount(BillGroupView, {
+            global: {
+                plugins: [getMockI18nPlugin()],
+                stubs: {
+                    BillBalanceSummary: true,
+                    BillTransactionList: true,
+                }
+            }
+        })
+
+        // then there should be a fab button to create a new transaction
+        const newTransactionButton = wrapper.findComponent(NewBillTransactionFabButton);
+        expect(newTransactionButton.exists()).toEqual(true);
+    })
+
+    it("should create a new transaction when the fab button emits a 'new-transaction-save' event", () => {
+
     })
 })

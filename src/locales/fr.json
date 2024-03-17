@@ -140,5 +140,11 @@
   },
   "billBalancesSummary": {
     "settledUp": "Tout est payé!"
+  },
+  "newBillTransaction": {
+    "description": "Description",
+    "enterADescription": "Entrer une description",
+    "amount": "montant",
+    "addTransaction": "Ajout d'une transaction"
   }
 }

@@ -6,7 +6,7 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content :fullscreen="true">
+    <ion-content>
       <ion-header collapse="condense">
         <ion-toolbar>
           <ion-title v-if="currentGroup" size="large">{{ currentGroup.name }}</ion-title>
@@ -16,6 +16,7 @@
         <BillBalanceSummary :balances="currentParticipantBalances"/>
         <BillTransactionList :transactions="currentGroupTransactions" @page-change="handlePageChange"/>
       </div>
+      <NewBillTransactionFabButton/>
     </ion-content>
   </BasePageTemplate>
 </template>
@@ -30,10 +31,12 @@ import {IonContent, IonHeader, IonTitle, IonToolbar} from "@ionic/vue";
 import BillBalanceSummary from "@/components/Bills/BillBalanceSummary.vue";
 import useAuthentication from "@/composable/use-authentication";
 import BillTransactionList from "@/components/Bills/BillTransactionList.vue";
+import NewBillTransactionFabButton from "@/components/Bills/NewBillTransactionFabButton.vue";
 
 export default {
   name: "BillGroupView",
   components: {
+    NewBillTransactionFabButton,
     BasePageTemplate,
     IonHeader,
     IonContent,

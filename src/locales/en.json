@@ -140,5 +140,11 @@
   },
   "billBalancesSummary": {
     "settledUp": "All settled up!"
+  },
+  "newBillTransaction": {
+    "description": "Description",
+    "enterADescription": "Enter a description",
+    "amount": "Amount",
+    "addTransaction": "Add a transaction"
   }
 }

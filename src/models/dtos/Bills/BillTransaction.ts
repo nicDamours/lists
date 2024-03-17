@@ -5,10 +5,17 @@ import {BillParticipant} from "@/models/dtos/Bills/BillParticipant";
 export class BillTransaction implements IdentifiableRecord {
     id: string;
 
+    private _description: string
+    private _currency: string;
+    private _date: Date;
+    private _splitType: BillSplitType;
+    private _creator: BillParticipant | null;
+    private _payer: BillParticipant | null
+
     constructor(id: string) {
         this.id = id;
         this._description = "";
-        this._amount = 0;
+        this._amount = null;
         this._currency = "cad"
         this._date = new Date()
         this._splitType = BillSplitType.EQUALS;
@@ -16,7 +23,7 @@ export class BillTransaction implements IdentifiableRecord {
         this._payer = null;
     }
 
-    private _description: string
+    private _amount: number | null;
 
     get description(): string {
         return this._description;
@@ -26,18 +33,13 @@ export class BillTransaction implements IdentifiableRecord {
         this._description = value;
     }
 
-    private _amount: number;
-
-    get amount(): number {
+    get amount(): number | null {
         return this._amount;
     }
 
-    set amount(value: number) {
+    set amount(value: number | null) {
         this._amount = value;
     }
-
-    private _currency: string;
-
     get currency(): string {
         return this._currency;
     }
@@ -45,9 +47,6 @@ export class BillTransaction implements IdentifiableRecord {
     set currency(value: string) {
         this._currency = value;
     }
-
-    private _date: Date;
-
     get date(): Date {
         return this._date;
     }
@@ -55,8 +54,6 @@ export class BillTransaction implements IdentifiableRecord {
     set date(value: Date) {
         this._date = value;
     }
-
-    private _splitType: BillSplitType;
 
     get splitType(): BillSplitType {
         return this._splitType;
@@ -66,8 +63,6 @@ export class BillTransaction implements IdentifiableRecord {
         this._splitType = value;
     }
 
-    private _creator: BillParticipant | null;
-
     get creator(): BillParticipant | null {
         return this._creator;
     }
@@ -75,8 +70,6 @@ export class BillTransaction implements IdentifiableRecord {
     set creator(value: BillParticipant | null) {
         this._creator = value;
     }
-
-    private _payer: BillParticipant | null
 
     get payer(): BillParticipant | null {
         return this._payer;

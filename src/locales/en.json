@@ -137,5 +137,8 @@
       "namePrompt": "Please enter the name of the new bill group",
       "placeholder": "name"
     }
+  },
+  "billBalancesSummary": {
+    "settledUp": "All settled up!"
   }
 }

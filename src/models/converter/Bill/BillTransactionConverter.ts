@@ -5,7 +5,7 @@ import {
     SnapshotOptions,
     Timestamp
 } from "firebase/firestore";
-import {Bill} from "@/models/dtos/Bills/Bill";
+import {BillTransaction} from "@/models/dtos/Bills/BillTransaction";
 import {
     BillParticipantConverter,
     BillParticipantConverterPayload
@@ -29,11 +29,11 @@ export type BillConverterPayload = {
     splitType: string
 }
 
-export const BillConverter: FirestoreDataConverter<Bill> = {
-    fromFirestore(snapshot: QueryDocumentSnapshot<BillConverterPayload>, options?: SnapshotOptions): Bill {
+export const BillTransactionConverter: FirestoreDataConverter<BillTransaction> = {
+    fromFirestore(snapshot: QueryDocumentSnapshot<BillConverterPayload>, options?: SnapshotOptions): BillTransaction {
         const data = snapshot.data();
 
-        const dto = new Bill(snapshot.id);
+        const dto = new BillTransaction(snapshot.id);
 
         dto.description = data.description;
 
@@ -66,7 +66,7 @@ export const BillConverter: FirestoreDataConverter<Bill> = {
 
         return dto;
     },
-    toFirestore(modelObject: Bill): DocumentData {
+    toFirestore(modelObject: BillTransaction): DocumentData {
         return {
             id: modelObject.id,
             description: modelObject.description,

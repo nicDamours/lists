@@ -2,7 +2,7 @@ import {IdentifiableRecord} from "@/models/Interfaces/IdentifiableRecord";
 import {BillSplitType} from "@/models/enums/BillSplitType";
 import {BillParticipant} from "@/models/dtos/Bills/BillParticipant";
 
-export class Bill implements IdentifiableRecord {
+export class BillTransaction implements IdentifiableRecord {
     id: string;
 
     constructor(id: string) {

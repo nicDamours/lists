@@ -11,7 +11,7 @@ describe("BillParticipantConverter", () => {
         it("should create BillParticipant object", () => {
             // given a payload
             const payload: BillParticipantConverterPayload = {
-                id: "irrelevent",
+                uid: "irrelevent",
                 email: "irrelevent"
             }
 
@@ -27,7 +27,7 @@ describe("BillParticipantConverter", () => {
             const givenId = "123";
 
             const payload = {
-                id: givenId,
+                uid: givenId,
                 email: "irrelevent"
             }
 
@@ -42,7 +42,7 @@ describe("BillParticipantConverter", () => {
             // given a payload with an email
             const givenEmail = "test@test.com";
             const payload = {
-                id: "irrelevent",
+                uid: "irrelevent",
                 email: givenEmail
             }
 
@@ -57,7 +57,7 @@ describe("BillParticipantConverter", () => {
             // given a payload with a display name
             const givenDisplayName = faker.person.firstName();
             const payload = {
-                id: "irrelevent",
+                uid: "irrelevent",
                 email: "irrelevent",
                 display_name: givenDisplayName
             }
@@ -82,7 +82,7 @@ describe("BillParticipantConverter", () => {
             }
 
             const payload = {
-                id: "irrelevent",
+                uid: "irrelevent",
                 email: "irrelevent",
                 balances: givenBalances
             }

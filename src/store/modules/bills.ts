@@ -3,24 +3,24 @@ import {BillGroup} from "@/models/dtos/Bills/BillGroup";
 
 export const namespaced = true;
 
-export type ListState = {
+export type GroupsState = {
     groups: BillGroup[];
 }
 
-export const state: ListState = {
+export const state: GroupsState = {
     groups: []
 }
 
 export const getters = {
-    groups(state: ListState) {
+    groups(state: GroupsState) {
         return state.groups;
     },
-    getGroupById: (state: ListState) => (id: string) => {
+    getGroupById: (state: GroupsState) => (id: string) => {
         return state.groups.find(item => item.id === id);
     }
 }
 
 export const mutations = {
-    ...firestoreMutations<ListState>("groups"),
+    ...firestoreMutations<GroupsState>("groups"),
 };
 

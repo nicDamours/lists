@@ -43,7 +43,7 @@ export default {
         return null;
       }
 
-      return group.value.getBalanceForParticipant(currentUser.value.id);
+      return group.value.getBalanceForParticipant(currentUser.value.uid);
     })
 
     const balanceClass = computed(() => {

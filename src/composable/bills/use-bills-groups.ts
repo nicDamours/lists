@@ -28,6 +28,6 @@ export default function useBillsGroups() {
         getGroupById,
         billGroups,
         createGroup,
-        deleteGroup
+        deleteGroup,
     };
 }

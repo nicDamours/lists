@@ -1,6 +1,9 @@
 import {DocumentData, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions} from "firebase/firestore";
 import {BillGroup} from "@/models/dtos/Bills/BillGroup";
-import {BillParticipantConverterPayload} from "@/models/converter/Bill/BillParticipantConverter";
+import {
+    BillParticipantConverter,
+    BillParticipantConverterPayload
+} from "@/models/converter/Bill/BillParticipantConverter";
 
 
 type BillGroupConverterPayload = {
@@ -18,14 +21,11 @@ export const BillGroupConverter: FirestoreDataConverter<BillGroup> = {
 
         dto.name = data.name;
 
-        /*
-        if (data.participants && false) {
-            console.log('payload participants', data.participants);
-            for (const participantPayload of data.participants) {
+        if (data.participants) {
+            for (const participantPayload of Object.values(data.participants)) {
                 dto.participants.push(BillParticipantConverter.fromFirestore(participantPayload))
             }
         }
-         */
 
         return dto;
 

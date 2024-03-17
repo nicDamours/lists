@@ -1,7 +1,12 @@
 module.exports = {
   preset: '@vue/cli-plugin-unit-jest/presets/typescript-and-babel',
   transform: {
-    '^.+\\.vue$': 'vue3-jest'
+      "^.+\\.js$": "babel-jest",
+      "^.+\\.tsx?$": ["ts-jest", {
+          babelConfig: true
+      }],
+      '^.+\\.vue$': '@vue/vue3-jest'
   },
-  transformIgnorePatterns: ['/node_modules/(?!@ionic/vue|@ionic/vue-router|@ionic/core|@stencil/core|ionicons)']
+    transformIgnorePatterns: ['/node_modules/(?!@ionic/vue|@ionic/vue-router|@ionic/core|@stencil/core|ionicons)'],
+    globals: {}
 }

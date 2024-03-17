@@ -137,5 +137,8 @@
       "namePrompt": "Veuillez entrer le nom du nouveau groupe de facturation",
       "placeholder": "name"
     }
+  },
+  "billBalancesSummary": {
+    "settledUp": "Tout est payé!"
   }
 }

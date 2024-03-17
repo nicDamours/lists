@@ -46,7 +46,7 @@ export default {
 
       const newGroup = new BillGroup(null);
       newGroup.name = values.newName;
-      newGroup.participants = [new BillParticipant(currentUser.value.id, currentUser.value.email)]
+      newGroup.participants = [new BillParticipant(currentUser.value.uid, currentUser.value.email)]
 
       emit("create-group", newGroup)
     }

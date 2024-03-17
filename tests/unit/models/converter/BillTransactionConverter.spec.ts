@@ -1,12 +1,12 @@
-import {BillConverter} from "@/models/converter/Bill/BillConverter";
+import {BillTransactionConverter} from "@/models/converter/Bill/BillTransactionConverter";
 import {DocumentSnapshotMock} from "../../../utils/DocumentSnapshotMock";
-import {Bill} from "@/models/dtos/Bills/Bill";
+import {BillTransaction} from "@/models/dtos/Bills/BillTransaction";
 import {Timestamp} from "firebase/firestore";
 import {BillSplitType} from "@/models/enums/BillSplitType";
 import {BillParticipantConverter} from "@/models/converter/Bill/BillParticipantConverter";
 import {BillParticipant} from "@/models/dtos/Bills/BillParticipant";
 
-describe("BillConverter", () => {
+describe("BillTransactionConverter", () => {
     describe("from Firestore", () => {
         it("should create a bill DTO", () => {
             // given a payload
@@ -15,10 +15,10 @@ describe("BillConverter", () => {
             // when creating dto using converter
             const querySnapshot = new DocumentSnapshotMock(payload);
 
-            const result = BillConverter.fromFirestore(querySnapshot);
+            const result = BillTransactionConverter.fromFirestore(querySnapshot);
 
             // then it should return a Bill
-            expect(result).toBeInstanceOf(Bill);
+            expect(result).toBeInstanceOf(BillTransaction);
         })
 
         it("should define the id", () => {
@@ -32,7 +32,7 @@ describe("BillConverter", () => {
             // when creating object using converter
             const querySnapshot = new DocumentSnapshotMock(payload);
 
-            const result = BillConverter.fromFirestore(querySnapshot);
+            const result = BillTransactionConverter.fromFirestore(querySnapshot);
 
             // then it should have defined the id
             expect(result.id).toEqual(givenID);
@@ -50,7 +50,7 @@ describe("BillConverter", () => {
             // when creating object using converter
             const querySnapshot = new DocumentSnapshotMock(payload);
 
-            const result = BillConverter.fromFirestore(querySnapshot);
+            const result = BillTransactionConverter.fromFirestore(querySnapshot);
 
             // then it should have defined the description
             expect(result.description).toEqual(givenDescription);
@@ -69,7 +69,7 @@ describe("BillConverter", () => {
             // when creating object using converter
             const querySnapshot = new DocumentSnapshotMock(payload);
 
-            const result = BillConverter.fromFirestore(querySnapshot);
+            const result = BillTransactionConverter.fromFirestore(querySnapshot);
 
             // then it should have defined the amount
             expect(result.amount).toEqual(givenAmount);
@@ -88,7 +88,7 @@ describe("BillConverter", () => {
             // when creating object using converter
             const querySnapshot = new DocumentSnapshotMock(payload);
 
-            const result = BillConverter.fromFirestore(querySnapshot);
+            const result = BillTransactionConverter.fromFirestore(querySnapshot);
 
             // then it should have defined the currency
             expect(result.currency).toEqual(givenCurrency);
@@ -107,7 +107,7 @@ describe("BillConverter", () => {
             // when creating object using converter
             const querySnapshot = new DocumentSnapshotMock(payload);
 
-            const result = BillConverter.fromFirestore(querySnapshot);
+            const result = BillTransactionConverter.fromFirestore(querySnapshot);
 
             // then it should have defined the date
             expect(result.date).toBeInstanceOf(Date);
@@ -129,7 +129,7 @@ describe("BillConverter", () => {
             // when creating object using converter
             const querySnapshot = new DocumentSnapshotMock(payload);
 
-            const result = BillConverter.fromFirestore(querySnapshot);
+            const result = BillTransactionConverter.fromFirestore(querySnapshot);
 
             // then it should have defined the split type
             expect(result.splitType).toEqual(givenSplitType);
@@ -154,7 +154,7 @@ describe("BillConverter", () => {
             // when creating object using converter
             const querySnapshot = new DocumentSnapshotMock(payload);
 
-            const result = BillConverter.fromFirestore(querySnapshot);
+            const result = BillTransactionConverter.fromFirestore(querySnapshot);
 
             // then the BillParticipantConverter should have been called
             expect(BillParticipantConverter.fromFirestore).toHaveBeenCalledWith(givenCreatorPayload);
@@ -182,7 +182,7 @@ describe("BillConverter", () => {
             // when creating object using converter
             const querySnapshot = new DocumentSnapshotMock(payload);
 
-            const result = BillConverter.fromFirestore(querySnapshot);
+            const result = BillTransactionConverter.fromFirestore(querySnapshot);
 
             // then the BillParticipantConverter should have been called
             expect(BillParticipantConverter.fromFirestore).toHaveBeenCalledWith(givenPayerPayload);
@@ -201,14 +201,14 @@ describe("BillConverter", () => {
             ["splitType", BillSplitType.FULLY_OWN, "splitType"]
         ])("should send property %s", (objectProperty, value, payloadProperty) => {
             // given an object with a property and a value
-            const object = new Bill("irrelevent");
+            const object = new BillTransaction("irrelevent");
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             object[objectProperty] = value;
 
             // when sending data to firestore using converter
-            const payload = BillConverter.toFirestore(object);
+            const payload = BillTransactionConverter.toFirestore(object);
 
             // then the payload should contains the value
             expect(payload).toHaveProperty(payloadProperty);
@@ -220,11 +220,11 @@ describe("BillConverter", () => {
             // given a bill with a date
             const givenDate = new Date();
 
-            const object = new Bill("irrelevent");
+            const object = new BillTransaction("irrelevent");
             object.date = givenDate;
 
             // when sending date to firestore using converter
-            const payload = BillConverter.toFirestore(object);
+            const payload = BillTransactionConverter.toFirestore(object);
 
             // then the payload should contain the date
             expect(payload).toHaveProperty('date');
@@ -237,11 +237,11 @@ describe("BillConverter", () => {
             const givenCreatorID = "123";
             const givenCreator = new BillParticipant(givenCreatorID, "irrelevent");
 
-            const object = new Bill("irrelevent");
+            const object = new BillTransaction("irrelevent");
             object.creator = givenCreator;
 
             // when sending date to firestore using converter
-            const payload = BillConverter.toFirestore(object);
+            const payload = BillTransactionConverter.toFirestore(object);
 
             // then the payload should contain the creator uuid
             expect(payload).toHaveProperty('creator');
@@ -254,11 +254,11 @@ describe("BillConverter", () => {
             const givenPayerId = "123";
             const givenPayer = new BillParticipant(givenPayerId, "irrelevent");
 
-            const object = new Bill("irrelevent");
+            const object = new BillTransaction("irrelevent");
             object.payer = givenPayer;
 
             // when sending date to firestore using converter
-            const payload = BillConverter.toFirestore(object);
+            const payload = BillTransactionConverter.toFirestore(object);
 
             // then the payload should contain the payer uuid
             expect(payload).toHaveProperty('creator');

@@ -5,7 +5,7 @@ import {
 } from "@/models/converter/Bill/BillParticipantBalanceConverter";
 
 export type BillParticipantConverterPayload = {
-    id: string,
+    uid: string,
     email: string,
     display_name?: string | null,
 
@@ -13,7 +13,7 @@ export type BillParticipantConverterPayload = {
 }
 export const BillParticipantConverter = {
     fromFirestore(payload: BillParticipantConverterPayload): BillParticipant {
-        const dto = new BillParticipant(payload.id, payload.email);
+        const dto = new BillParticipant(payload.uid, payload.email);
 
         if ('display_name' in payload && payload.display_name) {
             dto.displayName = payload.display_name;

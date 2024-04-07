@@ -16,7 +16,7 @@
         <BillBalanceSummary :balances="currentParticipantBalances"/>
         <BillTransactionList :transactions="currentGroupTransactions" @page-change="handlePageChange"/>
       </div>
-      <NewBillTransactionFabButton/>
+      <NewBillTransactionFabButton @save="handleNewBillTransactionSave"/>
     </ion-content>
   </BasePageTemplate>
 </template>
@@ -24,7 +24,6 @@
 <script>
 import {useI18n} from "vue-i18n";
 import useBillsGroups from "@/composable/bills/use-bills-groups";
-import {useRoute} from "vue-router";
 import {computed} from "vue";
 import BasePageTemplate from "@/components/template/BasePageTemplate.vue";
 import {IonContent, IonHeader, IonTitle, IonToolbar} from "@ionic/vue";
@@ -32,6 +31,7 @@ import BillBalanceSummary from "@/components/Bills/BillBalanceSummary.vue";
 import useAuthentication from "@/composable/use-authentication";
 import BillTransactionList from "@/components/Bills/BillTransactionList.vue";
 import NewBillTransactionFabButton from "@/components/Bills/NewBillTransactionFabButton.vue";
+import useBillTransactions from "@/composable/bills/use-bill-transactions";
 
 export default {
   name: "BillGroupView",
@@ -47,14 +47,10 @@ export default {
   },
   setup() {
     const {t} = useI18n();
-    const route = useRoute();
 
-    const {getGroupById, fetchTransactions} = useBillsGroups();
+    const {currentGroup, fetchTransactions} = useBillsGroups();
+    const {createTransaction} = useBillTransactions();
     const {currentUser} = useAuthentication();
-
-    const currentGroup = computed(() => {
-      return getGroupById(route.params.id)
-    })
 
     const currentParticipantBalances = computed(() => {
       if (!currentGroup.value) {
@@ -76,12 +72,17 @@ export default {
       await fetchTransactions();
     }
 
+    const handleNewBillTransactionSave = async (newBillTransaction) => {
+      await createTransaction(currentGroup.value, newBillTransaction)
+    }
+
     return {
       t,
       currentGroup,
       handlePageChange,
       currentGroupTransactions,
-      currentParticipantBalances
+      currentParticipantBalances,
+      handleNewBillTransactionSave
     }
   }
 }

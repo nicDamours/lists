@@ -1,10 +1,4 @@
-import {
-    DocumentData,
-    FirestoreDataConverter,
-    QueryDocumentSnapshot,
-    SnapshotOptions,
-    Timestamp
-} from "firebase/firestore";
+import {DocumentData, Timestamp} from "firebase/firestore";
 import {BillTransaction} from "@/models/dtos/Bills/BillTransaction";
 import {
     BillParticipantConverter,
@@ -12,9 +6,9 @@ import {
 } from "@/models/converter/Bill/BillParticipantConverter";
 import {BillSplitType} from "@/models/enums/BillSplitType";
 
-export type BillConverterPayload = {
+export type BillTransactionConverterPayload = {
     id: string,
-    date: Timestamp,
+    date?: Timestamp,
 
     description: string,
 
@@ -22,18 +16,18 @@ export type BillConverterPayload = {
 
     currency: string,
 
-    payer: BillParticipantConverterPayload,
+    payer?: BillParticipantConverterPayload,
 
-    creator: BillParticipantConverterPayload,
+    creator?: BillParticipantConverterPayload,
 
-    splitType: string
+    splitType?: string
 }
 
-export const BillTransactionConverter: FirestoreDataConverter<BillTransaction> = {
-    fromFirestore(snapshot: QueryDocumentSnapshot<BillConverterPayload>, options?: SnapshotOptions): BillTransaction {
-        const data = snapshot.data();
+export const BillTransactionConverter = {
+    fromFirestore(payload: BillTransactionConverterPayload): BillTransaction {
+        const data = payload;
 
-        const dto = new BillTransaction(snapshot.id);
+        const dto = new BillTransaction(payload.id);
 
         dto.description = data.description;
 
@@ -45,14 +39,17 @@ export const BillTransactionConverter: FirestoreDataConverter<BillTransaction> =
         }
 
         switch (data.splitType) {
-            case BillSplitType.EQUALS:
-                dto.splitType = BillSplitType.EQUALS;
+            case BillSplitType.PAID_BY_YOU_SPLIT_EQUALS:
+                dto.splitType = BillSplitType.PAID_BY_YOU_SPLIT_EQUALS;
                 break;
-            case BillSplitType.FULLY_OWN:
-                dto.splitType = BillSplitType.FULLY_OWN;
+            case BillSplitType.FULLY_OWED:
+                dto.splitType = BillSplitType.FULLY_OWED;
+                break;
+            case BillSplitType.OWE_FULLY:
+                dto.splitType = BillSplitType.OWE_FULLY;
                 break;
             default:
-                dto.splitType = BillSplitType.EQUALS;
+                dto.splitType = BillSplitType.PAID_BY_YOU_SPLIT_EQUALS;
                 break;
         }
 
@@ -74,8 +71,8 @@ export const BillTransactionConverter: FirestoreDataConverter<BillTransaction> =
             currency: modelObject.currency,
             splitType: modelObject.splitType,
             date: new Timestamp(modelObject.date.getTime() / 1000, 0),
-            creator: modelObject.creator?.id,
-            payer: modelObject.payer?.id
+            creator: modelObject.creator ? BillParticipantConverter.toFirestore(modelObject.creator) : null,
+            payer: modelObject.payer ? BillParticipantConverter.toFirestore(modelObject.payer) : null
         }
     }
 }

@@ -146,5 +146,11 @@
     "enterADescription": "Enter a description",
     "amount": "Amount",
     "addTransaction": "Add a transaction"
+  },
+  "billSplitType": {
+    "paid_by_you_split_equals": "Paid by you, equally split bill",
+    "paid_by_other_split_equals": "Paid by {name}, equally split bill",
+    "fully_owed": "You are owed the full amount",
+    "owe_fully": "You owe the full amount to {name}"
   }
 }

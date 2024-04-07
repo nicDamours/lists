@@ -55,6 +55,7 @@ export default {
 
     const {billGroups, createGroup, deleteGroup} = useBillsGroups();
 
+    console.log('billGroups', billGroups.value);
     const {showConfirm} = useConfirm();
 
     const handleGroupClick = async (bill) => {

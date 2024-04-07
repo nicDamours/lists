@@ -18,7 +18,7 @@ export class BillTransaction implements IdentifiableRecord {
         this._amount = null;
         this._currency = "cad"
         this._date = new Date()
-        this._splitType = BillSplitType.EQUALS;
+        this._splitType = BillSplitType.PAID_BY_YOU_SPLIT_EQUALS;
         this._creator = null;
         this._payer = null;
     }

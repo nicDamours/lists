@@ -146,5 +146,11 @@
     "enterADescription": "Entrer une description",
     "amount": "montant",
     "addTransaction": "Ajout d'une transaction"
+  },
+  "billSplitType": {
+    "paid_by_you_split_equals": "Payé par vous, facture égale",
+    "paid_by_other_split_equals": "Payé par {name}, facture égale",
+    "fully_owed": "On vous doit la totalité",
+    "owe_fully": "Vous devez la totalité à {name}"
   }
 }

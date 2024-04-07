@@ -4,6 +4,7 @@ import {DocumentSnapshotMock} from "../../../utils/DocumentSnapshotMock";
 import {faker} from "@faker-js/faker";
 import {BillParticipantConverter} from "@/models/converter/Bill/BillParticipantConverter";
 import {BillParticipant} from "@/models/dtos/Bills/BillParticipant";
+import {BillTransactionConverter} from "@/models/converter/Bill/BillTransactionConverter";
 
 describe("BillGroupConverter", () => {
     describe("from firestore", () => {
@@ -87,6 +88,36 @@ describe("BillGroupConverter", () => {
 
             // and the participants should have been defined on the Bill group
             expect(result.participants).toHaveLength(givenParticipantCount)
+        })
+
+        it("should define transactions", () => {
+            // given a payload with some transactions
+            const givenTransactionsCount = 3;
+
+            const payload: Record<string, any> = {
+                id: "irrelevent",
+                transactions: []
+            }
+
+            for (let i = 0; i < givenTransactionsCount; i++) {
+                payload.transactions.push({
+                    id: faker.string.uuid(),
+                })
+            }
+
+            // and a mock of the BillTransactionConverter
+            BillTransactionConverter.fromFirestore = jest.fn().mockReturnValue(new Array(givenTransactionsCount).fill({}))
+
+            // when creating dto using converter
+            const querySnapshot = new DocumentSnapshotMock(payload);
+
+            const result = BillGroupConverter.fromFirestore(querySnapshot);
+
+            // then the transaction converter should have been called
+            expect(BillTransactionConverter.fromFirestore).toHaveBeenCalledTimes(givenTransactionsCount)
+
+            // and the transactions should have been defined on the Bill group
+            expect(result.transactions).toHaveLength(givenTransactionsCount)
         })
     })
     describe("to firestore", () => {

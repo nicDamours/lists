@@ -4,12 +4,17 @@ import {
     BillParticipantConverter,
     BillParticipantConverterPayload
 } from "@/models/converter/Bill/BillParticipantConverter";
+import {
+    BillTransactionConverter,
+    BillTransactionConverterPayload
+} from "@/models/converter/Bill/BillTransactionConverter";
 
 
 type BillGroupConverterPayload = {
     id: string;
     name: string | null,
     participants: Array<BillParticipantConverterPayload>
+    transactions: Array<BillTransactionConverterPayload>
 
 }
 
@@ -27,15 +32,23 @@ export const BillGroupConverter: FirestoreDataConverter<BillGroup> = {
             }
         }
 
+        if (data.transactions) {
+            for (const transactionPayload of data.transactions) {
+                dto.transactions.push(BillTransactionConverter.fromFirestore(transactionPayload));
+            }
+        }
+
         return dto;
 
     },
     toFirestore(modelObject: BillGroup): DocumentData {
-        const formattedParticipants = modelObject.participants.map(participant => participant.id);
+        const formattedParticipants = modelObject.participants.map(participant => BillParticipantConverter.toFirestore(participant));
+        const formattedTransactions = modelObject.transactions.map(transaction => BillTransactionConverter.toFirestore(transaction));
 
         return {
             name: modelObject.name,
-            participants: formattedParticipants
+            participants: formattedParticipants,
+            transactions: formattedTransactions,
         }
     }
 }

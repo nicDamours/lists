@@ -1,5 +1,4 @@
 import {BillTransactionConverter} from "@/models/converter/Bill/BillTransactionConverter";
-import {DocumentSnapshotMock} from "../../../utils/DocumentSnapshotMock";
 import {BillTransaction} from "@/models/dtos/Bills/BillTransaction";
 import {Timestamp} from "firebase/firestore";
 import {BillSplitType} from "@/models/enums/BillSplitType";
@@ -10,12 +9,15 @@ describe("BillTransactionConverter", () => {
     describe("from Firestore", () => {
         it("should create a bill DTO", () => {
             // given a payload
-            const payload = {};
+            const payload = {
+                id: "irrelevent",
+                description: "irrelevent",
+                amount: 10,
+                currency: "CAD"
+            };
 
             // when creating dto using converter
-            const querySnapshot = new DocumentSnapshotMock(payload);
-
-            const result = BillTransactionConverter.fromFirestore(querySnapshot);
+            const result = BillTransactionConverter.fromFirestore(payload);
 
             // then it should return a Bill
             expect(result).toBeInstanceOf(BillTransaction);
@@ -27,12 +29,14 @@ describe("BillTransactionConverter", () => {
 
             const payload = {
                 id: givenID,
+                description: "irrelevent",
+                amount: 10,
+                currency: "CAD"
             }
 
             // when creating object using converter
-            const querySnapshot = new DocumentSnapshotMock(payload);
 
-            const result = BillTransactionConverter.fromFirestore(querySnapshot);
+            const result = BillTransactionConverter.fromFirestore(payload);
 
             // then it should have defined the id
             expect(result.id).toEqual(givenID);
@@ -44,13 +48,14 @@ describe("BillTransactionConverter", () => {
 
             const payload = {
                 id: "irrelevent",
-                description: givenDescription
+                description: givenDescription,
+                amount: 10,
+                currency: "CAD"
             }
 
             // when creating object using converter
-            const querySnapshot = new DocumentSnapshotMock(payload);
 
-            const result = BillTransactionConverter.fromFirestore(querySnapshot);
+            const result = BillTransactionConverter.fromFirestore(payload);
 
             // then it should have defined the description
             expect(result.description).toEqual(givenDescription);
@@ -63,13 +68,13 @@ describe("BillTransactionConverter", () => {
             const payload = {
                 id: "irrelevent",
                 description: "irrelevent",
-                amount: givenAmount
+                amount: givenAmount,
+                currency: "CAD"
             }
 
             // when creating object using converter
-            const querySnapshot = new DocumentSnapshotMock(payload);
 
-            const result = BillTransactionConverter.fromFirestore(querySnapshot);
+            const result = BillTransactionConverter.fromFirestore(payload);
 
             // then it should have defined the amount
             expect(result.amount).toEqual(givenAmount);
@@ -82,13 +87,13 @@ describe("BillTransactionConverter", () => {
             const payload = {
                 id: "irrelevent",
                 description: "irrelevent",
-                currency: givenCurrency
+                currency: givenCurrency,
+                amount: 10,
             }
 
             // when creating object using converter
-            const querySnapshot = new DocumentSnapshotMock(payload);
 
-            const result = BillTransactionConverter.fromFirestore(querySnapshot);
+            const result = BillTransactionConverter.fromFirestore(payload);
 
             // then it should have defined the currency
             expect(result.currency).toEqual(givenCurrency);
@@ -101,13 +106,14 @@ describe("BillTransactionConverter", () => {
             const payload = {
                 id: "irrelevent",
                 description: "irrelevent",
-                date: givenDate
+                date: givenDate,
+                amount: 10,
+                currency: "CAD"
             }
 
             // when creating object using converter
-            const querySnapshot = new DocumentSnapshotMock(payload);
 
-            const result = BillTransactionConverter.fromFirestore(querySnapshot);
+            const result = BillTransactionConverter.fromFirestore(payload);
 
             // then it should have defined the date
             expect(result.date).toBeInstanceOf(Date);
@@ -118,18 +124,19 @@ describe("BillTransactionConverter", () => {
 
         it("should define split type", () => {
             // given a payload with a split type
-            const givenSplitType = BillSplitType.EQUALS;
+            const givenSplitType = BillSplitType.PAID_BY_YOU_SPLIT_EQUALS;
 
             const payload = {
                 id: "irrelevent",
                 description: "irrelevent",
-                splitType: givenSplitType
+                splitType: givenSplitType,
+                amount: 10,
+                currency: "CAD"
             }
 
             // when creating object using converter
-            const querySnapshot = new DocumentSnapshotMock(payload);
 
-            const result = BillTransactionConverter.fromFirestore(querySnapshot);
+            const result = BillTransactionConverter.fromFirestore(payload);
 
             // then it should have defined the split type
             expect(result.splitType).toEqual(givenSplitType);
@@ -138,23 +145,24 @@ describe("BillTransactionConverter", () => {
         it("should define creator", () => {
             // given a payload with a creator
             const givenCreatorPayload = {
-                id: "irrelevent",
+                uid: "irrelevent",
                 email: "irrelevent"
             }
 
             const payload = {
                 id: "irrelvent",
                 description: "irrelevent",
-                creator: givenCreatorPayload
+                creator: givenCreatorPayload,
+                amount: 10,
+                currency: "CAD"
             }
 
             // and a mock of the BillParticipantConverter
             BillParticipantConverter.fromFirestore = jest.fn().mockReturnValue(new BillParticipant("irrelevent", "irrelevent"));
 
             // when creating object using converter
-            const querySnapshot = new DocumentSnapshotMock(payload);
 
-            const result = BillTransactionConverter.fromFirestore(querySnapshot);
+            const result = BillTransactionConverter.fromFirestore(payload);
 
             // then the BillParticipantConverter should have been called
             expect(BillParticipantConverter.fromFirestore).toHaveBeenCalledWith(givenCreatorPayload);
@@ -166,23 +174,23 @@ describe("BillTransactionConverter", () => {
         it("should define payer", () => {
             // given a payload with a payer
             const givenPayerPayload = {
-                id: "irrelevent",
+                uid: "irrelevent",
                 email: "irrelevent"
             }
 
             const payload = {
                 id: "irrelvent",
                 description: "irrelevent",
-                payer: givenPayerPayload
+                payer: givenPayerPayload,
+                amount: 10,
+                currency: "CAD"
             }
 
             // and a mock of the BillParticipantConverter
             BillParticipantConverter.fromFirestore = jest.fn().mockReturnValue(new BillParticipant("irrelevent", "irrelevent"));
 
             // when creating object using converter
-            const querySnapshot = new DocumentSnapshotMock(payload);
-
-            const result = BillTransactionConverter.fromFirestore(querySnapshot);
+            const result = BillTransactionConverter.fromFirestore(payload);
 
             // then the BillParticipantConverter should have been called
             expect(BillParticipantConverter.fromFirestore).toHaveBeenCalledWith(givenPayerPayload);
@@ -198,7 +206,7 @@ describe("BillTransactionConverter", () => {
             ["description", "some description", "description"],
             ["amount", 100, "amount"],
             ["currency", "cad", "currency"],
-            ["splitType", BillSplitType.FULLY_OWN, "splitType"]
+            ["splitType", BillSplitType.FULLY_OWED, "splitType"]
         ])("should send property %s", (objectProperty, value, payloadProperty) => {
             // given an object with a property and a value
             const object = new BillTransaction("irrelevent");
@@ -246,7 +254,7 @@ describe("BillTransactionConverter", () => {
             // then the payload should contain the creator uuid
             expect(payload).toHaveProperty('creator');
 
-            expect(payload.creator).toEqual(givenCreatorID)
+            expect(payload.creator.uid).toEqual(givenCreatorID)
         })
 
         it("should send id of the payer", () => {
@@ -263,7 +271,7 @@ describe("BillTransactionConverter", () => {
             // then the payload should contain the payer uuid
             expect(payload).toHaveProperty('creator');
 
-            expect(payload.payer).toEqual(givenPayerId)
+            expect(payload.payer.uid).toEqual(givenPayerId)
         })
     })
 })

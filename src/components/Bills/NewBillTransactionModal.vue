@@ -64,6 +64,9 @@ import {calendar, list, logoUsd} from "ionicons/icons";
 import {formatISO, parseISO} from "date-fns";
 import useLocale from "@/composable/use-locale";
 import BillTransactionSplitTypeSelector from "@/components/Bills/BillTransactionSplitTypeSelector.vue";
+import useBillsGroups from "@/composable/bills/use-bills-groups";
+import useAuthentication from "@/composable/use-authentication";
+import UUID from "@/utils/UUID";
 
 export default {
   name: "NewBillTransactionModal",
@@ -85,10 +88,18 @@ export default {
   },
   setup() {
     const {t} = useI18n();
+    const {currentGroup} = useBillsGroups();
+    const {currentUser} = useAuthentication();
+
+    const getCurrentParticipant = () => {
+      return currentGroup.value.participants.filter(participant => participant.id === currentUser.value.uid)[0];
+    }
 
     const {preferredLocale} = useLocale();
 
-    const model = ref(new BillTransaction("irrelevent"));
+    const model = ref(new BillTransaction(UUID.uuidv4()));
+    model.value.payer = getCurrentParticipant();
+
 
     const cancel = () => modalController.dismiss(null, 'cancel');
     const confirm = () => modalController.dismiss(model.value, 'confirm');

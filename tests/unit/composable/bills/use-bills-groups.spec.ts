@@ -12,6 +12,12 @@ jest.mock("vuex", () => {
     }
 })
 
+jest.mock("vue-router", () => {
+    return {
+        useRoute: jest.fn().mockReturnValue({})
+    }
+})
+
 describe("useBillsGroups", () => {
     it("should call service when creating new group", async () => {
         // given a group to create

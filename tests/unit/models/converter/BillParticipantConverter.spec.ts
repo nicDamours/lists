@@ -113,7 +113,7 @@ describe("BillParticipantConverter", () => {
 
             // then it should send the id
             expect(payload).toHaveProperty("id");
-            expect(payload.id).toEqual(givenId)
+            expect(payload.uid).toEqual(givenId)
         })
 
         it("should contain email", () => {
@@ -142,7 +142,7 @@ describe("BillParticipantConverter", () => {
 
             // then it should send the display name
             expect(payload).toHaveProperty("displayName");
-            expect(payload.displayName).toEqual(givenDisplayName)
+            expect(payload.display_name).toEqual(givenDisplayName)
         })
     })
 })

@@ -29,9 +29,9 @@ export const BillParticipantConverter = {
     },
     toFirestore(modelObject: BillParticipant) {
         return {
-            id: modelObject.id,
+            uid: modelObject.id,
             email: modelObject.email,
-            displayName: modelObject.displayName
+            display_name: modelObject.displayName
         }
     }
 }

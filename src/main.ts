@@ -42,7 +42,8 @@ import {library} from '@fortawesome/fontawesome-svg-core'
 import {
     faBiking as falBiking,
     faBurgerSoda as falBurgerAndSoda,
-    faPaintBrushAlt,
+    faDivide as falDivide,
+    faPaintBrushAlt as faPaintBrushAlt,
     faUtensils as falUtensils
 } from '@fortawesome/pro-light-svg-icons'
 import OnLongPress from "@/directive/on-long-press";
@@ -53,7 +54,7 @@ containerRegistrationFunction();
 
 const currentLocale = window.localStorage.getItem("preferred-locale");
 
-library.add(falBurgerAndSoda, falBiking, falUtensils, faPaintBrushAlt)
+library.add(falBurgerAndSoda, falBiking, falUtensils, faPaintBrushAlt, falDivide)
 
 const i18n = createI18n({
     legacy: false,

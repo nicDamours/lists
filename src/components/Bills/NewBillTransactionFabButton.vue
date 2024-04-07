@@ -18,9 +18,10 @@ export default {
   components: {IonIcon, IonFab, IonFabButton},
   emits: ["save"],
   setup(_, {emit}) {
+
     const openModal = async () => {
       const modal = await modalController.create({
-        component: NewBillTransactionModal,
+        component: NewBillTransactionModal
       });
 
       await modal.present();

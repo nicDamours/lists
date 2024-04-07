@@ -1,6 +1,7 @@
 import {BillGroup} from "@/models/dtos/Bills/BillGroup";
 import * as useBillsGroups from "@/composable/bills/use-bills-groups";
 import * as useAuthentication from "@/composable/use-authentication";
+import * as useBillTransactions from "@/composable/bills/use-bill-transactions";
 import {mockComposable, setComposableValue} from "../../../utils/mock-composable";
 import {flushPromises, mount} from "@vue/test-utils";
 import getMockI18nPlugin from "../../../utils/modifiers/get-mock-i18n-plugin";
@@ -16,6 +17,7 @@ import {BillTransaction} from "@/models/dtos/Bills/BillTransaction";
 import NewBillTransactionFabButton from "@/components/Bills/NewBillTransactionFabButton.vue";
 
 mockComposable("@/composable/bills/use-bills-groups");
+mockComposable("@/composable/bills/use-bill-transactions");
 mockComposable("@/composable/use-authentication");
 jest.mock('vue-router', () => ({
     useRoute: jest.fn()
@@ -490,7 +492,78 @@ describe("BillGroupView", () => {
         expect(newTransactionButton.exists()).toEqual(true);
     })
 
-    it("should create a new transaction when the fab button emits a 'new-transaction-save' event", () => {
+    it("should create a new transaction when the fab button emits a 'new-transaction-save' event", async () => {
+        // given a group with a name
+        const givenGroupName = "someGroupName";
+        const givenGroup = new BillGroup("123");
+        givenGroup.name = givenGroupName;
 
+        const currentParticipantId = "123123ad";
+        const currentParticipant = new BillParticipant(currentParticipantId, "irrelevent");
+        currentParticipant.balances = [
+            new BillParticipantBalance(123, "123123", "CAD")
+        ]
+
+        givenGroup.participants = [currentParticipant];
+
+        // and a mock of the getGroupById that returns that group
+        const getGroupByIdMock = jest.fn().mockReturnValue(givenGroup);
+
+        setComposableValue(useBillsGroups, {
+            getGroupById: getGroupByIdMock
+        })
+
+        setComposableValue(useAuthentication, {
+            currentUser: ref({
+                uid: currentParticipantId
+            })
+        })
+
+        // and a mock of the useBillTransaction
+        const createTransactionFn = jest.fn().mockResolvedValue({});
+        setComposableValue(useBillTransactions, {
+            createTransaction: createTransactionFn
+        })
+
+
+        // and a current route containing the group's id
+        const mockedRoute = jest.mocked(useRoute, {shallow: true});
+
+        mockedRoute.mockImplementationOnce(() => {
+            return {
+                name: "irrelevent",
+                matched: [],
+                hash: "",
+                meta: {},
+                path: "",
+                fullPath: "",
+                query: {},
+                redirectedFrom: undefined,
+                params: {
+                    id: givenGroup.id
+                }
+            }
+        })
+
+        // and a component
+        const wrapper = mount(BillGroupView, {
+            global: {
+                plugins: [getMockI18nPlugin()],
+                stubs: {
+                    BillBalanceSummary: true,
+                    BillTransactionList: true,
+                }
+            }
+        })
+
+        // when the fab button to create a new transaction emits a 'save' event
+        const givenNewTransaction = new BillTransaction("irrelevent");
+
+        const newTransactionButton = wrapper.getComponent(NewBillTransactionFabButton);
+        await newTransactionButton.vm.$emit('save', givenNewTransaction)
+        await flushPromises();
+
+        // then the function to create a new bill transaction should have been called
+        expect(createTransactionFn).toHaveBeenCalledWith(givenGroup, givenNewTransaction)
     })
 })

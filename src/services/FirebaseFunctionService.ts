@@ -10,8 +10,8 @@ export class FirebaseFunctionService {
 
         this._functions = getFunctions(app);
 
-        if (process.env.VUE_APP_RUN_PRODUCTION_FUNCTIONS !== "true") {
-            connectFunctionsEmulator(this._functions, "localhost", process.env.VUE_APP_FUNCTIONS_EMULATOR_PORT);
+        if (import.meta.env.VITE_APP_RUN_PRODUCTION_FUNCTIONS !== "true") {
+            connectFunctionsEmulator(this._functions, "localhost", import.meta.env.VITE_APP_FUNCTIONS_EMULATOR_PORT);
         }
     }
 

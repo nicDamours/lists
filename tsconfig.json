@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
+    "target": "ESNext",
+    "module": "ESNext",
     "strict": true,
     "jsx": "preserve",
     "importHelpers": true,
@@ -12,6 +12,7 @@
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
+      "node",
       "webpack-env",
       "jest"
     ],
@@ -22,6 +23,7 @@
     },
     "lib": [
       "esnext",
+      "ES6",
       "dom",
       "dom.iterable",
       "scripthost"

@@ -10,8 +10,8 @@ export class FirebaseAuthService {
 
         this._auth = getAuth(app);
 
-        if (process.env.VUE_APP_RUN_PRODUCTION_FUNCTIONS !== "true") {
-            connectAuthEmulator(this._auth, process.env.VUE_APP_AUTH_EMULATOR_URL)
+        if (import.meta.env.VITE_APP_RUN_PRODUCTION_FUNCTIONS !== "true") {
+            connectAuthEmulator(this._auth, import.meta.env.VITE_APP_AUTH_EMULATOR_URL)
         }
     }
 

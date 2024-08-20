@@ -15,7 +15,7 @@ export default createStore({
         sharedWeeks,
         shareRequests
     },
-    plugins: process.env.NODE_ENV !== "production"
+    plugins: import.meta.env.NODE_ENV !== "production"
         ? [
             createLogger({
                 actionFilter() {

@@ -10,8 +10,8 @@ export class FirebaseDatabaseService {
 
         this._db = getFirestore(app);
 
-        if (process.env.VUE_APP_RUN_PRODUCTION_FUNCTIONS !== "true") {
-            connectFirestoreEmulator(this._db, "localhost", process.env.VUE_APP_FIRESTORE_EMULATOR_PORT)
+        if (import.meta.env.VITE_APP_RUN_PRODUCTION_FUNCTIONS !== "true") {
+            connectFirestoreEmulator(this._db, "localhost", import.meta.env.VITE_APP_FIRESTORE_EMULATOR_PORT)
         }
     }
 

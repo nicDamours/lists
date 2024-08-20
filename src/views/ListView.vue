@@ -48,34 +48,39 @@
               </ion-item-options>
 
 
-              <ion-item class="o-form__group-input" v-if="item.editing"
-                        @blur.capture="(event) => handleItemBlur(item, event)">
-                <ion-input type="text" v-model="item.name" :ref="el => refs[item.id] = el"/>
-
-                <ion-button slot="end" color="success" fill="clear" class="o-form__update-save-button"
-                            @click="() => handleEditingSaveClick(item, itemIndex, sectionIndex)">
-                  {{ t("global.save") }}
-                  <ion-icon :icon="checkmarkOutline" slot="end"></ion-icon>
-                </ion-button>
-              </ion-item>
+              <form v-if="item.editing" @submit.prevent="() => handleEditingSaveClick(item, itemIndex, sectionIndex)">
+                <ion-item class="o-form__group-input"
+                          @blur.capture="(event) => handleItemBlur(item, event)">
+                  <ion-input :ref="el => refs[item.id] = el" v-model="item.name" type="text"/>
+                  <ion-button slot="end" class="o-form__update-save-button" color="success" fill="clear" type="submit">
+                    {{ t("global.save") }}
+                    <ion-icon slot="end" :icon="checkmarkOutline"></ion-icon>
+                  </ion-button>
+                </ion-item>
+              </form>
               <ion-item button detail="false"
                         v-long-press="handleItemLongPress"
                         @click.self="toggleUsingItem(sectionIndex, itemIndex, !item.done, $event)"
                         v-if="!item.editing">
                 <ion-reorder slot="start"/>
-                <ion-text @click.self="toggleItem(item)">{{ item.name }}</ion-text>
+                <ion-text :class="{'--strike-through': item.done}" @click.self="toggleItem(item)">{{
+                    item.name
+                  }}
+                </ion-text>
                 <ion-text class="o-list__item__quantity"
                           @click="event => showQuantityChange(sectionIndex, itemIndex, event)"> x {{ item.quantity }}
                 </ion-text>
                 <ion-checkbox :checked="item.done" slot="end"/>
               </ion-item>
             </ion-item-sliding>
-            <NewItemForm @form-submit="value => createNewItem(sectionIndex, value)" text="items.addNewItem"/>
+            <NewItemForm v-model:has-focus="formFocus[sectionIndex]" :data-test-id="`new-item-form-${sectionIndex}`"
+                         text="items.addNewItem" @form-submit="value => createNewItem(sectionIndex, value)"/>
           </template>
         </ion-reorder-group>
       </ion-list>
       <ion-list>
-        <NewItemForm @form-submit="createNewSection" text="sections.addNewSection"/>
+        <NewItemForm v-model:has-focus="newSectionFormFocus" data-test-id="new-section-form" text="sections.addNewSection"
+                     @form-submit="createNewSection"/>
       </ion-list>
     </ion-content>
   </ion-page>
@@ -84,7 +89,7 @@
 <script>
 import {useRoute} from "vue-router";
 import {useStore} from "vuex";
-import {computed, ref} from "vue";
+import {computed, nextTick, ref} from "vue";
 import {
   addOutline,
   checkmarkOutline,
@@ -170,11 +175,40 @@ export default {
     const {defineInputFocus} = useInputFocus(refs);
     const isReorderActive = ref(false);
 
+    const formFocus = ref([
+      false,
+    ])
+
+    const newSectionFormFocus = ref(false);
+
     const newSectionName = ref("");
 
     const list = computed(() => store.getters['lists/getListById'](currentListId.value));
 
-    const { reorderItemsInList } = useReorderItems(list);
+    const {reorderItemsInList} = useReorderItems(list);
+
+
+    const parseValue = (value) => {
+      const regexp = /(.+)\s+[xX*]\s*(\d+)/
+      const matches = value.match(regexp);
+
+      if (!matches || matches.length === 0) {
+        return [value, 1]
+      }
+
+      return [matches[1], parseInt(matches[2])];
+    }
+
+    const defocusCurrentForm = () => {
+      newSectionFormFocus.value = false
+      formFocus.value = formFocus.value.map(() => false);
+    }
+
+    const focusSectionNewItemForm = (sectionIndex) => {
+      defocusCurrentForm();
+
+      formFocus.value[sectionIndex] = true;
+    }
 
     const toggleItemDone = async (sectionIndex, itemIndex, value, $event) => {
       const target = $event.target;
@@ -187,7 +221,10 @@ export default {
     }
 
     const createNewItem = async (sectionIndex, value) => {
-      const newItem = new Item(UUID.uuidv4(), value);
+      const [name, quantity] = parseValue(value);
+
+      const newItem = new Item(UUID.uuidv4(), name);
+      newItem.quantity = quantity;
 
       const copiedList = list.value.clone();
       copiedList.sections[sectionIndex].items.push(newItem);
@@ -204,6 +241,10 @@ export default {
       copiedList.sections.push(newSection)
 
       await updateList(copiedList);
+
+      await nextTick();
+
+      focusSectionNewItemForm(copiedList.sections.length - 1);
     }
 
     const deleteSection = async (sectionId) => {
@@ -293,7 +334,7 @@ export default {
       }), t('modals.shareInfo.title'))
     }
     const toggleUsingItem = async (sectionIndex, itemIndex, done, event) => {
-      if(!isReorderActive.value) {
+      if (!isReorderActive.value) {
         await toggleItemDone(sectionIndex, itemIndex, done, event)
       }
     }
@@ -309,7 +350,7 @@ export default {
     const saveUpdatedList = async (newIndex, oldIndex) => {
       const updatedList = reorderItemsInList(newIndex, oldIndex);
 
-      if(updatedList !== null) {
+      if (updatedList !== null) {
         await updateList(updatedList);
       }
     }
@@ -325,11 +366,11 @@ export default {
 
       const changeDirection = event.detail.to < event.detail.from ? 'reorderBefore' : 'reorderAfter';
 
-      if(changeDirection in replacedWithItem.dataset && replacedWithItem.dataset[changeDirection] === 'false') {
+      if (changeDirection in replacedWithItem.dataset && replacedWithItem.dataset[changeDirection] === 'false') {
         shouldCompleteReorder = false;
       }
 
-      if(shouldCompleteReorder) {
+      if (shouldCompleteReorder) {
         event.detail.complete(true);
         await saveUpdatedList(event.detail.to, event.detail.from);
       } else {
@@ -348,6 +389,7 @@ export default {
       peopleOutline,
       list,
       refs,
+      formFocus,
       openPopover,
       toggleItem,
       deleteItem,
@@ -363,6 +405,7 @@ export default {
       showQuantityChange,
       handleItemLongPress,
       handleReorder,
+      newSectionFormFocus,
       handleEditingSaveClick,
       deleteItemWithoutConfirm
     }

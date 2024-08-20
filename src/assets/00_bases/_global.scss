@@ -26,3 +26,8 @@
   align-items: center;
   justify-content: flex-end;
 }
+
+.--strike-through {
+  text-decoration: line-through;
+  color: var(--ion-color-step-450)
+}

@@ -27,9 +27,7 @@ import 'firebaseui/dist/firebaseui.css'
 import "@/assets/main.scss";
 
 import store from './store'
-import loadLocaleMessages from './i18n'
-
-import {createI18n} from "vue-i18n";
+import createI18nPlugin from './i18n'
 
 import containerRegistrationFunction from "@/dependeciesInjections";
 import {Container} from "@/utils/Container";
@@ -51,19 +49,13 @@ import BugsnagPluginVue from "@bugsnag/plugin-vue";
 
 containerRegistrationFunction();
 
-const currentLocale = window.localStorage.getItem("preferred-locale");
 
 library.add(falBurgerAndSoda, falBiking, falUtensils, faPaintBrushAlt)
 
-const i18n = createI18n({
-    legacy: false,
-    locale: currentLocale || 'en',
-    fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'en',
-    messages: loadLocaleMessages()
-})
 
 Container.get<FirebaseAppService>('FirebaseAppService');
 
+const i18n = createI18nPlugin();
 
 Bugsnag.start({
     apiKey: process.env.VUE_APP_BUGSNAG_API_KEY,
@@ -71,7 +63,6 @@ Bugsnag.start({
     releaseStage: process.env.VUE_APP_BUGSNAG_STAGE,
     plugins: [new BugsnagPluginVue()]
 })
-
 
 const bugsnagVue = Bugsnag.getPlugin('vue');
 

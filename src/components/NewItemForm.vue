@@ -1,13 +1,13 @@
 <template>
   <ion-item data-reorder-after="false">
     <form @submit.prevent="handleSubmit" class="o-form">
-      <div class="o-form__new-label" v-if="!hasFocus" @click="handleLabelClick">
+      <div v-if="!hasFocusModel" class="o-form__new-label" @click="handleLabelClick">
         <ion-button fill="clear" color="dark">
           <ion-icon :icon="addOutline" slot="start"></ion-icon>
           {{ t(text) }}
         </ion-button>
       </div>
-      <div class="o-form__group--new o-form__keep-focus-on-click" v-if="hasFocus" @blur.capture="handleGroupBlur">
+      <div v-if="hasFocusModel" class="o-form__group--new o-form__keep-focus-on-click" @blur.capture="handleGroupBlur">
         <ion-item class="o-form__group-input">
           <ContainerWithErrors  :errors="inputErrors">
             <ion-label position="floating" :color="hasErrors ? 'danger' : 'primary'" >{{ t(text) }}</ion-label>
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import {computed, ref} from "vue";
+import {computed, ref, toRefs, watch} from "vue";
 import {IonButton, IonIcon, IonInput, IonItem, IonLabel} from "@ionic/vue";
 import {addOutline} from "ionicons/icons";
 import UUID from "@/utils/UUID";
@@ -43,20 +43,36 @@ export default {
     IonInput,
     IonButton
   },
-  emits: ["form-submit"],
+  emits: ["form-submit", "update:hasFocus"],
   props: {
     text: {
       type: String,
       required: true
+    },
+    hasFocus: {
+      type: Boolean,
+      required: false,
+      default() {
+        return false
+      }
     }
   },
-  setup(_, {emit}) {
+  setup(props, {emit}) {
     const uuid = ref(UUID.uuidv4());
     const refs = ref({});
     const inputErrors = ref([]);
     const {defineInputFocus} = useInputFocus(refs);
+    const {hasFocus} = toRefs(props);
 
-    const hasFocus = ref(false);
+    const hasFocusModel = computed({
+      get() {
+        console.log('new has focus', hasFocus.value);
+        return hasFocus.value
+      },
+      set(value) {
+        emit("update:hasFocus", value)
+      }
+    })
 
     const newItemName = ref("");
 
@@ -94,24 +110,28 @@ export default {
     }
 
     const handleLabelClick = async () => {
-      hasFocus.value = true;
+      hasFocusModel.value = true;
       await defineInputFocus(uuid.value, true);
     }
 
     const handleGroupBlur = async (event) => {
       if(!event.relatedTarget || !event.relatedTarget.closest('.o-form__keep-focus-on-click')) {
-        hasFocus.value = false;
+        hasFocusModel.value = false;
         await defineInputFocus(uuid.value, false);
       }
     }
 
     const hasErrors = computed(() => inputErrors.value.length > 0);
 
+    watch(hasFocus, (value) => {
+      defineInputFocus(uuid.value, value);
+    })
+
     return {
       t,
       refs,
       uuid,
-      hasFocus,
+      hasFocusModel,
       hasErrors,
       addOutline,
       inputErrors,

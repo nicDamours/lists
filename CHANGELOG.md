@@ -1,5 +1,15 @@
 # Change log
 
+## 1.7.0
+#### New features
+- Added support to detect quantity when creating a new item that ends with "x {some value}"
+- Changed done items style to be more distinctive from not done item.
+- Added auto focus of new item form after creating a new section, which prevent the need to reselect the new item form of the new section.
+
+#### Other changes
+- Added unit test for the ListView component.
+- Updated dependencies.
+
 ## 1.6.0
 
 - Added support for default section. ([#13](https://github.com/nicDamours/lists/issues/13))

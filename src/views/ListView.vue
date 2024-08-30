@@ -73,13 +73,14 @@
                 <ion-checkbox :checked="item.done" slot="end"/>
               </ion-item>
             </ion-item-sliding>
-            <NewItemForm v-model:has-focus="formFocus[sectionIndex]" :data-test-id="`new-item-form-${sectionIndex}`"
+            <NewItemForm :ref="el => sectionElementRef[sectionIndex] = el"
+                         :data-test-id="`new-item-form-${sectionIndex}`"
                          text="items.addNewItem" @form-submit="value => createNewItem(sectionIndex, value)"/>
           </template>
         </ion-reorder-group>
       </ion-list>
       <ion-list>
-        <NewItemForm v-model:has-focus="newSectionFormFocus" data-test-id="new-section-form" text="sections.addNewSection"
+        <NewItemForm ref="newSectionFormRef" data-test-id="new-section-form" text="sections.addNewSection"
                      @form-submit="createNewSection"/>
       </ion-list>
     </ion-content>
@@ -175,11 +176,9 @@ export default {
     const {defineInputFocus} = useInputFocus(refs);
     const isReorderActive = ref(false);
 
-    const formFocus = ref([
-      false,
-    ])
-
-    const newSectionFormFocus = ref(false);
+    const newSectionFormRef = ref(null)
+    const currentlyFocusElementRef = ref(null);
+    const sectionElementRef = ref([])
 
     const newSectionName = ref("");
 
@@ -200,14 +199,23 @@ export default {
     }
 
     const defocusCurrentForm = () => {
-      newSectionFormFocus.value = false
-      formFocus.value = formFocus.value.map(() => false);
+      if (currentlyFocusElementRef.value) {
+        currentlyFocusElementRef.value.defocus();
+      }
+
+      if (newSectionFormRef.value) {
+        newSectionFormRef.value.defocus();
+      }
     }
 
     const focusSectionNewItemForm = (sectionIndex) => {
       defocusCurrentForm();
 
-      formFocus.value[sectionIndex] = true;
+      if (sectionElementRef.value.length >= sectionIndex + 1) {
+        sectionElementRef.value[sectionIndex].focus()
+
+        currentlyFocusElementRef.value = sectionElementRef.value[sectionIndex];
+      }
     }
 
     const toggleItemDone = async (sectionIndex, itemIndex, value, $event) => {
@@ -389,7 +397,6 @@ export default {
       peopleOutline,
       list,
       refs,
-      formFocus,
       openPopover,
       toggleItem,
       deleteItem,
@@ -405,7 +412,8 @@ export default {
       showQuantityChange,
       handleItemLongPress,
       handleReorder,
-      newSectionFormFocus,
+      sectionElementRef,
+      newSectionFormRef,
       handleEditingSaveClick,
       deleteItemWithoutConfirm
     }

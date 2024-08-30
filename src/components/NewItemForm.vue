@@ -1,13 +1,13 @@
 <template>
   <ion-item data-reorder-after="false">
     <form @submit.prevent="handleSubmit" class="o-form">
-      <div v-if="!hasFocusModel" class="o-form__new-label" @click="handleLabelClick">
+      <div v-if="!hasFocus" class="o-form__new-label" @click="handleLabelClick">
         <ion-button fill="clear" color="dark">
           <ion-icon :icon="addOutline" slot="start"></ion-icon>
           {{ t(text) }}
         </ion-button>
       </div>
-      <div v-if="hasFocusModel" class="o-form__group--new o-form__keep-focus-on-click" @blur.capture="handleGroupBlur">
+      <div v-if="hasFocus" class="o-form__group--new o-form__keep-focus-on-click" @blur.capture="handleGroupBlur">
         <ion-item class="o-form__group-input">
           <ContainerWithErrors  :errors="inputErrors">
             <ion-label position="floating" :color="hasErrors ? 'danger' : 'primary'" >{{ t(text) }}</ion-label>
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import {computed, ref, toRefs, watch} from "vue";
+import {computed, ref} from "vue";
 import {IonButton, IonIcon, IonInput, IonItem, IonLabel} from "@ionic/vue";
 import {addOutline} from "ionicons/icons";
 import UUID from "@/utils/UUID";
@@ -43,36 +43,20 @@ export default {
     IonInput,
     IonButton
   },
-  emits: ["form-submit", "update:hasFocus"],
+  emits: ["form-submit"],
   props: {
     text: {
       type: String,
       required: true
-    },
-    hasFocus: {
-      type: Boolean,
-      required: false,
-      default() {
-        return false
-      }
     }
   },
-  setup(props, {emit}) {
+  setup(_, {emit, expose}) {
     const uuid = ref(UUID.uuidv4());
     const refs = ref({});
     const inputErrors = ref([]);
     const {defineInputFocus} = useInputFocus(refs);
-    const {hasFocus} = toRefs(props);
 
-    const hasFocusModel = computed({
-      get() {
-        console.log('new has focus', hasFocus.value);
-        return hasFocus.value
-      },
-      set(value) {
-        emit("update:hasFocus", value)
-      }
-    })
+    const hasFocus = ref(false);
 
     const newItemName = ref("");
 
@@ -99,7 +83,7 @@ export default {
     }
 
     const handleSubmit = async () => {
-      if(validateInputs()) {
+      if (validateInputs()) {
         emit("form-submit", `${newItemModel.value}`)
 
         newItemModel.value = ""
@@ -110,28 +94,36 @@ export default {
     }
 
     const handleLabelClick = async () => {
-      hasFocusModel.value = true;
+      hasFocus.value = true;
       await defineInputFocus(uuid.value, true);
     }
 
     const handleGroupBlur = async (event) => {
-      if(!event.relatedTarget || !event.relatedTarget.closest('.o-form__keep-focus-on-click')) {
-        hasFocusModel.value = false;
+      if (!event.relatedTarget || !event.relatedTarget.closest('.o-form__keep-focus-on-click')) {
+        hasFocus.value = false;
         await defineInputFocus(uuid.value, false);
       }
     }
 
     const hasErrors = computed(() => inputErrors.value.length > 0);
 
-    watch(hasFocus, (value) => {
-      defineInputFocus(uuid.value, value);
-    })
+    const exposedFocusFn = () => {
+      defineInputFocus(uuid.value, true);
+      hasFocus.value = true;
+    }
+
+    const exposedDefocusFn = () => {
+      defineInputFocus(uuid.value, false);
+      hasFocus.value = false;
+    }
+
+    expose({focus: exposedFocusFn, defocus: exposedDefocusFn});
 
     return {
       t,
       refs,
       uuid,
-      hasFocusModel,
+      hasFocus,
       hasErrors,
       addOutline,
       inputErrors,

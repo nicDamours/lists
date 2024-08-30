@@ -212,6 +212,8 @@ describe("ListView", () => {
         const givenNewItemName = "new item";
         const givenSectionNewItemFormComponent = wrapper.getComponent('[data-test-id="new-item-form-1"]')
 
+        await nextTick();
+
         await givenSectionNewItemFormComponent.vm.$emit('form-submit', givenNewItemName);
         await flushPromises();
 
@@ -419,7 +421,7 @@ describe("ListView", () => {
         // then the new item form, in the new section, should be focus
         const newSectionNewItemFormComponent = wrapper.getComponent('[data-test-id="new-item-form-1"]')
 
-        expect(newSectionNewItemFormComponent.props('hasFocus')).toEqual(true)
+        expect((newSectionNewItemFormComponent.vm as any).hasFocus).toEqual(true)
 
         resetRealStore();
     })

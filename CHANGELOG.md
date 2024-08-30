@@ -1,5 +1,11 @@
 # Change log
 
+## 1.7.1
+
+#### Bugfixes
+
+- Fixed bug where it was impossible to create new list due to a focus issue.
+
 ## 1.7.0
 #### New features
 - Added support to detect quantity when creating a new item that ends with "x {some value}"

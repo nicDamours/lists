@@ -72,6 +72,7 @@
     "revokeSuccessful": "Partage annuler avec succès",
     "successfullySentShareRequest": "Demande de partage envoyé avec succès.",
     "formTitle": "Nouveau partage",
+    "pending": "En attente",
     "form": {
       "headerText": "Pour partager cette liste avec quelqu'un, veuillez entrer son address courriel ici. Veuillez noter que l'adresse courriel doit être associé à un compte.",
       "email": "Address courriel"

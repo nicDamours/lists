@@ -72,6 +72,7 @@
     "revokeSuccessful": "Share revoke successfully",
     "successfullySentShareRequest": "Share request sent successfully",
     "formTitle": "New share",
+    "pending": "Pending",
     "form": {
       "headerText": "To share this list with someone, please enter their email address below. Please note that they need an account.",
       "email": "Email address"

@@ -1,5 +1,5 @@
 <template>
-  <form class="o-form ion-padding">
+  <form class="o-form ion-padding" @submit.stop.prevent="$emit('submit')">
     <ion-title size="h2">{{ t('shareWithUserModal.formTitle') }}</ion-title>
     <div class="o-form__group ion-padding">
       <ion-text>{{ headerText }}</ion-text>

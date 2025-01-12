@@ -4,6 +4,7 @@
       <ShareWithUserList :list="list"/>
       <ShareWithUserForm :header-text="t('shareWithUserModal.form.headerText')" :model-value="emailInput"
                          v-model:errors="errors"
+                         @submit="() => handleSubmitClick(emailInput)"
                          @update:modelValue="updateEmailInput"/>
     </template>
   </ShareWithUserModal>

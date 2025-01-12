@@ -3,5 +3,8 @@ module.exports = {
   transform: {
     '^.+\\.vue$': '@vue/vue3-jest'
   },
+  moduleNameMapper: {
+    "^@tests(.*)$": "<rootDir>/tests$1"
+  },
   transformIgnorePatterns: ['/node_modules/(?!@ionic/vue|@ionic/vue-router|@ionic/core|@stencil/core|ionicons)']
 }

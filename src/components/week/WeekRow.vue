@@ -7,10 +7,11 @@
     </ion-col>
     <WeekCell
         :content="cell.content"
-        v-for="cell in cells"
+        v-for="(cell, $index) in cells"
         :key="cell.id"
         :class="{'--today': isCurrentDate(cell) }"
         @change="value => handleCellChange(value, cell)"
+        :tab-index="($index * 3) + indexMultiplier"
     />
   </ion-row>
 </template>
@@ -35,6 +36,16 @@ export default {
     title: {
       type: String,
       required: true
+    },
+    indexMultiplier: {
+      type: Number,
+      required: false,
+      default() {
+        return 1
+      },
+      validator(value) {
+        return value >= 1
+      }
     }
   },
   setup(_, { emit }) {

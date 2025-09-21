@@ -2,13 +2,21 @@
   <div class="week-calendar">
     <ion-grid class="ion-hide-sm-down">
       <WeekHeader :start-date="plan.startDate" :end-date="plan.endDate" />
-      <WeekRow :cells="dinnerCells" :title="t('WeekPlanner.titles.dinner')" @change="({value, day}) => handleCellChange('dinner', value, day)"/>
-      <WeekRow :cells="supperCells" :title="t('WeekPlanner.titles.supper')"  @change="({value, day}) => handleCellChange('supper', value, day)"/>
-      <WeekRow :cells="activitiesCells" :title="t('WeekPlanner.titles.activities')"  @change="({value, day}) => handleCellChange('activities', value, day)"/>
+      <WeekRow :cells="dinnerCells" :index-multiplier="1"
+               :title="t('WeekPlanner.titles.dinner')" class="dinner-week-row"
+               @change="({value, day}) => handleCellChange('dinner', value, day)"/>
+      <WeekRow :cells="supperCells" :index-multiplier="2"
+               :title="t('WeekPlanner.titles.supper')" class="supper-week-row"
+               @change="({value, day}) => handleCellChange('supper', value, day)"/>
+      <WeekRow :cells="activitiesCells" :index-multiplier="3"
+               :title="t('WeekPlanner.titles.activities')" class="activities-week-row"
+               @change="({value, day}) => handleCellChange('activities', value, day)"/>
     </ion-grid>
 
     <ion-list class="ion-hide-sm-up">
-      <WeekDayListGroup v-for="day in plan.days" :key="day.date.getTime()" :day="day" @day-value-change="(value) => handleDayValueChange(value, day)" />
+      <WeekDayListGroup v-for="(day, $index) in plan.days" :key="day.date.getTime()" :day="day"
+                        :index="$index"
+                        :previousDay="getPreviousDay($index)" @day-value-change="(value) => handleDayValueChange(value, day)"/>
     </ion-list>
   </div>
 </template>
@@ -59,11 +67,20 @@ export default {
       handleDayValueChange(updatedValue, day);
     }
 
+    const getPreviousDay = (currentDayIndex) => {
+      if (currentDayIndex === 0) {
+        return null;
+      }
+
+      return plan.value.days[currentDayIndex - 1]
+    }
+
     return {
       t,
       dinnerCells,
       supperCells,
       activitiesCells,
+      getPreviousDay,
       handleCellChange,
       handleDayValueChange
     }

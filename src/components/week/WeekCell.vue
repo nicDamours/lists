@@ -1,6 +1,6 @@
 <template>
   <ion-col class="week-cell">
-    <ion-textarea v-model="contentModel" class="week-cell__input" debounce="500"/>
+    <ion-textarea v-model="contentModel" class="week-cell__input" debounce="500" tabindex="{{tabIndex}}"/>
   </ion-col>
 </template>
 
@@ -18,6 +18,16 @@ export default {
       required: false,
       default() {
         return "";
+      }
+    },
+    tabIndex: {
+      type: Number,
+      required: false,
+      default() {
+        return undefined
+      },
+      validator(value) {
+        return value === undefined || value >= 1
       }
     }
   },

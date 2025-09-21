@@ -2,11 +2,11 @@ import store from "@/store";
 import vuex from "vuex";
 
 export default function useRealStore() {
-    jest.unmock("vuex");
+    vi.unmock("vuex");
 
     const originalState = JSON.parse(JSON.stringify(store.state));
 
-    (vuex as any).useStore = jest.fn().mockReturnValue(store);
+    (vuex as any).useStore = vi.fn().mockReturnValue(store);
 
     const storeConfig = {
         global: {
@@ -15,7 +15,7 @@ export default function useRealStore() {
     };
 
     const mockRealStoreAccess = () => {
-        return jest.doMock("vuex", () => ({
+        return vi.doMock("vuex", () => ({
             useStore: () => store
         }));
     };

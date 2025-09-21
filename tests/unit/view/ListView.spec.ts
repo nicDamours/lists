@@ -67,7 +67,7 @@ describe("ListView", () => {
         store.commit(`lists/${MUTATION_NAME_ADD}LISTS`, givenList)
 
         // and a mock of the ListService
-        const updateListFn = jest.fn();
+        const updateListFn = vi.fn();
         setComposableValue(useListService, {
             updateList: updateListFn
         })
@@ -122,7 +122,7 @@ describe("ListView", () => {
         store.commit(`lists/${MUTATION_NAME_ADD}LISTS`, givenList)
 
         // and a mock of the ListService
-        const updateListFn = jest.fn();
+        const updateListFn = vi.fn();
         setComposableValue(useListService, {
             updateList: updateListFn
         })
@@ -181,7 +181,7 @@ describe("ListView", () => {
         store.commit(`lists/${MUTATION_NAME_ADD}LISTS`, givenList)
 
         // and a mock of the ListService
-        const updateListFn = jest.fn();
+        const updateListFn = vi.fn();
         setComposableValue(useListService, {
             updateList: updateListFn
         })
@@ -245,7 +245,7 @@ describe("ListView", () => {
         store.commit(`lists/${MUTATION_NAME_ADD}LISTS`, givenList)
 
         // and a mock of the ListService
-        const updateListFn = jest.fn();
+        const updateListFn = vi.fn();
         setComposableValue(useListService, {
             updateList: updateListFn
         })
@@ -314,7 +314,7 @@ describe("ListView", () => {
         store.commit(`lists/${MUTATION_NAME_ADD}LISTS`, givenList)
 
         // and a mock of the ListService
-        const updateListFn = jest.fn();
+        const updateListFn = vi.fn();
         setComposableValue(useListService, {
             updateList: updateListFn
         })
@@ -379,7 +379,7 @@ describe("ListView", () => {
         store.commit(`lists/${MUTATION_NAME_ADD}LISTS`, givenList)
 
         // and a mock of the ListService
-        const updateListFn = jest.fn().mockImplementation((updatedList) => {
+        const updateListFn = vi.fn().mockImplementation((updatedList) => {
             store.commit(`lists/${MUTATION_NAME_UPDATE}LISTS`, {id: givenListId, value: updatedList})
         });
 

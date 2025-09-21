@@ -12,7 +12,7 @@ describe("ShareWithUserForm", () => {
         const {i18n} = useFakeI18n();
 
         setComposableValue(useCurrentUser, {
-            getCurrentUser: jest.fn()
+            getCurrentUser: vi.fn()
         })
 
         const wrapper = mount(ShareWithUserForm, {

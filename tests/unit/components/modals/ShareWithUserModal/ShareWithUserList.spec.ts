@@ -35,11 +35,11 @@ describe("ShareWithUserList", () => {
         })
 
         setComposableValue(useShareRequests, {
-            getShareRequestsForList: jest.fn().mockReturnValue(givenSharedRequests)
+            getShareRequestsForList: vi.fn().mockReturnValue(givenSharedRequests)
         });
 
         setComposableValue(useCurrentUser, {
-            getCurrentUser: jest.fn()
+            getCurrentUser: vi.fn()
         })
 
         // when rendering the component
@@ -76,11 +76,11 @@ describe("ShareWithUserList", () => {
         ];
 
         setComposableValue(useShareRequests, {
-            getShareRequestsForList: jest.fn().mockReturnValue(givenSharedRequests)
+            getShareRequestsForList: vi.fn().mockReturnValue(givenSharedRequests)
         });
 
         setComposableValue(useCurrentUser, {
-            getCurrentUser: jest.fn()
+            getCurrentUser: vi.fn()
         })
 
         // when rendering the component
@@ -111,11 +111,11 @@ describe("ShareWithUserList", () => {
         ]
 
         setComposableValue(useShareRequests, {
-            getShareRequestsForList: jest.fn().mockReturnValue([])
+            getShareRequestsForList: vi.fn().mockReturnValue([])
         });
 
         setComposableValue(useCurrentUser, {
-            getCurrentUser: jest.fn()
+            getCurrentUser: vi.fn()
         })
 
         // when rendering the component
@@ -152,11 +152,11 @@ describe("ShareWithUserList", () => {
         ];
 
         setComposableValue(useShareRequests, {
-            getShareRequestsForList: jest.fn().mockReturnValue(givenSharedRequests)
+            getShareRequestsForList: vi.fn().mockReturnValue(givenSharedRequests)
         });
 
         setComposableValue(useCurrentUser, {
-            getCurrentUser: jest.fn()
+            getCurrentUser: vi.fn()
         })
         // and a list with non pending request
         const list = new List(givenListId, "irrelevent")
@@ -183,14 +183,14 @@ describe("ShareWithUserList", () => {
 
     it("should call the unshareWithEmail function when revoking a non pending request", async () => {
         // given a mock of the callFunction composable
-        const callFunctionFn = jest.fn();
+        const callFunctionFn = vi.fn();
 
         setComposableValue(useCloudFunctions, {
             callFunction: callFunctionFn
         })
 
         setComposableValue(useShareRequests, {
-            getShareRequestsForList: jest.fn().mockReturnValue([])
+            getShareRequestsForList: vi.fn().mockReturnValue([])
         });
 
 
@@ -222,7 +222,7 @@ describe("ShareWithUserList", () => {
 
     it("should call the deleteRequest function when revoking a pending request", async () => {
         // given a mock of the deleteRequest function
-        const deleteRequestFn = jest.fn();
+        const deleteRequestFn = vi.fn();
 
         // and a list with a pending request
         const givenListId = UUID.uuidv4();
@@ -242,7 +242,7 @@ describe("ShareWithUserList", () => {
 
         setComposableValue(useShareRequests, {
             deleteRequest: deleteRequestFn,
-            getShareRequestsForList: jest.fn().mockReturnValue([givenSharedRequest])
+            getShareRequestsForList: vi.fn().mockReturnValue([givenSharedRequest])
         });
 
         // and a component

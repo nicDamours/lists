@@ -38,6 +38,6 @@ export function setComposableImplementation<T extends ImportedComposable>(
 export function mockComposable(composablePath: string) {
     jest.doMock(composablePath, () => ({
         __esModule: true,
-        default: jest.fn()
+        default: vi.fn()
     }));
 }

@@ -30,7 +30,6 @@ export const WeekConverter: FirestoreDataConverter<WeekPlan> = {
     fromFirestore: function (snapshot: QueryDocumentSnapshot, options: SnapshotOptions): WeekPlan {
         const data = snapshot.data(options);
 
-        console.log('data', data);
 
         return weekFactory(snapshot.id, data);
     },

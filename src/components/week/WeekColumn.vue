@@ -126,6 +126,7 @@ export default {
 
     &__title {
       border-bottom: solid 1px lightgray;
+      padding: 8px;
 
       &-text {
         display: flex;
@@ -135,9 +136,7 @@ export default {
         align-items: center;
       }
     }
-  }
 
-  &-cell {
     &.--today {
       background-color: var(--ion-color-step-150);
     }

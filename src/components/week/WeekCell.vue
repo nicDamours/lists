@@ -32,8 +32,6 @@ export default {
   setup(props, {emit}) {
     const {content, placeholder} = toRefs(props);
 
-    const textArea = ref(null);
-
     const isPlaceholderDisabled = ref(false);
 
     const contentModel = computed({
@@ -41,7 +39,6 @@ export default {
         return content.value;
       },
       set(value) {
-        console.log('CHANGE', value)
         emit('change', value);
       }
     });
@@ -54,8 +51,6 @@ export default {
       if (isPlaceholderDisabled.value) {
         return
       }
-
-      console.log('setPlaceholderAsValue');
 
       contentModel.value = placeholder.value
     }

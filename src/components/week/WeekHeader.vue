@@ -5,13 +5,13 @@
         <ion-text>&nbsp;</ion-text>
       </div>
       <div class="week-header__cell">
-        Dinner
+        {{ t('WeekPlanner.titles.dinner') }}
       </div>
       <div class="week-header__cell">
-        Supper
+        {{ t('WeekPlanner.titles.supper') }}
       </div>
       <div class="week-header__cell">
-        Activities
+        {{ t('WeekPlanner.titles.activities') }}
       </div>
     </div>
   </ion-col>
@@ -19,35 +19,16 @@
 
 <script>
 import {IonCol, IonText} from "@ionic/vue";
-import {toRefs} from "@vueuse/core";
-import useDates from "@/composable/use-dates";
-import {computed} from "vue";
+import {useI18n} from "vue-i18n";
 
 export default {
   name: "WeekHeader",
   components: {IonCol, IonText},
-  props: {
-    startDate: {
-      type: Date,
-      required: true
-    },
-    endDate: {
-      type: Date,
-      required: true
-    }
-  },
-  setup(props) {
-    const { startDate, endDate } = toRefs(props);
-    const { getDaysFromDates, isSameDay } = useDates()
+  setup() {
+    const {t} = useI18n()
 
-    const daysOfWeek = computed(() => getDaysFromDates(startDate.value, endDate.value));
-
-    const isCurrentDate = (date) => {
-      return date && isSameDay(date, new Date());
-    }
     return {
-      daysOfWeek,
-      isCurrentDate
+      t
     }
   }
 }
@@ -65,6 +46,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 8px;
 
     &:not(:last-child) {
       border-bottom: solid 1px lightgray;

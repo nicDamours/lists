@@ -3,7 +3,8 @@
   <ion-item>
     <ion-icon slot="start" src="img/svgs/burger-soda.svg"></ion-icon>
     <ion-input v-model="dinnerModel" :placeholder="previousDaySupper" :tabindex="index * 3 + 1" class="lunch-input"
-               debounce="500" @keyup.tab="autoFillPreviousSupper"/>
+               debounce="500" @keydown="shouldDisablePlaceholder" @keydown.tab="autoFillPreviousSupper"
+               @ion-focus="handleFocus"/>
   </ion-item>
   <ion-item>
     <ion-icon slot="start" src="img/svgs/utensils.svg"></ion-icon>
@@ -20,7 +21,7 @@ import {WeekPlanDays} from "@/models/dtos/WeekPlan/WeekPlanDays";
 import {IonIcon, IonInput, IonItem, IonListHeader} from "@ionic/vue";
 import {useI18n} from "vue-i18n";
 import useDates from "@/composable/use-dates";
-import {computed, toRefs} from "vue";
+import {computed, ref, toRefs} from "vue";
 import useWeekDayModels from "@/composable/use-week-day-models";
 
 export default {
@@ -72,7 +73,13 @@ export default {
     const models = useWeekDayModels(day, emit);
     const {dinnerModel} = models;
 
+    const isPlaceholderDisabled = ref(false);
+
     const shouldAutofillPreviousSupper = computed(() => {
+      if (isPlaceholderDisabled.value) {
+        return false
+      }
+
       if (previousDaySupper.value === undefined) {
         return false;
       }
@@ -90,11 +97,24 @@ export default {
       }
     }
 
+    const shouldDisablePlaceholder = (event) => {
+      if (event.key !== 'tab') {
+        isPlaceholderDisabled.value = true;
+      }
+    }
+
+    const handleFocus = () => {
+      isPlaceholderDisabled.value = false
+      emit('focus')
+    }
+
     return {
       t,
+      handleFocus,
       getTitleForDay,
       previousDaySupper,
       autoFillPreviousSupper,
+      shouldDisablePlaceholder,
       ...models
     }
   }

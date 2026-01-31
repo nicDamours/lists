@@ -1,7 +1,7 @@
 <template>
   <div class="week-cell ion-padding">
     <ion-textarea v-model="contentModel" :placeholder="placeholder" class="week-cell__input" debounce="500"
-                  @keydown="shouldDisablePlaceholder" @keydown.tab="setPlaceholderAsValue" @ion-focus="handleFocus"/>
+                  @keydown.tab="setPlaceholderAsValue" @keydown="shouldDisablePlaceholder" @ion-focus="handleFocus"/>
   </div>
 </template>
 

@@ -1,16 +1,12 @@
 <template>
   <div class="week-calendar">
     <ion-grid class="ion-hide-sm-down">
-      <WeekHeader :start-date="plan.startDate" :end-date="plan.endDate" />
-      <WeekRow :cells="dinnerCells" :index-multiplier="1"
-               :title="t('WeekPlanner.titles.dinner')" class="dinner-week-row"
-               @change="({value, day}) => handleCellChange('dinner', value, day)"/>
-      <WeekRow :cells="supperCells" :index-multiplier="2"
-               :title="t('WeekPlanner.titles.supper')" class="supper-week-row"
-               @change="({value, day}) => handleCellChange('supper', value, day)"/>
-      <WeekRow :cells="activitiesCells" :index-multiplier="3"
-               :title="t('WeekPlanner.titles.activities')" class="activities-week-row"
-               @change="({value, day}) => handleCellChange('activities', value, day)"/>
+      <ion-row>
+        <WeekHeader :end-date="plan.endDate" :start-date="plan.startDate"/>
+        <WeekColumn v-for="(day, $index) in plan.days" :key="day.id" :day="day"
+                    :previousDay="getPreviousDay($index)"
+                    @day-value-change="(value) => handleDayValueChange(value, day)"/>
+      </ion-row>
     </ion-grid>
 
     <ion-list class="ion-hide-sm-up">
@@ -22,8 +18,8 @@
 </template>
 
 <script>
-import WeekRow from "./week/WeekRow";
-import {IonGrid, IonList} from "@ionic/vue";
+import WeekColumn from "./week/WeekColumn.vue";
+import {IonGrid, IonList, IonRow} from "@ionic/vue";
 import WeekHeader from "./week/WeekHeader";
 import {computed, toRefs} from "vue";
 import WeekDayListGroup from "@/components/week/WeekDayListGroup";
@@ -32,7 +28,7 @@ import {useI18n} from "vue-i18n";
 export default {
   name: "WeekPlanner",
   emits: ["update-plan"],
-  components: {WeekRow, IonGrid, WeekHeader, WeekDayListGroup, IonList },
+  components: {WeekColumn, IonGrid, IonRow, WeekHeader, WeekDayListGroup, IonList},
   props: {
     plan: {
       type: Object,

@@ -48,7 +48,7 @@ export default {
       }
     },
     previousDay: {
-      type: Object,
+      type: [Object, null],
       required: true,
       validator(value) {
         return value === null || value instanceof WeekPlanDays

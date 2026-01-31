@@ -1,13 +1,13 @@
 import {WeekPlan} from "@/models/dtos/WeekPlan/WeekPlan";
 import {addDays} from "date-fns";
 import WeekPlanner from "@/components/WeekPlanner.vue";
-import WeekDayListGroup from "@/components/week/WeekDayListGroup.vue";
-import {mount} from "@vue/test-utils";
+import {flushPromises, mount} from "@vue/test-utils";
 import useFakeI18n from "@tests/utils/modifiers/use-fake-i18n";
+import WeekColumn from "@/components/week/WeekColumn.vue";
 
 describe("WeekPlanner", () => {
-    it("should pass the previous day to the week day", () => {
-        // given a plan
+    it("should have one column for each days of the plan", () => {
+        // given a plan with some days
         const date = new Date();
         const plan = new WeekPlan('12345', date, addDays(date, 6))
 
@@ -22,20 +22,18 @@ describe("WeekPlanner", () => {
             }
         })
 
-        // then it should have passed the previous day to the Previous day props
-        const WeekDayListGroups = wrapper.findAllComponents(WeekDayListGroup);
+        // then it should have one WeekColumn for each plan day
 
-        for (let i = 0; i < WeekDayListGroups.length; i++) {
-            const previousDay = i === 0 ? null : plan.days[i - 1]
+        const WeekColumnComponents = wrapper.findAllComponents(WeekColumn);
+        expect(WeekColumnComponents).toHaveLength(plan.days.length)
 
-            const group = WeekDayListGroups[i]
-
-            expect(group.props('previousDay')).toEqual(previousDay)
+        for (let i = 0; i < plan.days.length; i++) {
+            expect(WeekColumnComponents[i].props('day')).toEqual(plan.days[i]);
         }
     })
 
-    it("should pass the multipliers to the week rows", () => {
-        // given a plan
+    it("should pass the previous day to the weekColumn", () => {
+        // given a plan with some days
         const date = new Date();
         const plan = new WeekPlan('12345', date, addDays(date, 6))
 
@@ -50,25 +48,22 @@ describe("WeekPlanner", () => {
             }
         })
 
-        // then it should have passed 1 to the dinner week row's index multiplier
-        const dinnerWeekRow = wrapper.findComponent('.dinner-week-row')
-        expect(dinnerWeekRow.props('indexMultiplier')).toEqual(1)
+        // then it should have passed null as the previous days for the first column
+        const WeekColumnComponents = wrapper.findAllComponents(WeekColumn);
+        expect(WeekColumnComponents[0].props('previousDay')).toEqual(null);
 
-        // and it should have passed 2 to the supper week row's index multiplier
-        const supperWeekRow = wrapper.findComponent('.supper-week-row')
-        expect(supperWeekRow.props('indexMultiplier')).toEqual(2)
-
-        // and it should have passed 3 to the activities week row's index multiplier
-        const activitiesWeekRow = wrapper.findComponent('.activities-week-row')
-        expect(activitiesWeekRow.props('indexMultiplier')).toEqual(3)
+        // and it should have passed the previous days to the other days
+        for (let i = 1; i < plan.days.length; i++) {
+            expect(WeekColumnComponents[i].props('previousDay')).toEqual(plan.days[i - 1]);
+        }
     })
 
-    it("should create the placeholders for the dinner cells", () => {
-        // given a plan
+    it("should emit a 'plan-change' when a WeekColum emits a change event", async () => {
+        // given a plan with some days
         const date = new Date();
         const plan = new WeekPlan('12345', date, addDays(date, 6))
 
-        // when rendering the week planner
+        // and a component
         const {i18n} = useFakeI18n();
         const wrapper = mount(WeekPlanner, {
             global: {
@@ -79,15 +74,19 @@ describe("WeekPlanner", () => {
             }
         })
 
-        // then it should have passed the previous day to the Previous day props
-        const WeekDayListGroups = wrapper.findAllComponents(WeekDayListGroup);
+        // when one of the weekDay emits a change event
+        const givenIndex = 4;
+        const givenNewValue = 'SomeNewValue';
+        const givenWeekDayComponent = wrapper.findAllComponents(WeekColumn)[givenIndex];
+        givenWeekDayComponent.vm.$emit('day-value-change', {supper: givenNewValue});
+        await flushPromises();
 
-        for (let i = 0; i < WeekDayListGroups.length; i++) {
-            const previousDay = i === 0 ? null : plan.days[i - 1]
-
-            const group = WeekDayListGroups[i]
-
-            expect(group.props('previousDay')).toEqual(previousDay)
-        }
+        // then it should have emitted a 'update-plan' with the new value for the given plan
+        expect(wrapper.emitted()).toHaveProperty('update-plan');
+        expect((wrapper.emitted<WeekPlan[]>('update-plan')?.[0][0] as WeekPlan).days).toEqual(expect.arrayContaining([
+            expect.objectContaining({
+                _supper: givenNewValue
+            })
+        ]));
     })
 })

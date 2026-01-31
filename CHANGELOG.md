@@ -1,5 +1,11 @@
 # Change log
 
+## 1.8.0
+- Added support to autofill lunch with the previous day's dinner. ([#19](https://github.com/nicDamours/lists/issues/19))
+- Refractored Week Planner to allow tab navigation vertically rather than horizontally
+- Fixed about message in english
+
+
 ## 1.7.1
 
 #### Bugfixes

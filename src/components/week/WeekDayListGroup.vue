@@ -2,17 +2,17 @@
   <ion-list-header>{{ getTitleForDay(day) }}</ion-list-header>
   <ion-item>
     <ion-icon slot="start" src="img/svgs/burger-soda.svg"></ion-icon>
-    <ion-input v-model="dinnerModel" :placeholder="previousDaySupper" :tabindex="index * 3 + 1" class="lunch-input"
+    <ion-input v-model="dinnerModel" :placeholder="previousDaySupper" class="lunch-input"
                debounce="500" @keydown="shouldDisablePlaceholder" @keydown.tab="autoFillPreviousSupper"
                @ion-focus="handleFocus"/>
   </ion-item>
   <ion-item>
     <ion-icon slot="start" src="img/svgs/utensils.svg"></ion-icon>
-    <ion-input v-model="supperModel" :tabindex="index * 3 + 2" class="supper-input" debounce="500"/>
+    <ion-input v-model="supperModel" class="supper-input" debounce="500"/>
   </ion-item>
   <ion-item>
     <ion-icon slot="start" src="img/svgs/biking.svg"></ion-icon>
-    <ion-input v-model="activitiesModel" :tabindex="index * 3 + 3" class="activities-input" debounce="500"/>
+    <ion-input v-model="activitiesModel" class="activities-input" debounce="500"/>
   </ion-item>
 </template>
 

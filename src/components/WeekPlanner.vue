@@ -1,21 +1,25 @@
 <template>
   <div class="week-calendar">
     <ion-grid class="ion-hide-sm-down">
-      <WeekHeader :start-date="plan.startDate" :end-date="plan.endDate" />
-      <WeekRow :cells="dinnerCells" :title="t('WeekPlanner.titles.dinner')" @change="({value, day}) => handleCellChange('dinner', value, day)"/>
-      <WeekRow :cells="supperCells" :title="t('WeekPlanner.titles.supper')"  @change="({value, day}) => handleCellChange('supper', value, day)"/>
-      <WeekRow :cells="activitiesCells" :title="t('WeekPlanner.titles.activities')"  @change="({value, day}) => handleCellChange('activities', value, day)"/>
+      <ion-row>
+        <WeekHeader :end-date="plan.endDate" :start-date="plan.startDate"/>
+        <WeekColumn v-for="(day, $index) in plan.days" :key="day.id" :day="day"
+                    :previousDay="getPreviousDay($index)"
+                    @day-value-change="(value) => handleDayValueChange(value, day)"/>
+      </ion-row>
     </ion-grid>
 
     <ion-list class="ion-hide-sm-up">
-      <WeekDayListGroup v-for="day in plan.days" :key="day.date.getTime()" :day="day" @day-value-change="(value) => handleDayValueChange(value, day)" />
+      <WeekDayListGroup v-for="(day, $index) in plan.days" :key="day.date.getTime()" :day="day"
+                        :index="$index"
+                        :previousDay="getPreviousDay($index)" @day-value-change="(value) => handleDayValueChange(value, day)"/>
     </ion-list>
   </div>
 </template>
 
 <script>
-import WeekRow from "./week/WeekRow";
-import {IonGrid, IonList} from "@ionic/vue";
+import WeekColumn from "./week/WeekColumn.vue";
+import {IonGrid, IonList, IonRow} from "@ionic/vue";
 import WeekHeader from "./week/WeekHeader";
 import {computed, toRefs} from "vue";
 import WeekDayListGroup from "@/components/week/WeekDayListGroup";
@@ -24,7 +28,7 @@ import {useI18n} from "vue-i18n";
 export default {
   name: "WeekPlanner",
   emits: ["update-plan"],
-  components: {WeekRow, IonGrid, WeekHeader, WeekDayListGroup, IonList },
+  components: {WeekColumn, IonGrid, IonRow, WeekHeader, WeekDayListGroup, IonList},
   props: {
     plan: {
       type: Object,
@@ -59,11 +63,20 @@ export default {
       handleDayValueChange(updatedValue, day);
     }
 
+    const getPreviousDay = (currentDayIndex) => {
+      if (currentDayIndex === 0) {
+        return null;
+      }
+
+      return plan.value.days[currentDayIndex - 1]
+    }
+
     return {
       t,
       dinnerCells,
       supperCells,
       activitiesCells,
+      getPreviousDay,
       handleCellChange,
       handleDayValueChange
     }

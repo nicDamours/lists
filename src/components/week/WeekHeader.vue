@@ -1,47 +1,34 @@
 <template>
-  <ion-row class="week-header">
-    <ion-col class="week-header__cell"></ion-col>
-    <ion-col
-        class="week-header__cell"
-        v-for="day in daysOfWeek"
-        :class="{'--today': isCurrentDate(day.date) }"
-        :key="day.date">
-      <span class="week-header__cell-content">{{ day.title }}</span>
-    </ion-col>
-  </ion-row>
+  <ion-col class="ion-no-padding">
+    <div class="week-header">
+      <div class="week-header__cell --header">
+        <ion-text>&nbsp;</ion-text>
+      </div>
+      <div class="week-header__cell">
+        {{ t('WeekPlanner.titles.dinner') }}
+      </div>
+      <div class="week-header__cell">
+        {{ t('WeekPlanner.titles.supper') }}
+      </div>
+      <div class="week-header__cell">
+        {{ t('WeekPlanner.titles.activities') }}
+      </div>
+    </div>
+  </ion-col>
 </template>
 
 <script>
-import {IonCol, IonRow} from "@ionic/vue";
-import {toRefs} from "@vueuse/core";
-import useDates from "@/composable/use-dates";
-import {computed} from "vue";
+import {IonCol, IonText} from "@ionic/vue";
+import {useI18n} from "vue-i18n";
 
 export default {
   name: "WeekHeader",
-  components: {IonRow, IonCol},
-  props: {
-    startDate: {
-      type: Date,
-      required: true
-    },
-    endDate: {
-      type: Date,
-      required: true
-    }
-  },
-  setup(props) {
-    const { startDate, endDate } = toRefs(props);
-    const { getDaysFromDates, isSameDay } = useDates()
+  components: {IonCol, IonText},
+  setup() {
+    const {t} = useI18n()
 
-    const daysOfWeek = computed(() => getDaysFromDates(startDate.value, endDate.value));
-
-    const isCurrentDate = (date) => {
-      return date && isSameDay(date, new Date());
-    }
     return {
-      daysOfWeek,
-      isCurrentDate
+      t
     }
   }
 }
@@ -49,14 +36,20 @@ export default {
 
 <style lang="scss">
 .week-header {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
   &__cell {
+    flex: 1 1 auto;
     border-bottom: solid 1px lightgray;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 8px;
 
     &:not(:last-child) {
-      border-right: solid 1px lightgray;
+      border-bottom: solid 1px lightgray;
     }
 
     &-content {
@@ -66,6 +59,10 @@ export default {
 
     &.--today {
       background-color: var(--ion-color-step-150);
+    }
+
+    &.--header {
+      flex: 0 1 auto;
     }
   }
 }

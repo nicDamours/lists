@@ -57,7 +57,6 @@ export default {
     })
 
     const weekSharingUserOptions = computed(() => {
-      console.log('locale', locale.value);
       const options = [
         {
           value: "null",

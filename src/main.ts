@@ -35,22 +35,11 @@ import {FirebaseAppService} from "@/services/FirebaseAppService";
 
 import "./registerServiceWorker";
 
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import {library} from '@fortawesome/fontawesome-svg-core'
-import {
-    faBiking as falBiking,
-    faBurgerSoda as falBurgerAndSoda,
-    faPaintBrushAlt,
-    faUtensils as falUtensils
-} from '@fortawesome/pro-light-svg-icons'
 import OnLongPress from "@/directive/on-long-press";
 import Bugsnag from "@bugsnag/js";
 import BugsnagPluginVue from "@bugsnag/plugin-vue";
 
 containerRegistrationFunction();
-
-
-library.add(falBurgerAndSoda, falBiking, falUtensils, faPaintBrushAlt)
 
 
 Container.get<FirebaseAppService>('FirebaseAppService');
@@ -77,7 +66,6 @@ const app = createApp(App)
     .use(bugsnagVue)
     .use(router);
 
-app.component('font-awesome-icon', FontAwesomeIcon)
 
 app.directive('long-press', OnLongPress)
 
